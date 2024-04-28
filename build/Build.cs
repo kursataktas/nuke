@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NuGet.Configuration;
 using NuGet.Packaging;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -49,6 +50,13 @@ partial class Build
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => ((IPack)x).Pack);
+
+    Target NAME => _ => _
+        .Executes(() =>
+        {
+            DotNet(
+                $"");
+        });
 
     [CI] readonly TeamCity TeamCity;
     [CI] readonly AzurePipelines AzurePipelines;

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using JetBrains.Annotations;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
+using Serilog.Events;
 
 namespace Nuke.Tooling;
 
@@ -30,10 +32,11 @@ public class Builder : Attribute
 }
 
 
+
 public class NuGetToolAttribute : ToolAttribute
 {
-    public string[] Executable { get; set; }
-    public string[] PackageId { get; set; }
+    public string Executable { get; set; }
+    public string PackageId { get; set; }
     public string FrameworkProperty { get; set; }
 
     internal override string GetToolPath(ToolOptions options)
@@ -41,7 +44,7 @@ public class NuGetToolAttribute : ToolAttribute
         var framework = FrameworkProperty != null
             ? options.GetType().GetProperty(FrameworkProperty)?.GetValue<string>(options)
             : null;
-        return NuGetToolPathResolver.GetPackageExecutable(PackageId.Join("|"), Executable.Join("|"), framework);
+        return NuGetToolPathResolver.GetPackageExecutable(PackageId, Executable, framework);
     }
 }
 
@@ -55,6 +58,19 @@ public class ArgumentAttribute : Attribute
     public Type FormatterType { get; set; }
     public string FormatterMethod { get; set; }
 
-    public string ListSeparator { get; set; }
-    public string ItemSeparator { get; set; }
+    public string Separator { get; set; }
+}
+
+public class LogErrorAsStandard() : Attribute;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class LogLevelPattern(LogEventLevel level, [RegexPattern] string pattern) : Attribute
+{
+    public LogEventLevel Level { get; } = level;
+    public string Pattern { get; } = pattern;
+}
+
+public class DefaultLogLevel(LogEventLevel level) : Attribute
+{
+    public LogEventLevel Level { get; } = level;
 }
