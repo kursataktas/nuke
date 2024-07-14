@@ -41,4 +41,16 @@ using Nuke.Components;
 partial class Build
 {
     const string AlphaDeployment = "alpha-deployment";
+
+    GitHubWorkflow Base = new GitHubWorkflow()
+        .Checkout(fetchDepth: 0)
+        .EnableGitHubToken()
+        .PublishArtifacts(false)
+        .Invoke((ITest x) => x.Test, (IPack x) => x.Pack);
+
+    GitHubWorkflow WindowsLatest => Base
+        .Name("windows-latest")
+        .OnPush([MasterBranch, $"{ReleaseBranchPrefix}/*"])
+        .OnPullRequest([DevelopBranch])
+        .Image(GitHubActionsImage.WindowsLatest);
 }
