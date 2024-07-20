@@ -1,9 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace Nuke.Tooling;
 
 public static class JsonExtensions
 {
-    public static JObject ToJObject(this object obj)
+    public static JObject ToJObject(this object obj, JsonSerializer serializer = null)
     {
-        return JObject.FromObject(obj);
+        serializer ??= JsonSerializer.CreateDefault();
+        return JObject.FromObject(obj, serializer);
     }
 }

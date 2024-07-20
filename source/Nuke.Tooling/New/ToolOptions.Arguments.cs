@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
 using Nuke.Common.Utilities;
@@ -115,18 +116,24 @@ partial class ToolOptions
             var valueType = property.PropertyType.GetScalarType();
             var values = token.Value<JArray>().Select(x => Parse(x, valueType));
 
-            if (attribute.Separator == null)
+            if (attribute.ListSeparator == null)
             {
                 return from value in values
                        from part in formatParts
                        select part.Replace(ValuePlaceholder, value);
             }
-            else
+
+            return formatParts.SelectMany(part =>
             {
-                Assert.False(attribute.Separator.IsNullOrWhiteSpace());
-                return from part in formatParts
-                       select part.Replace(ValuePlaceholder, values.Join(attribute.Separator));
-            }
+                var valueStart = part.IndexOf(ValuePlaceholder, StringComparison.OrdinalIgnoreCase);
+                if (valueStart == -1)
+                    return [part];
+
+                if (attribute.ListSeparator.IsNullOrWhiteSpace())
+                    return values.Select(x => part.Replace(ValuePlaceholder, x));
+
+                return [part.Replace(ValuePlaceholder, values.Join(attribute.ListSeparator))];
+            });
         }
 
         IEnumerable<string> GetDictionaryArguments()
@@ -134,46 +141,40 @@ partial class ToolOptions
             var valueType = property.PropertyType.GetGenericArguments().Last();
             var pairs = token.Value<JObject>().Properties().Select(x => (Key: x.Name, Value: Parse(x, valueType)));
 
-            if (attribute.Separator == null)
+            if (attribute.PairSeparator == null)
             {
                 return from pair in pairs
                        from part in formatParts
                        select part.Replace(KeyPlaceholder, pair.Key).Replace(ValuePlaceholder, pair.Value);
             }
-            else
-            {
-                Assert.False(attribute.Separator.IsNullOrWhiteSpace());
-                var (keyIndex, valueIndex) = (
-                    format.IndexOf(KeyPlaceholder, StringComparison.OrdinalIgnoreCase),
-                    format.IndexOf(ValuePlaceholder, StringComparison.OrdinalIgnoreCase)
-                );
 
-                return from part in formatParts
-                       select part.Replace(ValuePlaceholder, values.Join(attribute.Separator));
-            }
-            //
-            // var (keyIndex, valueIndex) = (
-            //     format.IndexOf(KeyPlaceholder, StringComparison.OrdinalIgnoreCase),
-            //     format.IndexOf(ValuePlaceholder, StringComparison.OrdinalIgnoreCase)
-            // );
-            // Assert.True(keyIndex > 0 && valueIndex > 0);
-            // var itemSeparator = format.Substring(
-            //     startIndex: keyIndex + KeyPlaceholder.Length,
-            //     length: valueIndex - keyIndex - KeyPlaceholder.Length);
-            //
-            // foreach (var value in values.Properties())
-            // {
-            //     // yield return first;
-            //     yield return value.Name;
-            //     yield return Format(value.Value, itemType);
-            // }
+            return formatParts.SelectMany(part =>
+            {
+                var pairStart = part.IndexOf(KeyPlaceholder, StringComparison.OrdinalIgnoreCase);
+                var pairLength = part.IndexOf(ValuePlaceholder, StringComparison.OrdinalIgnoreCase) - pairStart + ValuePlaceholder.Length;
+
+                if (pairStart == -1)
+                    return [part];
+
+                if (attribute.PairSeparator.IsNullOrWhiteSpace())
+                    return pairs.Select(x => part.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
+
+                var pairPart = part.Substring(pairStart, pairLength);
+                var formattedPairs = pairs.Select(x => pairPart.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
+                return [part.Substring(startIndex: 0, length: pairStart) + formattedPairs.Join(attribute.PairSeparator)];
+            });
         }
 
         IEnumerable<string> GetLookupArguments()
         {
+            Assert.True(attribute.PairSeparator == null);
+
             var valueType = property.PropertyType.GetGenericArguments().Last();
             var pairs = token.Value<JObject>().Properties()
-                .Select(x => (Key: x.Name, Values: x.Value<JArray>().Select(x => Parse(x, valueType))));
+                .Select(x => (Key: x.Name, Values: x.Value.Value<JArray>().Select(x => Parse(x, valueType))));
+
+
+
             return [];
         }
     }

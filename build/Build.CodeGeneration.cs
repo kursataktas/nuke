@@ -3,6 +3,7 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.IO;
@@ -30,7 +31,7 @@ partial class Build
     Target GenerateTools => _ => _
         .Executes(() =>
         {
-            SpecificationsDirectory.GlobFiles("*/*.json").ForEach(x =>
+            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name.Contains("DotNet")).ForEach(x =>
                 GenerateCode(
                     x,
                     namespaceProvider: x => $"Nuke.Common.Tools.{x.Name}",

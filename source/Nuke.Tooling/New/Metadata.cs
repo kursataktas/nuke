@@ -31,7 +31,15 @@ public class Builder : Attribute
     public string Property { get; set; }
 }
 
+public class PathToolAttribute : ToolAttribute
+{
+    public string Executable { get; set; }
 
+    internal override string GetToolPath(ToolOptions options)
+    {
+        return ToolPathResolver.GetPathExecutable(Executable);
+    }
+}
 
 public class NuGetToolAttribute : ToolAttribute
 {
@@ -58,7 +66,8 @@ public class ArgumentAttribute : Attribute
     public Type FormatterType { get; set; }
     public string FormatterMethod { get; set; }
 
-    public string Separator { get; set; }
+    public string ListSeparator { get; set; }
+    public string PairSeparator { get; set; }
 }
 
 public class LogErrorAsStandard() : Attribute;

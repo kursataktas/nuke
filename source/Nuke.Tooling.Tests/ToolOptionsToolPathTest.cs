@@ -44,7 +44,7 @@ public class ToolOptionsToolPathTest
     [Fact]
     public void TestOptionsCustomToolPath()
     {
-        new OptionsCustomToolPathOptions()
+        new OptionsToolOptionsWithCustomToolOptionsWithCustomToolPathOptions()
             .GetToolPath().Should().Be(nameof(OptionsCustomToolPathTool));
     }
 }
@@ -68,7 +68,7 @@ file class ToolCustomToolPathOptions : ToolOptions;
 file class OptionsCustomToolPathTool;
 
 [Command(Type = typeof(OptionsCustomToolPathTool))]
-file class OptionsCustomToolPathOptions : ToolOptions, IToolOptionsWithCustomToolPath
+file class OptionsToolOptionsWithCustomToolOptionsWithCustomToolPathOptions : ToolOptions, IToolOptionsWithCustomToolPath
 {
     string IToolOptionsWithCustomToolPath.GetToolPath() => nameof(OptionsCustomToolPathTool);
 }

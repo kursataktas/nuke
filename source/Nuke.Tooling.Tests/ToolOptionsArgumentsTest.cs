@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
+using Newtonsoft.Json;
 using Nuke.Common.Utilities.Collections;
 using Nuke.Tooling;
 using Xunit;
@@ -128,14 +129,15 @@ public class ToolOptionsArgumentsTest
     {
         Assert<ListToolOptions>(new { SimpleList = new[] { "a", "b" } }, ["--param", "a", "--param", "b"]);
         Assert<ListToolOptions>(new { SeparatorList = new[] { "a", "b" } }, ["--param", "a+b"]);
+        Assert<ListToolOptions>(new { WhitespaceList = new[] { "a", "b" } }, ["--param", "a", "b"]);
         Assert<ListToolOptions>(new { FormattedList = new[] { "true", "false" } }, ["--param=TRUE", "--param=FALSE"]);
     }
 
     private class ListToolOptions : ToolOptions
     {
         [Argument(Format = "--param {value}")] public IReadOnlyList<string> SimpleList => Get<List<string>>(() => SimpleList);
-        [Argument(Format = "--param {value}", Separator = "+")] public IReadOnlyList<string> SeparatorList => Get<List<string>>(() => SeparatorList);
-        [Argument(Format = "--param {value}", Separator = " ")] public IReadOnlyList<string> WhitespaceSeparatorList => Get<List<string>>(() => SeparatorList);
+        [Argument(Format = "--param {value}", ListSeparator = "+")] public IReadOnlyList<string> SeparatorList => Get<List<string>>(() => SeparatorList);
+        [Argument(Format = "--param {value}", ListSeparator = " ")] public IReadOnlyList<string> WhitespaceList => Get<List<string>>(() => SeparatorList);
         [Argument(Format = "--param={value}", FormatterMethod = nameof(Format))] public IReadOnlyList<bool> FormattedList => Get<List<bool>>(() => FormattedList);
 
         private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();
@@ -144,45 +146,46 @@ public class ToolOptionsArgumentsTest
     [Fact]
     public void TestDictionary()
     {
-        var simpleDictionary = new { SimpleDictionary = new Dictionary<string, object> { ["key1"] = 1, ["key2"] = "foobar" } };
-        Assert<DictionaryToolOptions>(simpleDictionary, ["--param", "key1=1", "--param", "key2=foobar"]);
+        var dictionary = new Dictionary<string, object> { ["key1"] = 1, ["key2"] = "foobar" };
+        Assert<DictionaryToolOptions>(new { SimpleDictionary = dictionary }, ["-p", "key1=1", "-p", "key2=foobar"]);
+        Assert<DictionaryToolOptions>(new { Simple2Dictionary = dictionary }, ["-p", "key1", "1", "-p", "key2", "foobar"]);
+        Assert<DictionaryToolOptions>(new { SeparatorDictionary = dictionary }, ["/p:key1=1;key2=foobar"]);
+        Assert<DictionaryToolOptions>(new { WhitespaceDictionary = dictionary }, ["--", "key1=1", "key2=foobar"]);
 
-        var separatorDictionary = new { SeparatorDictionary = new Dictionary<string, object> { ["key1"] = 1, ["key2"] = "foobar" } };
-        Assert<DictionaryToolOptions>(separatorDictionary, ["/p:key1=1;key2=foobar"]);
-
-        var whitespaceDictionary = new { SeparatorDictionary = new Dictionary<string, object> { ["key1"] = 1, ["key2"] = "foobar" } };
-        Assert<DictionaryToolOptions>(whitespaceDictionary, ["--", "key1=1", "key2=foobar"]);
+        var boolDictionary = new Dictionary<string, bool> { ["key1"] = true, ["key2"] = false };
+        Assert<DictionaryToolOptions>(new { FormattedDictionary = boolDictionary }, ["/p:key1=TRUE", "/p:key2=FALSE"]);
     }
 
     private class DictionaryToolOptions : ToolOptions
     {
         [Argument(Format = "-p {key}={value}")] public IReadOnlyDictionary<string, object> SimpleDictionary => Get<Dictionary<string, object>>(() => SimpleDictionary);
-        [Argument(Format = "/p:{key}={value}", Separator = ";")] public IReadOnlyDictionary<string, object> SeparatorDictionary => Get<Dictionary<string, object>>(() => SeparatorDictionary);
-        [Argument(Format = "-- {key}={value}", Separator = " ")] public IReadOnlyDictionary<string, object> WhitespaceDictionary => Get<Dictionary<string, object>>(() => WhitespaceDictionary);
+        [Argument(Format = "-p {key} {value}")] public IReadOnlyDictionary<string, object> Simple2Dictionary => Get<Dictionary<string, object>>(() => Simple2Dictionary);
+        [Argument(Format = "/p:{key}={value}", PairSeparator = ";")] public IReadOnlyDictionary<string, object> SeparatorDictionary => Get<Dictionary<string, object>>(() => SeparatorDictionary);
+        [Argument(Format = "-- {key}={value}", PairSeparator = " ")] public IReadOnlyDictionary<string, object> WhitespaceDictionary => Get<Dictionary<string, object>>(() => WhitespaceDictionary);
+        [Argument(Format = "/p:{key}={value}", FormatterMethod = nameof(Format))] public IReadOnlyDictionary<string, bool> FormattedDictionary => Get<Dictionary<string, bool>>(() => FormattedDictionary);
+
+        private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();
+    }
+
+    private class LookupToolOptions : ToolOptions
+    {
+        [Argument(Format = "--param {key}={value}", ListSeparator = ",", PairSeparator = " ")] public ILookup<string, object> SimpleLookup => Get<LookupTable<string, object>>(() => SimpleLookup);
+        [Argument(Format = "--param {key} {value}", ListSeparator = ",", PairSeparator = " ")] public ILookup<string, object> Simple2Lookup => Get<LookupTable<string, object>>(() => Simple2Lookup);
     }
 
     [Fact]
     public void TestLookup()
     {
-        // new SimpleToolOptions()
-        //     .SetLookupValue(new LookupTable<string, object> { ["key"] = [1, 2] })
-        //     .GetArguments().Should().Equal(["--param", "key=1,2"]);
+        var lookup = new LookupTable<string, object> { ["key1"] = new object[] { 1, 2 }, ["key2"] = new object[] { true, false } };
+        Assert<LookupToolOptions>(new { SimpleLookup = lookup }, ["--param", "key1=1,2", "key2=true,false"]);
+        Assert<LookupToolOptions>(new { Simple2Lookup = lookup }, ["--param", "key1", "1,2", "key2", "true,false"]);
     }
 
     private void Assert<T>(object obj, params string[] arguments)
         where T : ToolOptions, new()
     {
         var options = new T();
-        options.InternalOptions = obj.ToJObject();
+        options.InternalOptions = obj.ToJObject(Options.JsonSerializer);
         options.GetArguments().Should().Equal(arguments);
     }
-}
-
-[NuGetTool(PackageId = "xunit.runner.console", Executable = "xunit.console.exe")]
-file class SimpleTool;
-
-[Command(Type = typeof(SimpleTool))]
-file class SimpleToolOptions : ToolOptions
-{
-    [Argument(Format = "--param {key}={value}", Separator = ",")] public ILookup<string, object> LookupValue => Get<LookupTable<string, object>>(() => LookupValue);
 }
