@@ -4,11 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 
@@ -82,12 +84,12 @@ public class Options
         return UsingDictionary(optionProvider, dictionary => dictionary.Add(key, value));
     }
 
-    internal Options AddDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> optionProvider, IDictionary<TKey, TValue> value)
+    internal Options AddDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> optionProvider, Dictionary<TKey, TValue> value)
     {
         return UsingDictionary(optionProvider, dictionary => dictionary.AddDictionary(value));
     }
 
-    internal Options AddDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> optionProvider, IReadOnlyDictionary<TKey, TValue> value)
+    internal Options AddDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> optionProvider, ReadOnlyDictionary<TKey, TValue> value)
     {
         return UsingDictionary(optionProvider, dictionary => dictionary.AddReadOnlyDictionary(value));
     }
@@ -187,16 +189,4 @@ public class Options
     }
 
     #endregion
-}
-
-public static class OptionsExtensions
-{
-    internal static T Modify<T>(this T builder, Action<Options> modification = null)
-        where T : Options
-    {
-        var serializedObject = JsonConvert.SerializeObject(builder, Options.JsonSerializerSettings);
-        var copiedObject = JsonConvert.DeserializeObject<T>(serializedObject, Options.JsonSerializerSettings);
-        modification?.Invoke(copiedObject);
-        return copiedObject;
-    }
 }

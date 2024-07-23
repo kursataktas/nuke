@@ -2,7 +2,9 @@
 // Distributed under the MIT License.
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using Serilog.Events;
 
@@ -10,15 +12,26 @@ namespace Nuke.Tooling;
 
 partial class ToolOptions
 {
+    /// <summary><p>Defines the path of the tool to be invoked. In most cases, the tool path is automatically resolved from the PATH environment variable or a NuGet package.</p></summary>
     public string ProcessToolPath => Get<string>(() => ProcessToolPath);
+
+    /// <summary><p>Defines the working directory for the process.</p></summary>
     public string ProcessWorkingDirectory => Get<string>(() => ProcessWorkingDirectory);
 
-    public IReadOnlyDictionary<string, object> ProcessEnvironmentVariables =>
-        Get<Dictionary<string, object>>(() => ProcessEnvironmentVariables);
+    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    public IReadOnlyDictionary<string, object> ProcessEnvironmentVariables => Get<Dictionary<string, object>>(() => ProcessEnvironmentVariables);
 
+    /// <summary><p>Defines the execution timeout of the invoked process.</p></summary>
     public int? ProcessExecutionTimeout => Get<int?>(() => ProcessExecutionTimeout);
+
+    /// <summary><p>Defines the log-level for standard output.</p></summary>
     public LogEventLevel? ProcessOutputLogging => Get<LogEventLevel?>(() => ProcessOutputLogging);
+
+    /// <summary><p>Defines the log-level for the process invocation.</p></summary>
     public LogEventLevel? ProcessInvocationLogging => Get<LogEventLevel?>(() => ProcessInvocationLogging);
+
+    /// <summary><p>Defines whether to handle the process on exit.</p></summary>
+    public bool? ProcessExitHandling => Get<bool?>(() => ProcessExitHandling);
 }
 
 [PublicAPI]
@@ -26,11 +39,11 @@ public static partial class ToolOptionsExtensions
 {
     #region ToolOptions.ProcessToolPath
 
-    /// <summary><p>Defines the path of the tool to be invoked. In most cases, the tool path is automatically resolved from the PATH environment variable or a NuGet package.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessToolPath"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessToolPath))]
     public static T SetProcessToolPath<T>(this T o, string value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessToolPath, value));
 
-    /// <summary><p>Defines the path of the tool to be invoked. In most cases, the tool path is automatically resolved from the PATH environment variable or a NuGet package.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessToolPath"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessToolPath))]
     public static T ResetProcessToolPath<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessToolPath));
 
@@ -38,11 +51,11 @@ public static partial class ToolOptionsExtensions
 
     #region ToolOptions.ProcessWorkingDirectory
 
-    /// <summary><p>Defines the working directory for the process.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessWorkingDirectory"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessWorkingDirectory))]
     public static T SetProcessWorkingDirectory<T>(this T o, string value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessWorkingDirectory, value));
 
-    /// <summary><p>Defines the working directory for the process.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessWorkingDirectory"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessWorkingDirectory))]
     public static T ResetProcessWorkingDirectory<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessWorkingDirectory));
 
@@ -50,39 +63,39 @@ public static partial class ToolOptionsExtensions
 
     #region ToolOptions.ProcessEnvironmentVariables
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T SetProcessEnvironmentVariables<T>(this T o, IReadOnlyDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
+    public static T SetProcessEnvironmentVariables<T>(this T o, ReadOnlyDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T SetProcessEnvironmentVariables<T>(this T o, IDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
+    public static T SetProcessEnvironmentVariables<T>(this T o, Dictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T AddProcessEnvironmentVariables<T>(this T o, IReadOnlyDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
+    public static T AddProcessEnvironmentVariables<T>(this T o, ReadOnlyDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T AddProcessEnvironmentVariables<T>(this T o, IDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
+    public static T AddProcessEnvironmentVariables<T>(this T o, Dictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
     public static T AddProcessEnvironmentVariable<T>(this T o, string key, object value) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, key, value));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
     public static T SetProcessEnvironmentVariable<T>(this T o, string key, object value) where T : ToolOptions => o.Modify(b => b.SetDictionary(() => o.ProcessEnvironmentVariables, key, value));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
     public static T RemoveProcessEnvironmentVariable<T>(this T o, string key) where T : ToolOptions => o.Modify(b => b.RemoveDictionary(() => o.ProcessEnvironmentVariables, key));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
     public static T ClearProcessEnvironmentVariables<T>(this T o) where T : ToolOptions => o.Modify(b => b.ClearDictionary(() => o.ProcessEnvironmentVariables));
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
     public static T ResetProcessEnvironmentVariables<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessEnvironmentVariables));
 
@@ -90,11 +103,11 @@ public static partial class ToolOptionsExtensions
 
     #region ToolOptions.ProcessExecutionTimeout
 
-    /// <summary><p>Defines the execution timeout of the invoked process.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessExecutionTimeout"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExecutionTimeout))]
     public static T SetProcessExecutionTimeout<T>(this T o, int? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExecutionTimeout, value));
 
-    /// <summary><p>Defines the execution timeout of the invoked process.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessExecutionTimeout"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExecutionTimeout))]
     public static T ResetProcessExecutionTimeout<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessExecutionTimeout));
 
@@ -102,25 +115,71 @@ public static partial class ToolOptionsExtensions
 
     #region ToolOptions.ProcessOutputLogging
 
-    /// <summary><p>Defines the log-level for standard output.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
     public static T SetProcessOutputLogging<T>(this T o, LogEventLevel? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessOutputLogging, value));
 
-    /// <summary><p>Defines the log-level for standard output.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
     public static T ResetProcessOutputLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessOutputLogging));
+
+    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
+    public static T DisableProcessOutputLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessOutputLogging));
 
     #endregion
 
     #region ToolOptions.ProcessInvocationLogging
 
-    /// <summary><p>Defines the log-level for the process invocation.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
     public static T SetProcessInvocationLogging<T>(this T o, LogEventLevel? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessInvocationLogging, value));
 
-    /// <summary><p>Defines the log-level for the process invocation.</p></summary>
+    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
     public static T ResetProcessInvocationLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessInvocationLogging));
+
+    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
+    public static T DisableProcessInvocationLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessInvocationLogging));
+
+    #endregion
+
+    #region ToolOptions.ProcessExitHandling
+
+    /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
+    public static T SetProcessExitHandling<T>(this T o, LogEventLevel? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, value));
+
+    /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
+    public static T EnableProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, true));
+
+    /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
+    public static T DisableProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, false));
+
+    /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
+    public static T ToggleProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, !o.ProcessExitHandling));
+
+    /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
+    public static T ResetProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessExitHandling));
+
+    #endregion
+
+    #region DropIn Extensions
+
+    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
+    [Obsolete($"Use {nameof(DisableProcessOutputLogging)} instead")]
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
+    public static T DisableProcessLogOutput<T>(this T o) where T : ToolOptions => o.DisableProcessOutputLogging();
+
+    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
+    [Obsolete($"Use {nameof(DisableProcessInvocationLogging)} instead")]
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
+    public static T SetProcessLogInvocation<T>(this T o) where T : ToolOptions => o.DisableProcessInvocationLogging();
 
     #endregion
 }

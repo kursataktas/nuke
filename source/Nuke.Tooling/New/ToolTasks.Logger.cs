@@ -1,4 +1,4 @@
-// Copyright 2024 Maintainers of NUKE.
+﻿// Copyright 2024 Maintainers of NUKE.
 // Distributed under the MIT License.
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Serilog;
@@ -15,12 +14,25 @@ using Serilog.Events;
 
 namespace Nuke.Tooling;
 
-partial class ToolOptions
+public class LogErrorAsStandard : Attribute;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class LogLevelPattern(LogEventLevel level, [RegexPattern] string pattern) : Attribute
 {
-    internal partial Action<OutputType, string> GetLogger()
+    public LogEventLevel Level { get; } = level;
+    public string Pattern { get; } = pattern;
+}
+
+public class DefaultLogLevel(LogEventLevel level) : Attribute
+{
+    public LogEventLevel Level { get; } = level;
+}
+
+public abstract partial class ToolTasks
+{
+    protected internal virtual partial Action<OutputType, string> GetLogger()
     {
-        var optionsType = GetType();
-        var toolType = optionsType.GetCustomAttribute<CommandAttribute>().NotNull().Type;
+        var toolType = GetType();
         var levelProvider = toolType.GetCustomAttributes<LogLevelPattern>()
             .Select(x =>
             {

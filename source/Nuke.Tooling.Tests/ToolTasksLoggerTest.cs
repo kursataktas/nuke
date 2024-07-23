@@ -5,23 +5,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Nuke.Common.Tooling;
 using Nuke.Tooling;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
-using VerifyXunit;
 using Xunit;
 
 namespace Nuke.Common.Tests;
 
-public class ToolOptionsLoggerTest
+public class ToolTasksLoggerTest
 {
     private readonly List<LogEvent> _logEvents = new();
 
-    public ToolOptionsLoggerTest()
+    public ToolTasksLoggerTest()
     {
         var memorySink = new InMemorySink();
         Log.Logger = new LoggerConfiguration()
@@ -32,15 +30,12 @@ public class ToolOptionsLoggerTest
         _logEvents = memorySink.LogEvents;
     }
 
-    private class SimpleTool;
-
-    [Command(Type = typeof(SimpleTool))]
-    private class SimpleToolOptions : ToolOptions;
+    private class SimpleTasks : ToolTasks;
 
     [Fact]
     public void TestSimpleLogging()
     {
-        var logger = new SimpleToolOptions().GetLogger();
+        var logger = new SimpleTasks().GetLogger();
 
         logger.Invoke(OutputType.Std, "debug");
         logger.Invoke(OutputType.Err, "warning: some text");
@@ -54,15 +49,12 @@ public class ToolOptionsLoggerTest
 
     [LogLevelPattern(LogEventLevel.Warning, "^warning:")]
     [LogLevelPattern(LogEventLevel.Error, "^\\S* error:")]
-    private class RegexPatternsTool;
-
-    [Command(Type = typeof(RegexPatternsTool))]
-    private class RegexPatternsToolOptions : ToolOptions;
+    private class RegexPatternsTasks : ToolTasks;
 
     [Fact]
     public void TestRegexLogging()
     {
-        var logger = new RegexPatternsToolOptions().GetLogger();
+        var logger = new RegexPatternsTasks().GetLogger();
 
         logger.Invoke(OutputType.Std, "debug");
         logger.Invoke(OutputType.Err, "warning: some text");
@@ -80,15 +72,12 @@ public class ToolOptionsLoggerTest
 
     [LogErrorAsStandard]
     [LogLevelPattern(LogEventLevel.Warning, "^warning:")]
-    private class ErrorAsStandardTool;
-
-    [Command(Type = typeof(ErrorAsStandardTool))]
-    private class ErrorAsStandardToolOptions : ToolOptions;
+    private class ErrorAsStandardTasks : ToolTasks;
 
     [Fact]
     public void TestErrorAsStandardLogging()
     {
-        var logger = new ErrorAsStandardToolOptions().GetLogger();
+        var logger = new ErrorAsStandardTasks().GetLogger();
 
         logger.Invoke(OutputType.Err, "debug");
         logger.Invoke(OutputType.Err, "warning: some text");
@@ -102,15 +91,12 @@ public class ToolOptionsLoggerTest
 
     [LogErrorAsStandard]
     [DefaultLogLevel(LogEventLevel.Debug)]
-    private class DefaultLevelTool;
-
-    [Command(Type = typeof(DefaultLevelTool))]
-    private class DefaultLevelToolOptions : ToolOptions;
+    private class DefaultLevelTasks : ToolTasks;
 
     [Fact]
     public void TestDefaultLevelLogging()
     {
-        var logger = new DefaultLevelToolOptions().GetLogger();
+        var logger = new DefaultLevelTasks().GetLogger();
 
         logger.Invoke(OutputType.Err, "debug");
 

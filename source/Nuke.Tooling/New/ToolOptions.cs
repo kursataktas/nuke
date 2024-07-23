@@ -2,24 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Nuke.Common.Tooling;
+using Nuke.Common;
 
 namespace Nuke.Tooling;
 
-public interface IToolWithCustomToolPath
-{
-    abstract string GetToolPath(ToolOptions options);
-}
-
-public interface IToolOptionsWithCustomToolPath
-{
-    string GetToolPath();
-}
-
+// TODO: rename to TaskOptions
 [PublicAPI]
-public partial class ToolOptions : Options
+public abstract partial class ToolOptions : Options
 {
-    internal partial string GetToolPath();
+    internal static event EventHandler Created;
+
+    protected ToolOptions()
+    {
+        this.SetProcessEnvironmentVariables(EnvironmentInfo.Variables.ToDictionary(x => x.Key, object (x) => x.Value));
+        Created?.Invoke(this, EventArgs.Empty);
+    }
+
     internal partial IEnumerable<string> GetArguments();
-    internal partial Action<OutputType, string> GetLogger();
 }

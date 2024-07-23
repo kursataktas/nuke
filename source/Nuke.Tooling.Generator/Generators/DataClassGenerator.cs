@@ -9,6 +9,7 @@ using Nuke.CodeGeneration.Model;
 using Nuke.CodeGeneration.Writers;
 using Nuke.Common;
 using Nuke.Common.Utilities;
+using Nuke.Tooling;
 using Serilog;
 
 // ReSharper disable UnusedMethodReturnValue.Local
@@ -32,7 +33,7 @@ public static class DataClassGenerator
         }
 
         var writer = new DataClassWriter(dataClass, toolWriter);
-        var baseType = dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? "ToolSettings" : "ISettingsEntity");
+        var baseType = dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? "ToolOptions" : "Options");
 
         writer
             .WriteLine($"#region {dataClass.Name}")
@@ -41,6 +42,7 @@ public static class DataClassGenerator
             .WriteObsoleteAttributeWhenObsolete(dataClass)
             .WriteLine("[ExcludeFromCodeCoverage]")
             .WriteLine("[Serializable]")
+            .WriteLine($"[Command(Type = typeof({dataClass.Tool.GetClassName()}))]")
             .WriteLine($"public partial class {dataClass.Name} : {baseType}")
             .WriteBlock(w => w
                 .ForEach(dataClass.Properties, WritePropertyDeclaration))
@@ -82,13 +84,15 @@ public static class DataClassGenerator
         var type = GetPropertyType(property);
         var attributeArguments = new (string Name, string Value)[]
         {
-            (nameof(property.Format), property.Format?.DoubleQuote()),
-        }.Where(x => x.Item2 != null);
+            (nameof(ArgumentAttribute.Format), property.Format?.DoubleQuote()),
+            (nameof(ArgumentAttribute.Secret), property.Secret?.ToString().ToLowerInvariant()),
+            (nameof(ArgumentAttribute.ListSeparator), property.Separator?.ToString().DoubleQuote()),
+        }.Where(x => x.Item2 != null)
+        .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();
 
         writer
-            .WriteSummary(property)
-            .WriteLine($"[Argument({attributeArguments.Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace()}")
-            .WriteLine($"public virtual {type.External} {property.Name} => Get<{type.Internal}>(() => {property.Name})");
+            .WriteLine($"/// <summary>{property.Help}</summary>")
+            .WriteLine($"[Argument({attributeArguments})] public {type.External} {property.Name} => Get<{type.Internal}>(() => {property.Name});");
     }
 
     private static (string External, string Internal) GetPropertyType(Property property)

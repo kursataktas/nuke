@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nuke.CodeGeneration.Model;
 using Nuke.CodeGeneration.Writers;
+using Nuke.Common.Utilities;
 using Serilog;
 
 namespace Nuke.CodeGeneration.Generators;
@@ -51,9 +52,7 @@ public static class WriterExtensions
         lines.AddRange(GetArgumentsList(task.SettingsClass));
 
         return writerWrapper
-            .WriteLine("/// <remarks>")
-            .ForEachWriteLine(lines.Select(x => $"///   {x}"))
-            .WriteLine("/// </remarks>");
+            .WriteLine($"/// <remarks>{lines.Join(string.Empty)}</remarks>");
     }
 
     private static IEnumerable<string> GetArgumentsList(SettingsClass settingsClass)
@@ -85,12 +84,6 @@ public static class WriterExtensions
             yield return $"  <li><c>{pair.Argument}</c> via {pair.Property.ToSeeCref()}</li>";
 
         yield return "</ul>";
-    }
-
-    public static T WriteSummary<T>(this T writerWrapper, Property property)
-        where T : IWriterWrapper
-    {
-        return writerWrapper.WriteSummary(property.Help);
     }
 
     public static T WriteSummary<T>(this T writerWrapper, DataClass dataClass)
@@ -131,10 +124,7 @@ public static class WriterExtensions
         if (lines.Length == 0)
             return writerWrapper;
 
-        writerWrapper
-            .WriteLine("/// <summary>")
-            .ForEachWriteLine(lines.Select(x => $"///   {x}"))
-            .WriteLine("/// </summary>");
+        writerWrapper.WriteLine($"/// <summary>{lines.Join(string.Empty)}</summary>");
 
         return writerWrapper;
     }

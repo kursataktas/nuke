@@ -6,13 +6,45 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 
 namespace Nuke.Tooling;
+
+public class CommandAttribute : Attribute
+{
+    public Type Type { get; set; }
+    public string Command { get; set; }
+    public string Arguments { get; set; }
+}
+
+public class ArgumentEscapeAttribute : Attribute
+{
+    public Type Type { get; set; }
+    public string Method { get; set; }
+}
+
+public class ArgumentAttribute : Attribute
+{
+    public int Position { get; set; }
+    public string Format { get; set; }
+    public string AlternativeFormat { get; set; }
+    public bool Secret { get; set; }
+
+    public Type FormatterType { get; set; }
+    public string FormatterMethod { get; set; }
+
+    public string ListSeparator { get; set; }
+    public string PairSeparator { get; set; }
+}
+
+public class BuilderAttribute : Attribute
+{
+    public Type Type { get; set; }
+    public string Property { get; set; }
+}
 
 partial class ToolOptions
 {
@@ -21,13 +53,7 @@ partial class ToolOptions
 
     internal partial IEnumerable<string> GetArguments()
     {
-        var optionsType = GetType();
-        var commandAttribute = optionsType.GetCustomAttribute<CommandAttribute>();
-        var toolAttribute = commandAttribute?.Type.GetCustomAttribute<ToolAttribute>();
-
-        if (toolAttribute?.Arguments != null)
-            yield return toolAttribute.Arguments;
-
+        var commandAttribute = GetType().GetCustomAttribute<CommandAttribute>();
         if (commandAttribute?.Arguments != null)
             yield return commandAttribute.Arguments;
 
@@ -46,11 +72,13 @@ partial class ToolOptions
 
         Func<string, PropertyInfo, string> CreateEscape()
         {
-            if (toolAttribute?.EscapeMethod == null)
+            var toolType = commandAttribute?.Type;
+            var escapeAttribute = toolType?.GetCustomAttribute<ArgumentEscapeAttribute>();
+            if (escapeAttribute == null)
                 return (x, _) => x.DoubleQuoteIfNeeded();
 
-            var formatterType = toolAttribute.EscapeType ?? GetType();
-            var formatterMethod = formatterType.GetMethod(toolAttribute.EscapeMethod, ReflectionUtility.All);
+            var escapeType = escapeAttribute.Type ?? GetType();
+            var formatterMethod = escapeType.GetMethod(escapeAttribute.Method, ReflectionUtility.All);
             return (value, property) => formatterMethod.GetValue<string>(obj: this, args: [value, property]);
         }
     }
@@ -172,8 +200,6 @@ partial class ToolOptions
             var valueType = property.PropertyType.GetGenericArguments().Last();
             var pairs = token.Value<JObject>().Properties()
                 .Select(x => (Key: x.Name, Values: x.Value.Value<JArray>().Select(x => Parse(x, valueType))));
-
-
 
             return [];
         }

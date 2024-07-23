@@ -36,233 +36,263 @@ public static class DataClassExtensionGenerator
             return;
 
         writer.WriteLine($"#region {property.Name}");
+        var access = $"o.{property.Name}";
 
         if (!property.IsList() && !property.IsDictionary() && !property.IsLookupTable())
         {
+            var attributes = property.Secret ?? false ? "[Secret] " : string.Empty;
             writer
-                .WriteSummaryExtension($"Sets {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
                 .WriteMethod(
-                    $"Set{property.Name}",
                     property,
-                    $"toolSettings.{property.Name} = {property.Name.ToInstance().EscapeParameter()};")
-                .WriteSummaryExtension($"Resets {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
+                    name: $"Set{property.Name}",
+                    additionalParameters: [$"{attributes}{property.GetNullableType()} v"],
+                    modification: $"Set(() => {access}, v)")
                 .WriteMethod(
-                    $"Reset{property.Name}",
-                    $"toolSettings.{property.Name} = null;");
+                    property,
+                    name: $"Reset{property.Name}",
+                    additionalParameters: [],
+                    modification: $"Remove(() => {access})");
         }
 
+        // bool
         if (property.IsBoolean())
-            WriteBooleanExtensions(writer, property);
-        else if (property.IsList())
-            WriteListExtensions(writer, property);
-        else if (property.IsDictionary())
-            WriteDictionaryExtensions(writer, property);
-        else if (property.IsLookupTable())
-            WriteLookupExtensions(writer, property);
+        {
+            writer
+                // Enable
+                .WriteMethod(
+                    property,
+                    name: $"Enable{property.Name}",
+                    additionalParameters: [],
+                    modification: $"Set(() => {access}, true)")
+                // Disable
+                .WriteMethod(
+                    property,
+                    name: $"Disable{property.Name}",
+                    additionalParameters: [],
+                    modification: $"Set(() => {access}, false)")
+                // Toggle
+                .WriteMethod(
+                    property,
+                    name: $"Toggle{property.Name}",
+                    additionalParameters: [],
+                    modification: $"Set(() => {access}, !{access})");
+        }
+
+        // List<T>
+        if (property.IsList())
+        {
+            var valueType = property.GetListValueType();
+            writer
+                // Set
+                .WriteMethod(
+                    property,
+                    name: $"Set{property.Name}",
+                    additionalParameters: [$"params {valueType}[] v"],
+                    modification: $"Set(() => {access}, v)")
+                .WriteMethod(
+                    property,
+                    name: $"Set{property.Name}",
+                    additionalParameters: [$"IEnumerable<{valueType}> v"],
+                    modification: $"Set(() => {access}, v)")
+                // Add
+                .WriteMethod(
+                    property,
+                    name: $"Add{property.Name}",
+                    additionalParameters: [$"params {valueType}[] v"],
+                    modification: $"AddCollection(() => {access}, v)")
+                .WriteMethod(
+                    property,
+                    name: $"Add{property.Name}",
+                    additionalParameters: [$"IEnumerable<{valueType}> v"],
+                    modification: $"AddCollection(() => {access}, v)")
+                .When(property.HasCustomListType(), _ => _
+                    .WriteMethod(
+                        property,
+                        name: $"Add{property.Name}",
+                        additionalParameters: [$"Configure<{valueType}> v"],
+                        modification: $"AddCollection(() => {access}, v.InvokeSafe(new()))"))
+                // Remove
+                .WriteMethod(
+                    property,
+                    name: $"Remove{property.Name}",
+                    additionalParameters: [$"params {valueType}[] v"],
+                    modification: $"RemoveCollection(() => {access}, v)")
+                .WriteMethod(
+                    property,
+                    name: $"Remove{property.Name}",
+                    additionalParameters: [$"IEnumerable<{valueType}> v"],
+                    modification: $"RemoveCollection(() => {access}, v)")
+                // Clear
+                .WriteMethod(
+                    property,
+                    name: $"Clear{property.Name}",
+                    additionalParameters: [],
+                    modification: $"ClearCollection(() => {access})");
+        }
+
+        // Dictionary<TKey, TValue>
+        if (property.IsDictionary())
+        {
+            if (!property.OnlyDelegates)
+            {
+                var (keyType, valueType) = property.GetDictionaryKeyValueTypes();
+                var propertySingular = property.Name.ToSingular();
+
+                writer
+                    // Set
+                    .WriteMethod(
+                        property,
+                        name: $"Set{property.Name}",
+                        additionalParameters: [$"IDictionary<{keyType}, {valueType}> v"],
+                        modification: $"Set(() => {access}, v.ToDictionary(x => x.Key, x => x.Value, {property.GetKeyComparer()}))")
+                    // Set item
+                    .WriteMethod(
+                        property,
+                        name: $"Set{propertySingular}",
+                        additionalParameters: [$"{keyType} k", $"{valueType} v"],
+                        modification: $"SetDictionary(() => {access}, k, v)")
+                    // Add
+                    .WriteMethod(
+                        property,
+                        name: $"Add{propertySingular}",
+                        additionalParameters: [$"{keyType} k", $"{valueType} v"],
+                        modification: $"AddDictionary(() => {access}, k, v)")
+                    // Remove
+                    .WriteMethod(
+                        property,
+                        name: $"Remove{propertySingular}",
+                        additionalParameters: [$"{keyType} k"],
+                        modification: $"RemoveDictionary(() => {access}, k)")
+                    // Clear
+                    .WriteMethod(
+                        property,
+                        name: $"Clear{property.Name}",
+                        additionalParameters: [],
+                        modification: $"ClearDictionary(() => {access})");
+            }
+
+            // dictionary["well-known-key"]
+            property.Delegates.ForEach(WriteDelegateProperty);
+        }
+
+        // else if (property.IsLookupTable())
+        //     WriteLookupExtensions(writer, property);
 
         writer.WriteLine("#endregion");
-    }
+        return;
 
-    private static void WriteBooleanExtensions(DataClassWriter writer, Property property)
-    {
-        var propertyAccess = $"toolSettings.{property.Name}";
-
-        writer
-            .WriteSummaryExtension($"Enables {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Enable{property.Name}", $"{propertyAccess} = true;")
-            .WriteSummaryExtension($"Disables {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Disable{property.Name}", $"{propertyAccess} = false;")
-            .WriteSummaryExtension($"Toggles {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Toggle{property.Name}", $"{propertyAccess} = !{propertyAccess};");
-
-        // TODO [4]: negate for 'skip', 'no', 'disable'
-    }
-
-    private static void WriteListExtensions(DataClassWriter writer, Property property)
-    {
-        var propertyInternal = $"{property.Name}Internal";
-        var propertyInstance = property.Name.ToInstance().EscapeParameter();
-        var valueType = property.GetListValueType();
-        var propertyAccess = $"toolSettings.{propertyInternal}";
-
-        writer
-            .WriteSummaryExtension($"Sets {property.GetCrefTag()} to a new list", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Set{property.Name}",
-                $"params {valueType}[] {propertyInstance}",
-                $"{propertyAccess} = {propertyInstance}.ToList();")
-            .WriteSummaryExtension($"Sets {property.GetCrefTag()} to a new list", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Set{property.Name}",
-                $"IEnumerable<{valueType}> {propertyInstance}",
-                $"{propertyAccess} = {propertyInstance}.ToList();")
-            .WriteSummaryExtension($"Adds values to {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Add{property.Name}",
-                $"params {valueType}[] {propertyInstance}",
-                $"{propertyAccess}.AddRange({propertyInstance});")
-            .When(property.HasCustomListType(), _ => _
-                .WriteSummaryExtension($"Adds a value to {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Add{property.Name.ToSingular()}",
-                    $"Configure<{valueType}> configurator",
-                    $"{propertyAccess}.Add(configurator.InvokeSafe(new {valueType}()));"))
-            .WriteSummaryExtension($"Adds values to {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Add{property.Name}",
-                $"IEnumerable<{valueType}> {propertyInstance}",
-                $"{propertyAccess}.AddRange({propertyInstance});")
-            .WriteSummaryExtension($"Clears {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Clear{property.Name}",
-                $"{propertyAccess}.Clear();")
-            //.WriteSummaryExtension($"Adds a single {propertySingularInstance} to {property.GetCrefTag()}", property)
-            //.WriteListAddMethod(propertySingular, propertySingularInstanceEscaped, valueType, propertyInternal)
-            .WriteSummaryExtension($"Removes values from {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Remove{property.Name}",
-                $"params {valueType}[] {propertyInstance}",
-                $"var hashSet = new HashSet<{valueType}>({propertyInstance});",
-                $"{propertyAccess}.RemoveAll(x => hashSet.Contains(x));")
-            .WriteSummaryExtension($"Removes values from {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Remove{property.Name}",
-                $"IEnumerable<{valueType}> {propertyInstance}",
-                $"var hashSet = new HashSet<{valueType}>({propertyInstance});",
-                $"{propertyAccess}.RemoveAll(x => hashSet.Contains(x));");
-    }
-
-    private static void WriteDictionaryExtensions(DataClassWriter writer, Property property)
-    {
-        if (!property.OnlyDelegates)
+        void WriteDelegateProperty(Property delegateProperty)
         {
-            var propertyInstance = property.Name.ToInstance().EscapeParameter();
-            var (keyType, valueType) = property.GetDictionaryKeyValueTypes();
-            var propertySingular = property.Name.ToSingular();
-            var propertySingularInstance = property.Name.ToSingular().ToInstance();
-            var keyInstance = $"{propertySingularInstance}Key";
-            var valueInstance = $"{propertySingularInstance}Value";
-            var propertyAccess = $"toolSettings.{property.Name}Internal";
+            writer.WriteLine($"#region {delegateProperty.Name}");
+            var keyValue = delegateProperty.Name.DoubleQuote();
 
-            writer
-                .WriteSummaryExtension($"Sets {property.GetCrefTag()} to a new dictionary", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Set{property.Name}",
-                    $"IDictionary<{keyType}, {valueType}> {propertyInstance}",
-                    $"{propertyAccess} = {propertyInstance}.ToDictionary(x => x.Key, x => x.Value, {property.GetKeyComparer()});")
-                .WriteSummaryExtension($"Clears {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Clear{property.Name}",
-                    $"{propertyAccess}.Clear();")
-                .WriteSummaryExtension($"Adds a new key-value-pair {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Add{propertySingular}",
-                    new[] { $"{keyType} {keyInstance}", $"{valueType} {valueInstance}" },
-                    $"{propertyAccess}.Add({keyInstance}, {valueInstance});")
-                .WriteSummaryExtension($"Removes a key-value-pair from {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Remove{propertySingular}",
-                    $"{keyType} {keyInstance}",
-                    $"{propertyAccess}.Remove({keyInstance});")
-                .WriteSummaryExtension($"Sets a key-value-pair in {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Set{propertySingular}",
-                    new[] { $"{keyType} {keyInstance}", $"{valueType} {valueInstance}" },
-                    $"{propertyAccess}[{keyInstance}] = {valueInstance};");
+            if (!delegateProperty.IsList())
+            {
+                writer
+                    .WriteMethod(
+                        property,
+                        name: $"Set{delegateProperty.Name}",
+                        additionalParameters: [$"{delegateProperty.GetNullableType()} v"],
+                        modification: $"SetDictionary(() => {access}, {keyValue}, v)",
+                        delegateProperty.Help)
+                    .WriteMethod(
+                        property,
+                        name: $"Reset{delegateProperty.Name}",
+                        additionalParameters: [],
+                        modification: $"RemoveDictionary(() => {access}, {keyValue})",
+                        delegateProperty.Help);
+            }
+
+            // bool
+            if (delegateProperty.IsBoolean())
+            {
+                writer
+                    // Enable
+                    .WriteMethod(
+                        property,
+                        name: $"Enable{delegateProperty.Name}",
+                        additionalParameters: [],
+                        modification: $"SetDictionary(() => {access}, {keyValue}, true)",
+                        delegateProperty.Help)
+                    // Disable
+                    .WriteMethod(
+                        property,
+                        name: $"Disable{delegateProperty.Name}",
+                        additionalParameters: [],
+                        modification: $"SetDictionary(() => {access}, {keyValue}, false)",
+                        delegateProperty.Help)
+                    // Toggle
+                    .WriteMethod(
+                        property,
+                        name: $"Toggle{delegateProperty.Name}",
+                        additionalParameters: [],
+                        modification: $"Set(() => {access}, DelegateHelper.Toggle({access}, {keyValue}))",
+                        delegateProperty.Help);
+            }
+
+            // List<T>
+            if (delegateProperty.IsList())
+            {
+                var valueType = delegateProperty.GetListValueType();
+                var propertyPlural = delegateProperty.Name.ToPlural();
+                var separator = delegateProperty.Separator.ToString().DoubleQuote();
+
+                writer
+                    // Set
+                    .WriteMethod(
+                        property,
+                        name: $"Set{propertyPlural}",
+                        additionalParameters: [$"params {valueType}[] v"],
+                        modification: $"Set(() => {access}, DelegateHelper.SetCollection({access}, {keyValue}, v, {separator}))",
+                        delegateProperty.Help)
+                    .WriteMethod(
+                        property,
+                        name: $"Set{propertyPlural}",
+                        additionalParameters: [$"IEnumerable<{valueType}> v"],
+                        modification: $"Set(() => {access}, DelegateHelper.SetCollection({access}, {keyValue}, v, {separator}))",
+                        delegateProperty.Help)
+                    // Add
+                    .WriteMethod(
+                        property,
+                        name: $"Add{propertyPlural}",
+                        additionalParameters: [$"params {valueType}[] v"],
+                        modification: $"Set(() => {access}, DelegateHelper.AddCollection({access}, {keyValue}, v, {separator}))",
+                        delegateProperty.Help)
+                    .WriteMethod(
+                        property,
+                        name: $"Add{propertyPlural}",
+                        additionalParameters: [$"IEnumerable<{valueType}> v"],
+                        modification: $"Set(() => {access}, DelegateHelper.AddCollection({access}, {keyValue}, v, {separator}))",
+                        delegateProperty.Help)
+                    // Remove
+                    .WriteMethod(
+                        property,
+                        name: $"Remove{propertyPlural}",
+                        additionalParameters: [$"params {valueType}[] v"],
+                        modification: $"Set(() => {access}, DelegateHelper.RemoveCollection({access}, {keyValue}, v, {separator}))",
+                        delegateProperty.Help)
+                    .WriteMethod(
+                        property,
+                        name: $"Remove{propertyPlural}",
+                        additionalParameters: [$"IEnumerable<{valueType}> v"],
+                        modification: $"Set(() => {access}, DelegateHelper.RemoveCollection({access}, {keyValue}, v, {separator}))",
+                        delegateProperty.Help)
+                    // Clear
+                    .WriteMethod(
+                        property,
+                        name: $"Reset{delegateProperty.Name}",
+                        additionalParameters: [],
+                        modification: $"RemoveDictionary(() => {access}, {keyValue})",
+                        delegateProperty.Help);
+            }
+
+            writer.WriteLine("#endregion");
         }
-
-        writer.ForEach(property.Delegates, x => WriteDictionaryDelegateExtensions(writer, property, x));
     }
 
     private static void WriteDictionaryDelegateExtensions(DataClassWriter writer, Property property, Property delegateProperty)
     {
-        writer.WriteLine($"#region {delegateProperty.Name}");
 
-        var propertyAccess = $"toolSettings.{property.Name}Internal";
-        var reference = $"<c>{delegateProperty.Name}</c>";
-
-        string GetModification(string newValue) => $"{propertyAccess}[{delegateProperty.Name.DoubleQuote()}] = {newValue};";
-
-        if (!delegateProperty.IsList())
-        {
-            writer
-                .WriteSummaryExtension($"Sets {reference} in {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod(
-                    $"Set{delegateProperty.Name}",
-                    delegateProperty,
-                    GetModification(delegateProperty.Name.ToInstance()))
-                .WriteSummaryExtension($"Resets {reference} in {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod(
-                    $"Reset{delegateProperty.Name}",
-                    $"{propertyAccess}.Remove({delegateProperty.Name.DoubleQuote()});");
-        }
-
-        if (delegateProperty.IsBoolean())
-        {
-            writer
-                .WriteSummaryExtension($"Enables {reference} in {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Enable{delegateProperty.Name}", GetModification("true"))
-                .WriteSummaryExtension($"Disables {reference} in {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Disable{delegateProperty.Name}", GetModification("false"))
-                .WriteSummaryExtension($"Toggles {reference} in {property.GetCrefTag()}", property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Toggle{delegateProperty.Name}",
-                    $"ExtensionHelper.ToggleBoolean({propertyAccess}, {delegateProperty.Name.DoubleQuote()});");
-        }
-
-        if (delegateProperty.IsList())
-        {
-            var propertyInstance = delegateProperty.Name.ToInstance();
-            var valueType = delegateProperty.GetListValueType();
-            var propertyPlural = delegateProperty.Name.ToPlural();
-
-            writer
-                .WriteSummaryExtension($"Sets {reference} in {property.GetCrefTag()} to a new collection", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Set{propertyPlural}",
-                    $"params {valueType}[] {propertyInstance}",
-                    $"ExtensionHelper.SetCollection({propertyAccess}, {delegateProperty.Name.DoubleQuote()}, {propertyInstance}, {delegateProperty.Separator.SingleQuote()});")
-                .WriteSummaryExtension($"Sets {reference} in {property.GetCrefTag()} to a new collection", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Set{propertyPlural}",
-                    $"IEnumerable<{valueType}> {propertyInstance}",
-                    $"ExtensionHelper.SetCollection({propertyAccess}, {delegateProperty.Name.DoubleQuote()}, {propertyInstance}, {delegateProperty.Separator.SingleQuote()});")
-                .WriteSummaryExtension($"Adds values to {reference} in {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Add{propertyPlural}",
-                    $"params {valueType}[] {propertyInstance}",
-                    $"ExtensionHelper.AddItems({propertyAccess}, {delegateProperty.Name.DoubleQuote()}, {propertyInstance}, {delegateProperty.Separator.SingleQuote()});")
-                .WriteSummaryExtension($"Adds values to {reference} in existing {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Add{propertyPlural}",
-                    $"IEnumerable<{valueType}> {propertyInstance}",
-                    $"ExtensionHelper.AddItems({propertyAccess}, {delegateProperty.Name.DoubleQuote()}, {propertyInstance}, {delegateProperty.Separator.SingleQuote()});")
-                .WriteSummaryExtension($"Clears {reference} in {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Clear{propertyPlural}",
-                    $"{propertyAccess}.Remove({delegateProperty.Name.DoubleQuote()});")
-                .WriteSummaryExtension($"Removes values from {reference} in {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Remove{propertyPlural}",
-                    $"params {valueType}[] {propertyInstance}",
-                    $"ExtensionHelper.RemoveItems({propertyAccess}, {delegateProperty.Name.DoubleQuote()}, {propertyInstance}, {delegateProperty.Separator.SingleQuote()});")
-                .WriteSummaryExtension($"Removes values from {reference} in {property.GetCrefTag()}", delegateProperty, property)
-                .WriteObsoleteAttributeWhenObsolete(property)
-                .WriteMethod($"Remove{propertyPlural}",
-                    $"IEnumerable<{valueType}> {propertyInstance}",
-                    $"ExtensionHelper.RemoveItems({propertyAccess}, {delegateProperty.Name.DoubleQuote()}, {propertyInstance}, {delegateProperty.Separator.SingleQuote()});");
-        }
-
-        writer.WriteLine("#endregion");
     }
 
     private static void WriteLookupExtensions(DataClassWriter writer, Property property)
@@ -345,5 +375,25 @@ public static class DataClassExtensionGenerator
                 .WriteLine("toolSettings = toolSettings.NewInstance();")
                 .ForEachWriteLine(modifications)
                 .WriteLine("return toolSettings;"));
+    }
+
+    private static DataClassWriter WriteMethod(
+        this DataClassWriter writer,
+        Property property,
+        string name,
+        string[] additionalParameters,
+        string modification,
+        string help = null)
+    {
+        var builder = $"[Builder(Type = typeof({writer.DataClass.Name}), Property = nameof({writer.DataClass.Name}.{property.Name}))]";
+        var parameters = new[] { "this T o" }.Concat(additionalParameters);
+        var signature = $"public static T {name}<T>({parameters.JoinCommaSpace()}) where T : {writer.DataClass.Name}";
+        var implementation = $"o.Modify(b => b.{modification})";
+        return writer
+            .WriteLineIfTrue(help == null, $"/// <inheritdoc cref=\"{writer.DataClass.Name}.{property.Name}\"/>")
+            .WriteLineIfTrue(help != null, $"/// <summary>{help}</summary>")
+            .WriteLine($"[Pure] {builder}")
+            .WriteObsoleteAttributeWhenObsolete(property)
+            .WriteLine($"{signature} => {implementation};");
     }
 }

@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using Newtonsoft.Json;
 using Nuke.Common.Utilities.Collections;
 using Nuke.Tooling;
 using Xunit;
@@ -45,13 +44,10 @@ public class ToolOptionsArgumentsTest
     [Fact]
     public void TestImplicit()
     {
-        Assert<ImplicitToolOptions>(new { String = "value" }, ["first", "second", "--string", "value"]);
+        Assert<ImplicitToolOptions>(new { String = "value" }, ["implicit argument", "--string", "value"]);
     }
 
-    [NuGetTool(Arguments = "first")]
-    private class ImplicitTool;
-
-    [Command(Type = typeof(ImplicitTool), Arguments = "second")]
+    [Command(Arguments = "implicit argument")]
     private class ImplicitToolOptions : ToolOptions
     {
         [Argument(Format = "--string {value}")] public string String => Get<string>(() => String);
@@ -176,12 +172,12 @@ public class ToolOptionsArgumentsTest
     [Fact]
     public void TestLookup()
     {
-        var lookup = new LookupTable<string, object> { ["key1"] = new object[] { 1, 2 }, ["key2"] = new object[] { true, false } };
+        var lookup = new LookupTable<string, object> { ["key1"] = [1, 2,], ["key2"] = [true, false,] };
         Assert<LookupToolOptions>(new { SimpleLookup = lookup }, ["--param", "key1=1,2", "key2=true,false"]);
         Assert<LookupToolOptions>(new { Simple2Lookup = lookup }, ["--param", "key1", "1,2", "key2", "true,false"]);
     }
 
-    private void Assert<T>(object obj, params string[] arguments)
+    private void Assert<T>(object obj, string[] arguments)
         where T : ToolOptions, new()
     {
         var options = new T();

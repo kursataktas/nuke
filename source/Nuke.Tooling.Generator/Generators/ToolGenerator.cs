@@ -68,6 +68,7 @@ public static class ToolGenerator
                    "Nuke.Common.Tooling",
                    "Nuke.Common.Tools",
                    "Nuke.Common.Utilities.Collections",
+                   "Nuke.Tooling",
                    "System",
                    "System.Collections.Generic",
                    "System.Collections.ObjectModel",

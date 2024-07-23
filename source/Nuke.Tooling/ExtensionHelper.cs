@@ -57,3 +57,55 @@ public static class ExtensionHelper
         return collection.Select(x => x.ToString()).Join(separator);
     }
 }
+
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+public static class ExtensionHelper2
+{
+    public static IDictionary<string, object> Toggle(IReadOnlyDictionary<string, object> dictionary, string key)
+    {
+        var newDictionary = dictionary.ToDictionary(x => x.Key, x => x.Value);
+        newDictionary[key] = !dictionary.ContainsKey(key) || !Convert<bool>(dictionary[key].ToString());
+        return newDictionary;
+    }
+
+    public static IDictionary<string, object> SetCollection<TValue>(IReadOnlyDictionary<string, object> dictionary, string key, IEnumerable<TValue> values, string separator)
+    {
+        var newDictionary = dictionary.ToDictionary(x => x.Key, x => x.Value);
+        var collectionAsString = CollectionToString(values, separator);
+        if (!string.IsNullOrWhiteSpace(collectionAsString))
+            newDictionary[key] = collectionAsString;
+        return newDictionary;
+    }
+
+    public static IDictionary<string, object> AddItems<TValue>(IReadOnlyDictionary<string, object> dictionary, string key, IEnumerable<TValue> values, string separator)
+    {
+        var newDictionary = dictionary.ToDictionary(x => x.Key, x => x.Value);
+        var collection = ParseCollection<TValue>(dictionary, key, separator);
+        collection.AddRange(values);
+        newDictionary[key] = CollectionToString(collection, separator);
+        return newDictionary;
+    }
+
+    public static IDictionary<string, object> RemoveItems<TValue>(IReadOnlyDictionary<string, object> dictionary, string key, IEnumerable<TValue> values, string separator)
+    {
+        var newDictionary = dictionary.ToDictionary(x => x.Key, x => x.Value);
+        var valueHashSet = new HashSet<TValue>(values);
+        var collection = ParseCollection<TValue>(dictionary, key, separator);
+        collection.RemoveAll(x => valueHashSet.Contains(x));
+        newDictionary[key] = CollectionToString(collection, separator);
+        return newDictionary;
+    }
+
+    private static List<TValue> ParseCollection<TValue>(IReadOnlyDictionary<string, object> dictionary, string key, string separator)
+    {
+        return (dictionary.TryGetValue(key, out var value)
+                ? ((string)value).Split([separator], StringSplitOptions.RemoveEmptyEntries)
+                : new string[0])
+            .Select(Convert<TValue>).ToList();
+    }
+
+    private static string CollectionToString<T>(IEnumerable<T> collection, string separator)
+    {
+        return collection.Select(x => x.ToString()).Join(separator);
+    }
+}
