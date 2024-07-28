@@ -23,6 +23,7 @@ public class LogLevelPattern(LogEventLevel level, [RegexPattern] string pattern)
     public string Pattern { get; } = pattern;
 }
 
+[AttributeUsage(AttributeTargets.Class)]
 public class DefaultLogLevel(LogEventLevel level) : Attribute
 {
     public LogEventLevel Level { get; } = level;

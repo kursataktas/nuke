@@ -23,7 +23,7 @@ public class ToolTasksToolPathTest
     public void TestFromAttribute()
     {
         new SimpleTool()
-            .GetToolPath()
+            .GetToolPathInternal()
             .Should().EndWith("xunit.console.exe");
     }
 
@@ -31,7 +31,7 @@ public class ToolTasksToolPathTest
     public void TestFromOptions()
     {
         new SimpleTool()
-            .GetToolPath(new SimpleToolPathToolOptions()
+            .GetToolPathInternal(new SimpleToolPathToolOptions()
                 .SetProcessToolPath("/some/path"))
             .Should().EndWith("/some/path");
     }
@@ -40,7 +40,7 @@ public class ToolTasksToolPathTest
     public void TestFromOverride()
     {
         new CustomToolPathTool()
-            .GetToolPath()
+            .GetToolPathInternal()
             .Should().Be(nameof(CustomToolPathTool));
     }
 }

@@ -8,17 +8,8 @@ using Nuke.Common.Utilities;
 
 namespace Nuke.Tooling;
 
-public class CustomConverter : JsonConverter
+public class CustomConverter(Type type, string name) : JsonConverter
 {
-    private readonly Type _type;
-    private readonly string _name;
-
-    public CustomConverter(Type type, string name)
-    {
-        _type = type;
-        _name = name;
-    }
-
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         var rootProperty = GetRootMember(value.GetType());
@@ -40,12 +31,12 @@ public class CustomConverter : JsonConverter
     public override bool CanConvert(Type objectType)
     {
         return objectType.IsGenericType
-            ? objectType.GetGenericTypeDefinition() == _type
-            : objectType.IsAssignableTo(_type);
+            ? objectType.GetGenericTypeDefinition() == type
+            : objectType.IsAssignableTo(type);
     }
 
     private MemberInfo GetRootMember(Type objectType)
     {
-        return objectType.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic).First(x => x.Name == _name);
+        return objectType.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic).First(x => x.Name == name);
     }
 }

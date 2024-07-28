@@ -19,7 +19,7 @@ public abstract class ToolAttribute : Attribute
 
 public abstract partial class ToolTasks
 {
-    protected internal virtual partial string GetToolPath(ToolOptions options = null)
+    internal string GetToolPathInternal(ToolOptions options = null)
     {
         if (options?.ProcessToolPath != null)
             return options.ProcessToolPath;
@@ -29,6 +29,12 @@ public abstract partial class ToolTasks
         if (ToolPathResolver.TryGetEnvironmentExecutable(environmentVariable) is { } environmentExecutable)
             return environmentExecutable;
 
+        return GetToolPath();
+    }
+
+    protected virtual partial string GetToolPath(ToolOptions options = null)
+    {
+        var toolType = GetType();
         return toolType.GetCustomAttribute<ToolAttribute>().NotNull().GetToolPath(options);
     }
 }
@@ -46,6 +52,7 @@ public class PathToolAttribute : ToolAttribute
 public class NuGetToolAttribute : ToolAttribute
 {
     public string Id { get; set; }
+    public string Executable { get; set; }
     public string FrameworkProperty { get; set; }
 
     internal override string GetToolPath(ToolOptions options)

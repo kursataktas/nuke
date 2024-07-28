@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Nuke.Common.Utilities;
 
 namespace Nuke.Tooling;
 
+[PublicAPI]
 public static class DelegateHelper
 {
     public static IDictionary<string, object> Toggle(IReadOnlyDictionary<string, object> dictionary, string key)
