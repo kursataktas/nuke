@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using Serilog.Events;
+// ReSharper disable ArrangeMethodOrOperatorBody
 
 namespace Nuke.Tooling;
 
@@ -24,14 +25,16 @@ partial class ToolOptions
     /// <summary><p>Defines the execution timeout of the invoked process.</p></summary>
     public int? ProcessExecutionTimeout => Get<int?>(() => ProcessExecutionTimeout);
 
-    /// <summary><p>Defines the log-level for standard output.</p></summary>
-    public LogEventLevel? ProcessOutputLogging => Get<LogEventLevel?>(() => ProcessOutputLogging);
+    /// <summary><p>Defines whether to log output.</p></summary>
+    public bool? ProcessOutputLogging => Get<bool?>(() => ProcessOutputLogging);
 
-    /// <summary><p>Defines the log-level for the process invocation.</p></summary>
-    public LogEventLevel? ProcessInvocationLogging => Get<LogEventLevel?>(() => ProcessInvocationLogging);
+    /// <summary><p>Defines whether to log the invocation.</p></summary>
+    public bool? ProcessInvocationLogging => Get<bool?>(() => ProcessInvocationLogging);
 
     /// <summary><p>Defines whether to handle the process on exit.</p></summary>
     public bool? ProcessExitHandling => Get<bool?>(() => ProcessExitHandling);
+
+    public IReadOnlyList<string> ProcessRedactedSecrets => Get<List<string>>(() => ProcessRedactedSecrets);
 }
 
 [PublicAPI]
@@ -109,6 +112,10 @@ public static partial class ToolOptionsExtensions
 
     /// <inheritdoc cref="ToolOptions.ProcessExecutionTimeout"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExecutionTimeout))]
+    public static T SetProcessExecutionTimeout<T>(this T o, TimeSpan value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExecutionTimeout, value.TotalMilliseconds));
+
+    /// <inheritdoc cref="ToolOptions.ProcessExecutionTimeout"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExecutionTimeout))]
     public static T ResetProcessExecutionTimeout<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessExecutionTimeout));
 
     #endregion
@@ -117,15 +124,19 @@ public static partial class ToolOptionsExtensions
 
     /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
-    public static T SetProcessOutputLogging<T>(this T o, LogEventLevel? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessOutputLogging, value));
+    public static T SetProcessOutputLogging<T>(this T o, bool? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessOutputLogging, value));
+
+    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
+    public static T EnableProcessOutputLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessOutputLogging, value: true));
+
+    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
+    public static T DisableProcessOutputLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessOutputLogging, value: false));
 
     /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
     public static T ResetProcessOutputLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessOutputLogging));
-
-    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
-    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
-    public static T DisableProcessOutputLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessOutputLogging));
 
     #endregion
 
@@ -133,15 +144,19 @@ public static partial class ToolOptionsExtensions
 
     /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
-    public static T SetProcessInvocationLogging<T>(this T o, LogEventLevel? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessInvocationLogging, value));
+    public static T SetProcessInvocationLogging<T>(this T o, bool? value) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessInvocationLogging, value));
+
+    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
+    public static T EnableProcessInvocationLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessInvocationLogging, value: true));
+
+    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
+    public static T DisableProcessInvocationLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessInvocationLogging, value: false));
 
     /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
     public static T ResetProcessInvocationLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessInvocationLogging));
-
-    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
-    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
-    public static T DisableProcessInvocationLogging<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessInvocationLogging));
 
     #endregion
 
@@ -153,11 +168,11 @@ public static partial class ToolOptionsExtensions
 
     /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
-    public static T EnableProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, true));
+    public static T EnableProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, value: true));
 
     /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
-    public static T DisableProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, false));
+    public static T DisableProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessExitHandling, value: false));
 
     /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
@@ -166,20 +181,6 @@ public static partial class ToolOptionsExtensions
     /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
     public static T ResetProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessExitHandling));
-
-    #endregion
-
-    #region DropIn Extensions
-
-    /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
-    [Obsolete($"Use {nameof(DisableProcessOutputLogging)} instead")]
-    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]
-    public static T DisableProcessLogOutput<T>(this T o) where T : ToolOptions => o.DisableProcessOutputLogging();
-
-    /// <inheritdoc cref="ToolOptions.ProcessInvocationLogging"/>
-    [Obsolete($"Use {nameof(DisableProcessInvocationLogging)} instead")]
-    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessInvocationLogging))]
-    public static T SetProcessLogInvocation<T>(this T o) where T : ToolOptions => o.DisableProcessInvocationLogging();
 
     #endregion
 }

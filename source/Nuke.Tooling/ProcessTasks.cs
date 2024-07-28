@@ -12,6 +12,7 @@ using System.Text;
 using JetBrains.Annotations;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
+using Nuke.Tooling;
 using Serilog;
 using Serilog.Events;
 
@@ -66,6 +67,57 @@ public static class ProcessTasks
             toolSettings.ProcessLogger,
             arguments.FilterSecrets);
     }
+
+    public static IProcess StartProcess(ToolOptions toolOptions)
+    {
+        var secrets = toolOptions.GetSecrets().ToList();
+        return StartProcess2(
+            toolOptions.ProcessToolPath,
+            toolOptions.GetArguments().JoinSpace(),
+            toolOptions.ProcessWorkingDirectory,
+            toolOptions.ProcessEnvironmentVariables.ToDictionary(x => x.Key, x => (string)x.Value),
+            toolOptions.ProcessExecutionTimeout,
+            logOutput: true,
+            logInvocation: true,
+            toolOptions.GetLogger(),
+            x => secrets.Aggregate(x, (str, s) => str.Replace(s, "[REDACTED]")));
+    }
+
+    public static IProcess StartProcess2(
+        string toolPath,
+        string arguments = null,
+        string workingDirectory = null,
+        IReadOnlyDictionary<string, string> environmentVariables = null,
+        int? timeout = null,
+        bool? logOutput = null,
+        bool? logInvocation = null,
+        Action<OutputType, string> logger = null,
+        Func<string, string> outputFilter = null)
+    {
+        Assert.True(toolPath != null);
+        if (!Path.IsPathRooted(toolPath) && !toolPath.Contains(Path.DirectorySeparatorChar))
+            toolPath = ToolPathResolver.GetPathExecutable(toolPath);
+
+        var toolPathOverride = GetToolPathOverride(toolPath);
+        if (!string.IsNullOrEmpty(toolPathOverride))
+        {
+            arguments = $"{toolPath.DoubleQuoteIfNeeded()} {arguments}".TrimEnd();
+            toolPath = toolPathOverride;
+        }
+
+        return StartProcessInternal(
+            toolPath,
+            arguments ?? string.Empty,
+            workingDirectory ?? DefaultWorkingDirectory,
+            environmentVariables,
+            timeout,
+            logInvocation ?? DefaultLogInvocation,
+            logOutput ?? DefaultLogOutput
+                ? logger ?? DefaultLogger
+                : null,
+            outputFilter ?? (x => x));
+    }
+
 
 #if NET6_0_OR_GREATER
 

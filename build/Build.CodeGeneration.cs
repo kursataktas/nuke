@@ -31,7 +31,7 @@ partial class Build
     Target GenerateTools => _ => _
         .Executes(() =>
         {
-            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name.Contains("DotNet")).ForEach(x =>
+            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name != "foo").ForEach(x =>
                 GenerateCode(
                     x,
                     namespaceProvider: x => $"Nuke.Common.Tools.{x.Name}",

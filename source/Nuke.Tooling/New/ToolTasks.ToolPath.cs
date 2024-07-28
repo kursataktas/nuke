@@ -45,8 +45,7 @@ public class PathToolAttribute : ToolAttribute
 
 public class NuGetToolAttribute : ToolAttribute
 {
-    public string Executable { get; set; }
-    public string PackageId { get; set; }
+    public string Id { get; set; }
     public string FrameworkProperty { get; set; }
 
     internal override string GetToolPath(ToolOptions options)
@@ -54,6 +53,6 @@ public class NuGetToolAttribute : ToolAttribute
         var framework = FrameworkProperty != null
             ? options.GetType().GetProperty(FrameworkProperty)?.GetValue<string>(options)
             : null;
-        return NuGetToolPathResolver.GetPackageExecutable(PackageId, Executable, framework);
+        return NuGetToolPathResolver.GetPackageExecutable(Id, Executable, framework);
     }
 }

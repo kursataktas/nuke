@@ -34,11 +34,15 @@ public class ToolOptionsArgumentsTest
     public void TestString()
     {
         Assert<StringToolOptions>(new { String = "value" }, ["--string", "value",]);
+
+        var options = SetInternalOptions<StringToolOptions>(new { Secret = "secret-value" });
+        options.GetSecrets().Should().Equal("secret-value");
     }
 
     private class StringToolOptions : ToolOptions
     {
         [Argument(Format = "--string {value}")] public string String => Get<string>(() => String);
+        [Argument(Format = "--secret {value}", Secret = true)] public string Secret => Get<string>(() => Secret);
     }
 
     [Fact]
@@ -180,8 +184,15 @@ public class ToolOptionsArgumentsTest
     private void Assert<T>(object obj, string[] arguments)
         where T : ToolOptions, new()
     {
+        var options = SetInternalOptions<T>(obj);
+        options.GetArguments().Should().Equal(arguments);
+    }
+
+    private static T SetInternalOptions<T>(object obj)
+        where T : ToolOptions, new()
+    {
         var options = new T();
         options.InternalOptions = obj.ToJObject(Options.JsonSerializer);
-        options.GetArguments().Should().Equal(arguments);
+        return options;
     }
 }

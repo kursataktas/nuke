@@ -45,13 +45,13 @@ public class ToolTasksToolPathTest
     }
 }
 
-[NuGetTool(PackageId = "xunit.runner.console", Executable = "xunit.console.exe")]
+[NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.exe")]
 file class SimpleTool : ToolTasks;
 
 [Command(Type = typeof(SimpleTool))]
 file class SimpleToolPathToolOptions : ToolOptions;
 
-[NuGetTool(PackageId = "xunit.runner.console", Executable = "xunit.console.exe")]
+[NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.exe")]
 file class CustomToolPathTool : ToolTasks
 {
     protected internal override string GetToolPath(ToolOptions options = null) => nameof(CustomToolPathTool);

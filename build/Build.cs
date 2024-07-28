@@ -21,6 +21,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Components;
+using Nuke.Tooling;
 using static Nuke.Common.ControlFlow;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.ReSharper.ReSharperTasks;
@@ -56,6 +57,8 @@ partial class Build
         {
             DotNet(
                 $"");
+
+            DotNetRestore(new DotNetRestoreSettings());
         });
 
     [CI] readonly TeamCity TeamCity;

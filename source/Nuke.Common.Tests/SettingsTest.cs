@@ -13,6 +13,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities;
+using Nuke.Tooling;
 using Xunit;
 
 namespace Nuke.Common.Tests;
@@ -34,18 +35,11 @@ public class SettingsTest
         var settings = new DotNetRunSettings()
             .SetProcessToolPath("/path/to/dotnet")
             .SetProcessEnvironmentVariable("key", "value")
-            .SetProcessExecutionTimeout(TimeSpan.FromMilliseconds(1_000))
-            .SetProcessArgumentConfigurator(_ => _
-                .Add("/switch"))
-            .SetProcessLogger((type, str) => logEntry = (type, str))
-            .EnableProcessLogInvocation();
-        settings.ProcessLogger.Invoke(OutputType.Err, "text");
+            .SetProcessExecutionTimeout(TimeSpan.FromMilliseconds(1_000));
 
         settings.ProcessToolPath.Should().Be("/path/to/dotnet");
         settings.ProcessEnvironmentVariables.Should().ContainSingle(x => x.Key == "key" && x.Value == "value");
         settings.ProcessExecutionTimeout.Should().Be(1_000);
-        settings.ProcessArgumentConfigurator.Invoke(new Arguments()).RenderForOutput().Should().Be("/switch");
-        logEntry.Should().Be((OutputType.Err, "text"));
     }
 
     [Fact]

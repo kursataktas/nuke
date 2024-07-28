@@ -35,6 +35,7 @@ public static class DataClassGenerator
         var writer = new DataClassWriter(dataClass, toolWriter);
         var baseType = dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? "ToolOptions" : "Options");
 
+
         writer
             .WriteLine($"#region {dataClass.Name}")
             .WriteSummary(dataClass)
@@ -42,11 +43,26 @@ public static class DataClassGenerator
             .WriteObsoleteAttributeWhenObsolete(dataClass)
             .WriteLine("[ExcludeFromCodeCoverage]")
             .WriteLine("[Serializable]")
-            .WriteLine($"[Command(Type = typeof({dataClass.Tool.GetClassName()}))]")
+            .WriteLine(GetCommandAttribute())
             .WriteLine($"public partial class {dataClass.Name} : {baseType}")
             .WriteBlock(w => w
                 .ForEach(dataClass.Properties, WritePropertyDeclaration))
             .WriteLine("#endregion");
+
+        string GetCommandAttribute()
+        {
+            if (dataClass is not SettingsClass settingsClass)
+                return null;
+
+            var commandArguments = new (string Name, string Value)[]
+                {
+                    (nameof(CommandAttribute.Type), $"typeof({dataClass.Tool.GetClassName()})"),
+                    (nameof(CommandAttribute.Command), $"nameof({dataClass.Tool.GetClassName()}.{settingsClass.Task.GetTaskMethodName()})"),
+                    (nameof(CommandAttribute.Arguments), $"{settingsClass.Task.DefiniteArgument.DoubleQuote()}"),
+                }.Where(x => x.Item2 != null)
+                .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();
+            return $"[Command({commandArguments})]";
+        }
     }
 
     private static void CheckMissingValue(Property property)
