@@ -11,6 +11,7 @@ using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Tools.Xunit;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.CorFlags;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities;
 using Nuke.Tooling;
@@ -101,5 +102,15 @@ public class SettingsTest
                 .AddFilters("+[*]*", "-[xunit.*]*", "-[NUnit.*]*")
                 .SetTargetArguments("-diagnostics -HTML \"new folder\\data.xml\""),
             $"-target:{projectFile.ToString().DoubleQuoteIfNeeded()} -targetargs:\"-diagnostics -HTML \\\"new folder\\data.xml\\\"\" -filter:\"+[*]* -[xunit.*]* -[NUnit.*]*\"");
+    }
+
+    [Fact]
+    public void TestCorFlags()
+    {
+        Assert2<CorFlagsSettings>(x => x
+                .SetAssembly("assembly")
+                .EnablePrefer32Bit()
+                .DisableILOnly(),
+            "assembly -32BITPREF+ -ILONLY-");
     }
 }

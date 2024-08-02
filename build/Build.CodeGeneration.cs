@@ -33,22 +33,10 @@ partial class Build
         .Executes(() =>
         {
             SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name.ContainsAnyOrdinalIgnoreCase([
-                    "WebConfig",
-                    "VSTest",
-                    "TestCloud",
-                    "StaticWebApps",
-                    "Squirrel",
-                    "SpecFlow",
-                    "Sonar",
-                    "SignTool",
-                    "SignClient",
-                    "ReportGenerator",
-                    "Pwsh",
-                    "PowerShell",
-                    "Pulumi",
-                    "Paket",
-                    "OpenCover",
-                    "MSpec",
+                    "NuGet",
+                    "Npm",
+                    "MauiCheck",
+                    "Netlify",
                 ])).ForEach(x =>
                 GenerateCode(
                     x,

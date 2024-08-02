@@ -43,22 +43,22 @@
             "name": "ILOnly",
             "type": "bool",
             "format": "-ILONLY{value}",
-            "customValue": true,
-            "help": "Sets/clears the ILONLY flag."
+            "help": "Sets/clears the ILONLY flag.",
+            "formatter": "FormatBoolean"
           },
           {
             "name": "Require32Bit",
             "type": "bool",
             "format": "-32BIT{value}",
-            "customValue": true,
-            "help": "Sets/clears the 32BITREQUIRED flag."
+            "help": "Sets/clears the 32BITREQUIRED flag.",
+            "formatter": "FormatBoolean"
           },
           {
             "name": "Prefer32Bit",
             "type": "bool",
             "format": "-32BITPREF{value}",
-            "customValue": true,
-            "help": "Sets/clears the 32BITPREFERRED flag."
+            "help": "Sets/clears the 32BITPREFERRED flag.",
+            "formatter": "FormatBoolean"
           }
         ]
       }

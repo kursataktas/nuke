@@ -86,4 +86,6 @@ public class Property : IDeprecatable
     public bool OnlyDelegates { get; set; }
 
     public bool IsTailArgument { get; set; }
+
+    public string Formatter { get; set; }
 }

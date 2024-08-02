@@ -103,6 +103,7 @@ public static class DataClassGenerator
             (nameof(ArgumentAttribute.Format), property.Format?.DoubleQuote()),
             (nameof(ArgumentAttribute.Secret), property.Secret?.ToString().ToLowerInvariant()),
             (nameof(ArgumentAttribute.ListSeparator), property.Separator?.ToString().DoubleQuote()),
+            (nameof(ArgumentAttribute.FormatterMethod), property.Formatter?.Apply(x => $"nameof({x})")),
         }.Where(x => x.Item2 != null)
         .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();
 
