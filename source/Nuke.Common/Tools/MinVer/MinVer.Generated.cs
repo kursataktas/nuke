@@ -1,11 +1,11 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/MinVer/MinVer.json
-
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools;
 using Nuke.Common.Utilities.Collections;
+using Nuke.Tooling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,323 +14,147 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 namespace Nuke.Common.Tools.MinVer;
-
-/// <summary>
-///   <p>Minimalistic versioning using Git tags.</p>
-///   <p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p>
-/// </summary>
+/// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[NuGetPackageRequirement(MinVerPackageId)]
-public partial class MinVerTasks
-    : IRequireNuGetPackage
+[NuGetPackageRequirement(PackageId)]
+[NuGetTool(Id = PackageId)]
+public partial class MinVerTasks : ToolTasks
 {
-    public const string MinVerPackageId = "minver-cli";
-    /// <summary>
-    ///   Path to the MinVer executable.
-    /// </summary>
-    public static string MinVerPath =>
-        ToolPathResolver.TryGetEnvironmentExecutable("MINVER_EXE") ??
-        GetToolPath();
-    public static Action<OutputType, string> MinVerLogger { get; set; } = ProcessTasks.DefaultLogger;
-    public static Action<ToolSettings, IProcess> MinVerExitHandler { get; set; } = ProcessTasks.DefaultExitHandler;
-    /// <summary>
-    ///   <p>Minimalistic versioning using Git tags.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p>
-    /// </summary>
-    public static IReadOnlyCollection<Output> MinVer(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Action<IProcess> exitHandler = null)
-    {
-        using var process = ProcessTasks.StartProcess(MinVerPath, arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger ?? MinVerLogger);
-        (exitHandler ?? (p => MinVerExitHandler.Invoke(null, p))).Invoke(process.AssertWaitForExit());
-        return process.Output;
-    }
-    /// <summary>
-    ///   <p>Minimalistic versioning using Git tags.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p>
-    /// </summary>
-    /// <remarks>
-    ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
-    ///   <ul>
-    ///     <li><c>--auto-increment</c> via <see cref="MinVerSettings.AutoIncrement"/></li>
-    ///     <li><c>--build-metadata</c> via <see cref="MinVerSettings.BuildMetadata"/></li>
-    ///     <li><c>--default-pre-release-phase</c> via <see cref="MinVerSettings.DefaultPreReleasePhase"/></li>
-    ///     <li><c>--minimum-major-minor</c> via <see cref="MinVerSettings.MinimumMajorMinor"/></li>
-    ///     <li><c>--tag-prefix</c> via <see cref="MinVerSettings.TagPrefix"/></li>
-    ///     <li><c>--verbosity</c> via <see cref="MinVerSettings.Verbosity"/></li>
-    ///   </ul>
-    /// </remarks>
-    public static (MinVer Result, IReadOnlyCollection<Output> Output) MinVer(MinVerSettings toolSettings = null)
-    {
-        toolSettings = toolSettings ?? new MinVerSettings();
-        using var process = ProcessTasks.StartProcess(toolSettings);
-        toolSettings.ProcessExitHandler.Invoke(toolSettings, process.AssertWaitForExit());
-        return (GetResult(process, toolSettings), process.Output);
-    }
-    /// <summary>
-    ///   <p>Minimalistic versioning using Git tags.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p>
-    /// </summary>
-    /// <remarks>
-    ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
-    ///   <ul>
-    ///     <li><c>--auto-increment</c> via <see cref="MinVerSettings.AutoIncrement"/></li>
-    ///     <li><c>--build-metadata</c> via <see cref="MinVerSettings.BuildMetadata"/></li>
-    ///     <li><c>--default-pre-release-phase</c> via <see cref="MinVerSettings.DefaultPreReleasePhase"/></li>
-    ///     <li><c>--minimum-major-minor</c> via <see cref="MinVerSettings.MinimumMajorMinor"/></li>
-    ///     <li><c>--tag-prefix</c> via <see cref="MinVerSettings.TagPrefix"/></li>
-    ///     <li><c>--verbosity</c> via <see cref="MinVerSettings.Verbosity"/></li>
-    ///   </ul>
-    /// </remarks>
-    public static (MinVer Result, IReadOnlyCollection<Output> Output) MinVer(Configure<MinVerSettings> configurator)
-    {
-        return MinVer(configurator(new MinVerSettings()));
-    }
-    /// <summary>
-    ///   <p>Minimalistic versioning using Git tags.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p>
-    /// </summary>
-    /// <remarks>
-    ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
-    ///   <ul>
-    ///     <li><c>--auto-increment</c> via <see cref="MinVerSettings.AutoIncrement"/></li>
-    ///     <li><c>--build-metadata</c> via <see cref="MinVerSettings.BuildMetadata"/></li>
-    ///     <li><c>--default-pre-release-phase</c> via <see cref="MinVerSettings.DefaultPreReleasePhase"/></li>
-    ///     <li><c>--minimum-major-minor</c> via <see cref="MinVerSettings.MinimumMajorMinor"/></li>
-    ///     <li><c>--tag-prefix</c> via <see cref="MinVerSettings.TagPrefix"/></li>
-    ///     <li><c>--verbosity</c> via <see cref="MinVerSettings.Verbosity"/></li>
-    ///   </ul>
-    /// </remarks>
-    public static IEnumerable<(MinVerSettings Settings, MinVer Result, IReadOnlyCollection<Output> Output)> MinVer(CombinatorialConfigure<MinVerSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
-    {
-        return configurator.Invoke(MinVer, MinVerLogger, degreeOfParallelism, completeOnFailure);
-    }
+    public static string MinVerPath => new MinVerTasks().GetToolPath();
+    public const string PackageId = "minver-cli";
+    /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
+    public static IReadOnlyCollection<Output> MinVer(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<MinVerTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
+    /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul>  <li><c>--auto-increment</c> via <see cref="MinVerSettings.AutoIncrement"/></li>  <li><c>--build-metadata</c> via <see cref="MinVerSettings.BuildMetadata"/></li>  <li><c>--default-pre-release-phase</c> via <see cref="MinVerSettings.DefaultPreReleasePhase"/></li>  <li><c>--minimum-major-minor</c> via <see cref="MinVerSettings.MinimumMajorMinor"/></li>  <li><c>--tag-prefix</c> via <see cref="MinVerSettings.TagPrefix"/></li>  <li><c>--verbosity</c> via <see cref="MinVerSettings.Verbosity"/></li></ul></remarks>
+    public static (MinVer Result, IReadOnlyCollection<Output> Output) MinVer(MinVerSettings options = null) => Run<MinVerTasks, MinVer>(options);
+    /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul>  <li><c>--auto-increment</c> via <see cref="MinVerSettings.AutoIncrement"/></li>  <li><c>--build-metadata</c> via <see cref="MinVerSettings.BuildMetadata"/></li>  <li><c>--default-pre-release-phase</c> via <see cref="MinVerSettings.DefaultPreReleasePhase"/></li>  <li><c>--minimum-major-minor</c> via <see cref="MinVerSettings.MinimumMajorMinor"/></li>  <li><c>--tag-prefix</c> via <see cref="MinVerSettings.TagPrefix"/></li>  <li><c>--verbosity</c> via <see cref="MinVerSettings.Verbosity"/></li></ul></remarks>
+    public static (MinVer Result, IReadOnlyCollection<Output> Output) MinVer(Configure<MinVerSettings> configurator) => Run<MinVerTasks, MinVer>(configurator.Invoke(new MinVerSettings()));
+    /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul>  <li><c>--auto-increment</c> via <see cref="MinVerSettings.AutoIncrement"/></li>  <li><c>--build-metadata</c> via <see cref="MinVerSettings.BuildMetadata"/></li>  <li><c>--default-pre-release-phase</c> via <see cref="MinVerSettings.DefaultPreReleasePhase"/></li>  <li><c>--minimum-major-minor</c> via <see cref="MinVerSettings.MinimumMajorMinor"/></li>  <li><c>--tag-prefix</c> via <see cref="MinVerSettings.TagPrefix"/></li>  <li><c>--verbosity</c> via <see cref="MinVerSettings.Verbosity"/></li></ul></remarks>
+    public static IEnumerable<(MinVerSettings Settings, MinVer Result, IReadOnlyCollection<Output> Output)> MinVer(CombinatorialConfigure<MinVerSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke2(MinVer, degreeOfParallelism, completeOnFailure);
 }
 #region MinVerSettings
-/// <summary>
-///   Used within <see cref="MinVerTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Serializable]
-public partial class MinVerSettings : ToolSettings
+[Command(Type = typeof(MinVerTasks), Command = nameof(MinVerTasks.MinVer))]
+public partial class MinVerSettings : ToolOptions
 {
-    /// <summary>
-    ///   Path to the MinVer executable.
-    /// </summary>
-    public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
-    public override Action<OutputType, string> ProcessLogger => base.ProcessLogger ?? MinVerTasks.MinVerLogger;
-    public override Action<ToolSettings, IProcess> ProcessExitHandler => base.ProcessExitHandler ?? MinVerTasks.MinVerExitHandler;
-    public virtual MinVerVersionPart AutoIncrement { get; internal set; }
-    public virtual string BuildMetadata { get; internal set; }
-    public virtual string DefaultPreReleasePhase { get; internal set; }
-    public virtual string MinimumMajorMinor { get; internal set; }
-    public virtual string TagPrefix { get; internal set; }
-    public virtual MinVerVerbosity Verbosity { get; internal set; }
-    public virtual string Framework { get; internal set; }
-    protected override Arguments ConfigureProcessArguments(Arguments arguments)
-    {
-        arguments
-          .Add("--auto-increment {value}", AutoIncrement)
-          .Add("--build-metadata {value}", BuildMetadata)
-          .Add("--default-pre-release-phase {value}", DefaultPreReleasePhase)
-          .Add("--minimum-major-minor {value}", MinimumMajorMinor)
-          .Add("--tag-prefix {value}", TagPrefix)
-          .Add("--verbosity {value}", Verbosity);
-        return base.ConfigureProcessArguments(arguments);
-    }
+    /// <summary></summary>
+    [Argument(Format = "--auto-increment {value}")] public MinVerVersionPart AutoIncrement => Get<MinVerVersionPart>(() => AutoIncrement);
+    /// <summary></summary>
+    [Argument(Format = "--build-metadata {value}")] public string BuildMetadata => Get<string>(() => BuildMetadata);
+    /// <summary></summary>
+    [Argument(Format = "--default-pre-release-phase {value}")] public string DefaultPreReleasePhase => Get<string>(() => DefaultPreReleasePhase);
+    /// <summary></summary>
+    [Argument(Format = "--minimum-major-minor {value}")] public string MinimumMajorMinor => Get<string>(() => MinimumMajorMinor);
+    /// <summary></summary>
+    [Argument(Format = "--tag-prefix {value}")] public string TagPrefix => Get<string>(() => TagPrefix);
+    /// <summary></summary>
+    [Argument(Format = "--verbosity {value}")] public MinVerVerbosity Verbosity => Get<MinVerVerbosity>(() => Verbosity);
+    /// <summary></summary>
+    [Argument()] public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region MinVer
-/// <summary>
-///   Used within <see cref="MinVerTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Serializable]
-public partial class MinVer : ISettingsEntity
+public partial class MinVer : Options
 {
-    public virtual string MinVerVersion { get; internal set; }
-    public virtual string MinVerMajor { get; internal set; }
-    public virtual string MinVerMinor { get; internal set; }
-    public virtual string MinVerPatch { get; internal set; }
-    public virtual string MinVerPreRelease { get; internal set; }
-    public virtual string MinVerBuildMetadata { get; internal set; }
-    public virtual string AssemblyVersion { get; internal set; }
-    public virtual string FileVersion { get; internal set; }
-    public virtual string PackageVersion { get; internal set; }
-    public virtual string Version { get; internal set; }
+    /// <summary></summary>
+    [Argument()] public string MinVerVersion => Get<string>(() => MinVerVersion);
+    /// <summary></summary>
+    [Argument()] public string MinVerMajor => Get<string>(() => MinVerMajor);
+    /// <summary></summary>
+    [Argument()] public string MinVerMinor => Get<string>(() => MinVerMinor);
+    /// <summary></summary>
+    [Argument()] public string MinVerPatch => Get<string>(() => MinVerPatch);
+    /// <summary></summary>
+    [Argument()] public string MinVerPreRelease => Get<string>(() => MinVerPreRelease);
+    /// <summary></summary>
+    [Argument()] public string MinVerBuildMetadata => Get<string>(() => MinVerBuildMetadata);
+    /// <summary></summary>
+    [Argument()] public string AssemblyVersion => Get<string>(() => AssemblyVersion);
+    /// <summary></summary>
+    [Argument()] public string FileVersion => Get<string>(() => FileVersion);
+    /// <summary></summary>
+    [Argument()] public string PackageVersion => Get<string>(() => PackageVersion);
+    /// <summary></summary>
+    [Argument()] public string Version => Get<string>(() => Version);
 }
 #endregion
 #region MinVerSettingsExtensions
-/// <summary>
-///   Used within <see cref="MinVerTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class MinVerSettingsExtensions
 {
     #region AutoIncrement
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.AutoIncrement"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetAutoIncrement<T>(this T toolSettings, MinVerVersionPart autoIncrement) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AutoIncrement = autoIncrement;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.AutoIncrement"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetAutoIncrement<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AutoIncrement = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.AutoIncrement"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.AutoIncrement))]
+    public static T SetAutoIncrement<T>(this T o, MinVerVersionPart v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.AutoIncrement, v));
+    /// <inheritdoc cref="MinVerSettings.AutoIncrement"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.AutoIncrement))]
+    public static T ResetAutoIncrement<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.AutoIncrement));
     #endregion
     #region BuildMetadata
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.BuildMetadata"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetBuildMetadata<T>(this T toolSettings, string buildMetadata) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.BuildMetadata = buildMetadata;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.BuildMetadata"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetBuildMetadata<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.BuildMetadata = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.BuildMetadata"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.BuildMetadata))]
+    public static T SetBuildMetadata<T>(this T o, string v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.BuildMetadata, v));
+    /// <inheritdoc cref="MinVerSettings.BuildMetadata"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.BuildMetadata))]
+    public static T ResetBuildMetadata<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.BuildMetadata));
     #endregion
     #region DefaultPreReleasePhase
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.DefaultPreReleasePhase"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetDefaultPreReleasePhase<T>(this T toolSettings, string defaultPreReleasePhase) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefaultPreReleasePhase = defaultPreReleasePhase;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.DefaultPreReleasePhase"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetDefaultPreReleasePhase<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefaultPreReleasePhase = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.DefaultPreReleasePhase"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.DefaultPreReleasePhase))]
+    public static T SetDefaultPreReleasePhase<T>(this T o, string v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.DefaultPreReleasePhase, v));
+    /// <inheritdoc cref="MinVerSettings.DefaultPreReleasePhase"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.DefaultPreReleasePhase))]
+    public static T ResetDefaultPreReleasePhase<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.DefaultPreReleasePhase));
     #endregion
     #region MinimumMajorMinor
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.MinimumMajorMinor"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetMinimumMajorMinor<T>(this T toolSettings, string minimumMajorMinor) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.MinimumMajorMinor = minimumMajorMinor;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.MinimumMajorMinor"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetMinimumMajorMinor<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.MinimumMajorMinor = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.MinimumMajorMinor"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.MinimumMajorMinor))]
+    public static T SetMinimumMajorMinor<T>(this T o, string v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.MinimumMajorMinor, v));
+    /// <inheritdoc cref="MinVerSettings.MinimumMajorMinor"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.MinimumMajorMinor))]
+    public static T ResetMinimumMajorMinor<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.MinimumMajorMinor));
     #endregion
     #region TagPrefix
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.TagPrefix"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetTagPrefix<T>(this T toolSettings, string tagPrefix) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TagPrefix = tagPrefix;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.TagPrefix"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetTagPrefix<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TagPrefix = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.TagPrefix"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.TagPrefix))]
+    public static T SetTagPrefix<T>(this T o, string v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.TagPrefix, v));
+    /// <inheritdoc cref="MinVerSettings.TagPrefix"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.TagPrefix))]
+    public static T ResetTagPrefix<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.TagPrefix));
     #endregion
     #region Verbosity
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.Verbosity"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetVerbosity<T>(this T toolSettings, MinVerVerbosity verbosity) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Verbosity = verbosity;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.Verbosity"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetVerbosity<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Verbosity = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.Verbosity"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Verbosity))]
+    public static T SetVerbosity<T>(this T o, MinVerVerbosity v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.Verbosity, v));
+    /// <inheritdoc cref="MinVerSettings.Verbosity"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Verbosity))]
+    public static T ResetVerbosity<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.Verbosity));
     #endregion
     #region Framework
-    /// <summary>
-    ///   <p><em>Sets <see cref="MinVerSettings.Framework"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T SetFramework<T>(this T toolSettings, string framework) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Framework = framework;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="MinVerSettings.Framework"/></em></p>
-    /// </summary>
-    [Pure]
-    public static T ResetFramework<T>(this T toolSettings) where T : MinVerSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Framework = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="MinVerSettings.Framework"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Framework))]
+    public static T SetFramework<T>(this T o, string v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.Framework, v));
+    /// <inheritdoc cref="MinVerSettings.Framework"/>
+    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Framework))]
+    public static T ResetFramework<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion
 #region MinVerVerbosity
-/// <summary>
-///   Used within <see cref="MinVerTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -349,9 +173,7 @@ public partial class MinVerVerbosity : Enumeration
 }
 #endregion
 #region MinVerVersionPart
-/// <summary>
-///   Used within <see cref="MinVerTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [Serializable]
 [ExcludeFromCodeCoverage]

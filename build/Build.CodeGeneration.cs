@@ -33,7 +33,7 @@ partial class Build
         .Executes(() =>
         {
             SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name.ContainsAnyOrdinalIgnoreCase([
-                    "Octo",
+                    "Minver",
                 ])).ForEach(x =>
                 GenerateCode(
                     x,

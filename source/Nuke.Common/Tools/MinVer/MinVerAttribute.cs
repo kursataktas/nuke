@@ -11,6 +11,7 @@ using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Tooling;
 using Nuke.Common.ValueInjection;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.MinVer;
 
@@ -28,7 +29,7 @@ public class MinVerAttribute : ValueInjectionAttributeBase
     {
         var version = MinVerTasks.MinVer(s => s
                 .SetFramework(Framework)
-                .DisableProcessLogOutput())
+                .DisableProcessOutputLogging())
             .Result;
 
         if (UpdateBuildNumber)
