@@ -10,6 +10,7 @@ using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Tooling;
 using Nuke.Common.ValueInjection;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.NerdbankGitVersioning;
 
@@ -25,7 +26,7 @@ public class NerdbankGitVersioningAttribute : ValueInjectionAttributeBase
     public override object GetValue(MemberInfo member, object instance)
     {
         var version = NerdbankGitVersioningTasks.NerdbankGitVersioningGetVersion(s => s
-                .DisableProcessLogOutput()
+                .DisableProcessOutputLogging()
                 .SetFormat(NerdbankGitVersioningFormat.json))
             .Result;
 
