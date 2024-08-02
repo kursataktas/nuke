@@ -41,7 +41,7 @@ public partial class GitVersionTasks : ToolTasks
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Serializable]
-[Command(Type = typeof(GitVersionTasks), Command = nameof(GitVersionTasks.GitVersion), Arguments = "")]
+[Command(Type = typeof(GitVersionTasks), Command = nameof(GitVersionTasks.GitVersion))]
 public partial class GitVersionSettings : ToolOptions
 {
     /// <summary>The directory containing .git. If not defined current directory is used. (Must be first argument).</summary>
