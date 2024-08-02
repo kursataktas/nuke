@@ -24,7 +24,8 @@ public static class TaskGenerator
             .WriteLine("[PublicAPI]")
             .WriteLine("[ExcludeFromCodeCoverage]")
             .WriteLineIfTrue(tool.NuGetPackageId != null, "[NuGetPackageRequirement(PackageId)]")
-            .WriteLineIfTrue(tool.NuGetPackageId != null, "[NuGetTool(Id = PackageId)]")
+            .WriteLineIfTrue(tool.NuGetPackageId != null && tool.PackageExecutable == null, "[NuGetTool(Id = PackageId)]")
+            .WriteLineIfTrue(tool.NuGetPackageId != null && tool.PackageExecutable != null, "[NuGetTool(Id = PackageId, Executable = PackageExecutable)]")
             .WriteLineIfTrue(tool.NpmPackageId != null, "[NpmPackageRequirement(PackageId)]")
             .WriteLineIfTrue(tool.AptGetPackageId != null, "[AptGetPackageRequirement(PackageId)]")
             .WriteLineIfTrue(tool.PathExecutable != null, "[PathToolRequirement(PathExecutable)]")
@@ -60,7 +61,7 @@ public static class TaskGenerator
                              "bool? logOutput = null",
                              "bool? logInvocation = null",
                              "Action<OutputType, string> logger = null",
-                             "Action<IProcess> exitHandler = null"
+                             "Func<IProcess, object> exitHandler = null"
                          };
         var arguments = new[]
                         {

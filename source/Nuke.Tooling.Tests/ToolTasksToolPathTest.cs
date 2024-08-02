@@ -54,5 +54,5 @@ file class SimpleToolPathToolOptions : ToolOptions;
 [NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.exe")]
 file class CustomToolPathTool : ToolTasks
 {
-    protected internal override string GetToolPath(ToolOptions options = null) => nameof(CustomToolPathTool);
+    protected override string GetToolPath(ToolOptions options = null) => nameof(CustomToolPathTool);
 }

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.OctoVersion;
 
@@ -23,6 +24,24 @@ public partial class OctoVersionExecuteSettings
     private string GetProcessToolPath()
     {
         return OctoVersionTasks.GetToolPath(Framework);
+    }
+}
+
+partial class OctoVersionTasks2 : ToolTasks
+{
+    public const string PackageId = "foo";
+
+    protected override string GetToolPath(ToolOptions options = null)
+    {
+        var framework = (object)options switch
+        {
+            OctoVersionGetVersionSettings settings => settings.Framework,
+            OctoVersionExecuteSettings settings => settings.Framework,
+        };
+        return NuGetToolPathResolver.GetPackageExecutable(
+            packageId: PackageId,
+            packageExecutable: "OctoVersion.Tool.dll",
+            framework: framework);
     }
 }
 

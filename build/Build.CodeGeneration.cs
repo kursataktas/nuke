@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.GitHub;
+using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.CodeGeneration.CodeGenerator;
 using static Nuke.CodeGeneration.ReferenceUpdater;
@@ -31,7 +32,24 @@ partial class Build
     Target GenerateTools => _ => _
         .Executes(() =>
         {
-            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name != "foo").ForEach(x =>
+            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name.ContainsAnyOrdinalIgnoreCase([
+                    "WebConfig",
+                    "VSTest",
+                    "TestCloud",
+                    "StaticWebApps",
+                    "Squirrel",
+                    "SpecFlow",
+                    "Sonar",
+                    "SignTool",
+                    "SignClient",
+                    "ReportGenerator",
+                    "Pwsh",
+                    "PowerShell",
+                    "Pulumi",
+                    "Paket",
+                    "OpenCover",
+                    "MSpec",
+                ])).ForEach(x =>
                 GenerateCode(
                     x,
                     namespaceProvider: x => $"Nuke.Common.Tools.{x.Name}",

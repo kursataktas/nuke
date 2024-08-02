@@ -4,6 +4,7 @@
 
 using JetBrains.Annotations;
 using Nuke.Common.Tooling;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.ReportGenerator;
 
@@ -20,21 +21,14 @@ public class ReportGeneratorVerbosityMappingAttribute : VerbosityMappingAttribut
     }
 }
 
-partial class ReportGeneratorSettings
-{
-    private string GetProcessToolPath()
-    {
-        return ReportGeneratorTasks.GetToolPath(Framework);
-    }
-}
-
 partial class ReportGeneratorTasks
 {
-    internal static string GetToolPath(string framework = null)
+    protected override string GetToolPath(ToolOptions options = null)
     {
+        var reportGeneratorOptions = (ReportGeneratorSettings)options;
         return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: "ReportGenerator",
+            packageId: PackageId,
             packageExecutable: "ReportGenerator.dll|ReportGenerator.exe",
-            framework: framework);
+            framework: reportGeneratorOptions?.Framework);
     }
 }

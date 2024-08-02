@@ -36,18 +36,4 @@ partial class ToolOptions
         var toolInstance = commandAttribute.Type.CreateInstance<ToolTasks>();
         return toolInstance.GetLogger();
     }
-
-    internal partial IEnumerable<string> GetSecrets()
-    {
-        return (ProcessRedactedSecrets ?? [])
-            .Concat(InternalOptions.Properties()
-                .Select(x => (Token: x.Value, Property: GetType().GetProperty(x.Name).NotNull()))
-                .Select(x => (x.Token, x.Property, Attribute: x.Property.GetCustomAttribute<ArgumentAttribute>()))
-                .Where(x => x.Attribute?.Secret ?? false)
-                .Select(x =>
-                {
-                    Assert.True(x.Property.GetMemberType() == typeof(string));
-                    return x.Token.Value<string>();
-                }));
-    }
 }

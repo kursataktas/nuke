@@ -5,8 +5,23 @@
 using System;
 using System.Linq;
 using Nuke.Common.Tooling;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.MinVer;
+
+partial class MinVerTasks2 : ToolTasks
+{
+    public const string PackageId = "foo";
+
+    protected override string GetToolPath(ToolOptions options = null)
+    {
+        var minVerOptions = (MinVerSettings)(object)options;
+        return NuGetToolPathResolver.GetPackageExecutable(
+            packageId: PackageId,
+            packageExecutable: "minver-cli.dll",
+            framework: minVerOptions.Framework);
+    }
+}
 
 partial class MinVerTasks
 {

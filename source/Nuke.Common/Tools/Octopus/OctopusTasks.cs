@@ -3,6 +3,8 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.OctoVersion;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.Octopus;
 
@@ -43,6 +45,27 @@ public partial class OctopusDeployReleaseSettings
     private string GetProcessToolPath()
     {
         return OctopusTasks.GetToolPath(Framework);
+    }
+}
+
+partial class OctopusTasks2 : ToolTasks
+{
+    public const string PackageId = "foo";
+
+    protected override string GetToolPath(ToolOptions options = null)
+    {
+        var framework = (object)options switch
+        {
+            OctopusBuildInformationSettings settings => settings.Framework,
+            OctopusPackSettings settings => settings.Framework,
+            OctopusPushSettings settings => settings.Framework,
+            OctopusCreateReleaseSettings settings => settings.Framework,
+            OctopusDeployReleaseSettings settings => settings.Framework,
+        };
+        return NuGetToolPathResolver.GetPackageExecutable(
+            packageId: PackageId,
+            packageExecutable: "OctoVersion.Tool.dll",
+            framework: framework);
     }
 }
 

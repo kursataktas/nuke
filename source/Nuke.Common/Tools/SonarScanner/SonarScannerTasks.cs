@@ -3,36 +3,21 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using Nuke.Common.Tooling;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.SonarScanner;
 
-partial class SonarScannerBeginSettings
-{
-    private string GetProcessToolPath()
-    {
-        return SonarScannerTasks.GetToolPath(Framework);
-    }
-
-    private string GetVerbose()
-    {
-        return Verbose.ToString().ToLowerInvariant();
-    }
-}
-
-partial class SonarScannerEndSettings
-{
-    private string GetProcessToolPath()
-    {
-        return SonarScannerTasks.GetToolPath(Framework);
-    }
-}
-
 partial class SonarScannerTasks
 {
-    internal static string GetToolPath(string framework = null)
+    protected override string GetToolPath(ToolOptions options = null)
     {
+        var framework = options switch
+        {
+            SonarScannerBeginSettings settings => settings.Framework,
+            SonarScannerEndSettings settings => settings.Framework,
+        };
         return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: "dotnet-sonarscanner|MSBuild.SonarQube.Runner.Tool",
+            packageId: PackageId,
             packageExecutable: "SonarScanner.MSBuild.dll|SonarScanner.MSBuild.exe",
             framework: framework);
     }

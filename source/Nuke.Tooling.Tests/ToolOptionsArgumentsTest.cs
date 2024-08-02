@@ -181,7 +181,25 @@ public class ToolOptionsArgumentsTest
         Assert<LookupToolOptions>(new { Simple2Lookup = lookup }, ["--param", "key1", "1,2", "key2", "true,false"]);
     }
 
-    private void Assert<T>(object obj, string[] arguments)
+    [Fact]
+    public void TestAdditionalArguments()
+    {
+        var arguments = new[] { "first", "second" };
+        Assert<AdditionalArgumentsToolOptions>(
+            new
+            {
+                String = "value",
+                ProcessAdditionalArguments = arguments
+            },
+            new[] { "--string", "value" }.Concat(arguments));
+    }
+
+    private class AdditionalArgumentsToolOptions : ToolOptions
+    {
+        [Argument(Format = "--string {value}")] public string String => Get<string>(() => String);
+    }
+
+    private void Assert<T>(object obj, IEnumerable<string> arguments)
         where T : ToolOptions, new()
     {
         var options = SetInternalOptions<T>(obj);

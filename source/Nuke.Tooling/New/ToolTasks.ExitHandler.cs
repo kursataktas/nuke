@@ -10,14 +10,14 @@ namespace Nuke.Tooling;
 
 public abstract partial class ToolTasks
 {
-    internal Action<IProcess> GetExitHandlerInternal(ToolOptions options = null)
+    internal Func<IProcess, object> GetExitHandlerInternal(ToolOptions options = null)
     {
         return options?.ProcessExitHandling ?? true
             ? GetExitHandler(options)
-            : _ => { };
+            : _ => null;
     }
 
-    protected virtual partial Action<IProcess> GetExitHandler(ToolOptions options = null)
+    protected virtual partial Func<IProcess, object> GetExitHandler(ToolOptions options = null)
     {
         return x => x.AssertZeroExitCode();
     }

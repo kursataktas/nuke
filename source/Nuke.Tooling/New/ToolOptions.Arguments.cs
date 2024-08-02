@@ -65,7 +65,8 @@ partial class ToolOptions
             .OrderByDescending(x => x.Attribute.Position.CompareTo(0))
             .ThenBy(x => x.Attribute.Position)
             .SelectMany(x => GetArgument(x.Token, x.Property, x.Attribute, escapeMethod))
-            .WhereNotNull();
+            .WhereNotNull()
+            .Concat(ProcessAdditionalArguments ?? []);
 
         foreach (var argument in arguments)
             yield return argument;

@@ -11,6 +11,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Components;
+using Nuke.Tooling;
 using Octokit;
 using Serilog;
 using static Nuke.Common.ChangeLog.ChangelogTasks;
@@ -77,7 +78,7 @@ partial class Build
                 .SetUrl(RootDirectory)
                 .SetBranch(MasterBranch)
                 .EnableNoFetch()
-                .DisableProcessLogOutput()).Result;
+                .DisableProcessOutputLogging()).Result;
 
             if (!GitRepository.IsOnHotfixBranch())
                 Checkout($"{HotfixBranchPrefix}/{masterVersion.Major}.{masterVersion.Minor}.{masterVersion.Patch + 1}", start: MasterBranch);

@@ -13,28 +13,32 @@ namespace Nuke.Tooling;
 
 partial class ToolOptions
 {
-    /// <summary><p>Defines the path of the tool to be invoked. In most cases, the tool path is automatically resolved from the PATH environment variable or a NuGet package.</p></summary>
+    /// <summary>Defines the path of the tool to be invoked. In most cases, the tool path is automatically resolved from the PATH environment variable or a NuGet package.</summary>
     public string ProcessToolPath => Get<string>(() => ProcessToolPath);
 
-    /// <summary><p>Defines the working directory for the process.</p></summary>
+    /// <summary>Defines the working directory for the process.</summary>
     public string ProcessWorkingDirectory => Get<string>(() => ProcessWorkingDirectory);
 
-    /// <summary><p>Defines the environment variables to be passed to the process. By default, the environment variables of the current process are used.</p></summary>
+    /// <summary>Collection of environment variables to be passed to the process. By default, the environment variables of the current process are used.</summary>
     public IReadOnlyDictionary<string, object> ProcessEnvironmentVariables => Get<Dictionary<string, object>>(() => ProcessEnvironmentVariables);
 
-    /// <summary><p>Defines the execution timeout of the invoked process.</p></summary>
+    /// <summary>Defines the execution timeout of the invoked process.</summary>
     public int? ProcessExecutionTimeout => Get<int?>(() => ProcessExecutionTimeout);
 
-    /// <summary><p>Defines whether to log output.</p></summary>
+    /// <summary>Defines whether to log output.</summary>
     public bool? ProcessOutputLogging => Get<bool?>(() => ProcessOutputLogging);
 
-    /// <summary><p>Defines whether to log the invocation.</p></summary>
+    /// <summary>Defines whether to log the invocation.</summary>
     public bool? ProcessInvocationLogging => Get<bool?>(() => ProcessInvocationLogging);
 
-    /// <summary><p>Defines whether to handle the process on exit.</p></summary>
+    /// <summary>Defines whether to handle the process on exit.</summary>
     public bool? ProcessExitHandling => Get<bool?>(() => ProcessExitHandling);
 
+    /// <summary>Collection of secret values to be redacted from log output.</summary>
     public IReadOnlyList<string> ProcessRedactedSecrets => Get<List<string>>(() => ProcessRedactedSecrets);
+
+    /// <summary>Collection of additional arguments to append.</summary>
+    public IReadOnlyList<string> ProcessAdditionalArguments => Get<List<string>>(() => ProcessAdditionalArguments);
 }
 
 [PublicAPI]
@@ -181,6 +185,58 @@ public static partial class ToolOptionsExtensions
     /// <inheritdoc cref="ToolOptions.ProcessExitHandling"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessExitHandling))]
     public static T ResetProcessExitHandling<T>(this T o) where T : ToolOptions => o.Modify(b => b.Remove(() => o.ProcessExitHandling));
+
+    #endregion
+
+    #region ToolOptions.ProcessRedactedSecrets
+
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T SetProcessRedactedSecrets<T>(this T o, params string[] v) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessRedactedSecrets, v));
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T SetProcessRedactedSecrets<T>(this T o, IEnumerable<string> v) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessRedactedSecrets, v));
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T AddProcessRedactedSecrets<T>(this T o, params string[] v) where T : ToolOptions => o.Modify(b => b.AddCollection(() => o.ProcessRedactedSecrets, v));
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T AddProcessRedactedSecrets<T>(this T o, IEnumerable<string> v) where T : ToolOptions => o.Modify(b => b.AddCollection(() => o.ProcessRedactedSecrets, v));
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T RemoveProcessRedactedSecrets<T>(this T o, params string[] v) where T : ToolOptions => o.Modify(b => b.RemoveCollection(() => o.ProcessRedactedSecrets, v));
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T RemoveProcessRedactedSecrets<T>(this T o, IEnumerable<string> v) where T : ToolOptions => o.Modify(b => b.RemoveCollection(() => o.ProcessRedactedSecrets, v));
+    /// <inheritdoc cref="ToolOptions.ProcessRedactedSecrets"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessRedactedSecrets))]
+    public static T ClearProcessRedactedSecrets<T>(this T o) where T : ToolOptions => o.Modify(b => b.ClearCollection(() => o.ProcessRedactedSecrets));
+
+    #endregion
+
+    #region ToolOptions.ProcessAdditionalArguments
+
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T SetProcessAdditionalArguments<T>(this T o, params string[] v) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessAdditionalArguments, v));
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T SetProcessAdditionalArguments<T>(this T o, IEnumerable<string> v) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessAdditionalArguments, v));
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T AddProcessAdditionalArguments<T>(this T o, params string[] v) where T : ToolOptions => o.Modify(b => b.AddCollection(() => o.ProcessAdditionalArguments, v));
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T AddProcessAdditionalArguments<T>(this T o, IEnumerable<string> v) where T : ToolOptions => o.Modify(b => b.AddCollection(() => o.ProcessAdditionalArguments, v));
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T RemoveProcessAdditionalArguments<T>(this T o, params string[] v) where T : ToolOptions => o.Modify(b => b.RemoveCollection(() => o.ProcessAdditionalArguments, v));
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T RemoveProcessAdditionalArguments<T>(this T o, IEnumerable<string> v) where T : ToolOptions => o.Modify(b => b.RemoveCollection(() => o.ProcessAdditionalArguments, v));
+    /// <inheritdoc cref="ToolOptions.ProcessAdditionalArguments"/>
+    [Pure] [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessAdditionalArguments))]
+    public static T ClearProcessAdditionalArguments<T>(this T o) where T : ToolOptions => o.Modify(b => b.ClearCollection(() => o.ProcessAdditionalArguments));
 
     #endregion
 }

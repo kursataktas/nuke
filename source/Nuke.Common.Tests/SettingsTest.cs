@@ -28,6 +28,12 @@ public class SettingsTest
         configurator.Invoke(new T()).GetProcessArguments().RenderForOutput().Should().Be(arguments);
     }
 
+    private static void Assert2<T>(Configure<T> configurator, string arguments)
+        where T : ToolOptions, new()
+    {
+        configurator.Invoke(new T()).GetArguments().JoinSpace().Should().Be(arguments);
+    }
+
     [Fact]
     public void TestCommon()
     {

@@ -12,10 +12,42 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Unity.Logging;
 using Nuke.Common.Utilities;
+using Nuke.Tooling;
 using Nuke.Utilities.Text.Yaml;
 using Serilog;
 
 namespace Nuke.Common.Tools.Unity;
+
+public class UnityTasks2 : ToolTasks
+{
+    protected override string GetToolPath(ToolOptions options = null)
+    {
+        var unityOptions = (UnityBaseSettings)(object)options;
+        var programFiles = EnvironmentInfo.IsWin
+            ? EnvironmentInfo.SpecialFolder(EnvironmentInfo.Is32Bit ? SpecialFolders.ProgramFilesX86 : SpecialFolders.ProgramFiles)
+            : null;
+        return unityOptions.HubVersion switch
+        {
+            { } version => EnvironmentInfo.Platform switch
+            {
+                PlatformFamily.Windows => $@"{programFiles}\Unity\Hub\Editor\{version}\Editor\Unity.exe",
+                PlatformFamily.OSX => $"/Applications/Unity/Hub/Editor/{version}/Unity.app/Contents/MacOS/Unity",
+                _ => throw new Exception($"Cannot determine Unity Hub installation path for '{version}'.")
+            },
+            null => EnvironmentInfo.Platform switch
+            {
+                PlatformFamily.Windows => $@"{programFiles}\Unity\Editor\Unity.exe",
+                PlatformFamily.OSX => "/Applications/Unity/Unity.app/Contents/MacOS/Unity",
+                _ => null
+            }
+        };
+    }
+
+    protected override ToolOptions PreProcess(ToolOptions options)
+    {
+        return base.PreProcess(options);
+    }
+}
 
 public partial class UnityTasks
 {

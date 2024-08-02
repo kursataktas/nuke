@@ -3,6 +3,7 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Nuke.Common.Tooling;
@@ -17,8 +18,10 @@ public abstract partial class ToolTasks
     protected internal virtual partial Action<OutputType, string> GetLogger();
 
     protected virtual partial string GetToolPath(ToolOptions options = null);
-    protected virtual partial Action<IProcess> GetExitHandler(ToolOptions options = null);
+    protected virtual partial Func<IProcess, object> GetExitHandler(ToolOptions options = null);
 
     protected virtual ToolOptions PreProcess(ToolOptions options) => options;
     protected virtual void PostProcess(ToolOptions options) { }
+
+    protected virtual object GetResult<T>(ToolOptions options, IReadOnlyCollection<Output> output) => default;
 }

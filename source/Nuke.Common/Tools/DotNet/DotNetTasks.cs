@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using JetBrains.Annotations;
 using Nuke.Common.Tooling;
+using Nuke.Tooling;
 using Serilog;
 
 namespace Nuke.Common.Tools.DotNet;

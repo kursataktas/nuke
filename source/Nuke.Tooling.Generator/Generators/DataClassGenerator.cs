@@ -58,7 +58,7 @@ public static class DataClassGenerator
                 {
                     (nameof(CommandAttribute.Type), $"typeof({dataClass.Tool.GetClassName()})"),
                     (nameof(CommandAttribute.Command), $"nameof({dataClass.Tool.GetClassName()}.{settingsClass.Task.GetTaskMethodName()})"),
-                    (nameof(CommandAttribute.Arguments), $"{settingsClass.Task.DefiniteArgument.DoubleQuote()}"),
+                    (nameof(CommandAttribute.Arguments), settingsClass.Task.DefiniteArgument?.DoubleQuote()),
                 }.Where(x => x.Item2 != null)
                 .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();
             return $"[Command({commandArguments})]";

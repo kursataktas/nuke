@@ -27,19 +27,21 @@ partial class ToolTasks
             options.ProcessExecutionTimeout,
             options.ProcessOutputLogging,
             options.ProcessInvocationLogging,
-            options.GetLogger(),
+            tool.GetLogger(),
             text => secrets.Aggregate(text, (str, s) => str.Replace(s, "[REDACTED]")));
-        tool.PostProcess(options);
 
         tool.GetExitHandlerInternal().Invoke(process);
+        tool.PostProcess(options);
+
         return process.Output;
     }
 
-    protected static (T Result, IReadOnlyCollection<Output> Output) Run<T, TResult>(ToolOptions options)
+    protected static (TResult Result, IReadOnlyCollection<Output> Output) Run<T, TResult>(ToolOptions options)
         where T : ToolTasks, new()
     {
         var output = Run<T>(options);
-        return (Result: default, Output: output);
+        var result = new T().GetResult<TResult>(options, output);
+        return (Result: (TResult)result, Output: output);
     }
 
 #if NET6_0_OR_GREATER
@@ -52,7 +54,7 @@ partial class ToolTasks
         bool? logOutput = null,
         bool? logInvocation = null,
         Action<OutputType, string> logger = null,
-        Action<IProcess> exitHandler = null)
+        Func<IProcess, object> exitHandler = null)
         where T : ToolTasks, new()
     {
         var tool = new T();

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Nuke.Utilities.Text.Json\Nuke.Utilities.Text.Json.csproj" />
     <ProjectReference Include="..\Nuke.Utilities\Nuke.Utilities.csproj" />
   </ItemGroup>
 

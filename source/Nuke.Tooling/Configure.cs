@@ -140,7 +140,6 @@ public static class ConfigureExtensions
     public static IReadOnlyCollection<(TOptions Options, TResult Result, IReadOnlyCollection<Output> Output)> Invoke2<TOptions, TResult>(
         this CombinatorialConfigure<TOptions> configurator,
         Func<TOptions, (TResult Result, IReadOnlyCollection<Output> Output)> executor,
-        Action<OutputType, string> logger,
         int degreeOfParallelism,
         bool completeOnFailure)
         where TOptions : ToolOptions, new()

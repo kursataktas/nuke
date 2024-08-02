@@ -12,6 +12,7 @@ using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Git;
 using Nuke.Common.Tooling;
 using Nuke.Common.ValueInjection;
+using Nuke.Tooling;
 using Serilog;
 using static Nuke.Common.ControlFlow;
 
@@ -48,7 +49,7 @@ public class GitVersionAttribute : ValueInjectionAttributeBase
                 .SetFramework(Framework)
                 .SetNoFetch(NoFetch)
                 .SetNoCache(NoCache)
-                .DisableProcessLogOutput()
+                .DisableProcessOutputLogging()
                 .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
                 .When(TeamCity.Instance is { IsPullRequest: true } && !EnvironmentInfo.Variables.ContainsKey("Git_Branch"), _ => _
                     .AddProcessEnvironmentVariable(
