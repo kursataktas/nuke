@@ -111,61 +111,6 @@
       }
     ]
   },
-  "dataClasses": [
-    {
-      "name": "OctoVersionInfo",
-      "properties": [
-        {
-          "name": "Major",
-          "type": "int"
-        },
-        {
-          "name": "Minor",
-          "type": "int"
-        },
-        {
-          "name": "Patch",
-          "type": "int"
-        },
-        {
-          "name": "PreReleaseTag",
-          "type": "string"
-        },
-        {
-          "name": "PreReleaseTagWithDash",
-          "type": "string"
-        },
-        {
-          "name": "BuildMetaData",
-          "type": "string"
-        },
-        {
-          "name": "BuildMetadataWithPlus",
-          "type": "string"
-        },
-        {
-          "name": "MajorMinorPatch",
-          "type": "string"
-        },
-        {
-          "name": "NuGetCompatiblePreReleaseWithDash",
-          "type": "string"
-        },
-        {
-          "name": "FullSemVer",
-          "type": "string"
-        },
-        {
-          "name": "InformationalVersion",
-          "type": "string"
-        },
-        {
-          "name": "NuGetVersion",
-          "type": "string"
-        }
-      ]
-    }
-  ],
   "enumerations": [
     {
       "name": "OctoVersionOutputFormatter",

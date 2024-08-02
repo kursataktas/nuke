@@ -3,6 +3,8 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -11,61 +13,52 @@ using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.OctoVersion;
 
-public partial class OctoVersionGetVersionSettings
+partial class OctoVersionTasks
 {
-    private string GetProcessToolPath()
-    {
-        return OctoVersionTasks.GetToolPath(Framework);
-    }
-}
-
-public partial class OctoVersionExecuteSettings
-{
-    private string GetProcessToolPath()
-    {
-        return OctoVersionTasks.GetToolPath(Framework);
-    }
-}
-
-partial class OctoVersionTasks2 : ToolTasks
-{
-    public const string PackageId = "foo";
-
     protected override string GetToolPath(ToolOptions options = null)
     {
-        var framework = (object)options switch
-        {
-            OctoVersionGetVersionSettings settings => settings.Framework,
-            OctoVersionExecuteSettings settings => settings.Framework,
-        };
         return NuGetToolPathResolver.GetPackageExecutable(
             packageId: PackageId,
             packageExecutable: "OctoVersion.Tool.dll",
-            framework: framework);
+            framework: options switch
+            {
+                OctoVersionGetVersionSettings settings => settings.Framework,
+                OctoVersionExecuteSettings settings => settings.Framework,
+                _ => throw new ArgumentOutOfRangeException(nameof(options), options, null)
+            });
+    }
+
+    protected override object GetResult<T>(ToolOptions options, IReadOnlyCollection<Output> output)
+    {
+        if (options is OctoVersionGetVersionSettings getVersion)
+        {
+            Assert.FileExists(getVersion.OutputJsonFile);
+            try
+            {
+                var file = (AbsolutePath) getVersion.OutputJsonFile;
+                return file.ReadJson<OctoVersionInfo>(new JsonSerializerSettings { ContractResolver = new AllWritableContractResolver() });
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Cannot parse {nameof(OctoVersion)} output from {getVersion.OutputJsonFile.SingleQuote()}.", exception);
+            }
+        }
+
+        return null;
     }
 }
 
-public partial class OctoVersionTasks
-{
-    internal static string GetToolPath(string framework = null)
-    {
-        return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: "Octopus.OctoVersion.Tool",
-            packageExecutable: "OctoVersion.Tool.dll",
-            framework: framework);
-    }
-
-    private static OctoVersionInfo GetResult(IProcess process, OctoVersionGetVersionSettings toolSettings)
-    {
-        Assert.FileExists(toolSettings.OutputJsonFile);
-        try
-        {
-            var file = (AbsolutePath) toolSettings.OutputJsonFile;
-            return file.ReadJson<OctoVersionInfo>(new JsonSerializerSettings { ContractResolver = new AllWritableContractResolver() });
-        }
-        catch (Exception exception)
-        {
-            throw new Exception($"Cannot parse {nameof(OctoVersion)} output from {toolSettings.OutputJsonFile.SingleQuote()}.", exception);
-        }
-    }
-}
+[PublicAPI]
+public record OctoVersionInfo(
+    int? Major,
+    int? Minor,
+    int? Patch,
+    string PreReleaseTag,
+    string PreReleaseTagWithDash,
+    string BuildMetaData,
+    string BuildMetadataWithPlus,
+    string MajorMinorPatch,
+    string NuGetCompatiblePreReleaseWithDash,
+    string FullSemVer,
+    string InformationalVersion,
+    string NuGetVersion);
