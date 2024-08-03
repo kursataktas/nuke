@@ -14,6 +14,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
+using Nuke.Tooling;
 using Serilog;
 using Serilog.Formatting.Compact.Reader;
 using static Nuke.Common.Tools.Docker.DockerTasks;
@@ -63,8 +64,8 @@ public static class DockerTargetDefinitionExtensions
                     .SetOutput(buildAssemblyDirectory)
                     .SetRuntime(settings.DotNetRuntime)
                     .EnableSelfContained()
-                    .DisableProcessLogInvocation()
-                    .DisableProcessLogOutput());
+                    .DisableProcessOutputLogging()
+                    .DisableProcessInvocationLogging());
             }
             else
             {

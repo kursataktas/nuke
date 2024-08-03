@@ -33,7 +33,7 @@ public static class DataClassGenerator
         }
 
         var writer = new DataClassWriter(dataClass, toolWriter);
-        var baseType = dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? "ToolOptions" : "Options");
+        var baseType = dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? nameof(ToolOptions) : nameof(Options));
 
 
         writer

@@ -32,10 +32,8 @@ partial class Build
     Target GenerateTools => _ => _
         .Executes(() =>
         {
-            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => !x.Name.ContainsAnyOrdinalIgnoreCase([
-                    "entity",
-                    "docfx",
-                    "nsis",
+            SpecificationsDirectory.GlobFiles("*/*.json").Where(x => x.Name.ContainsAnyOrdinalIgnoreCase([
+                    "resharper",
                 ])).ForEach(x =>
                 GenerateCode(
                     x,

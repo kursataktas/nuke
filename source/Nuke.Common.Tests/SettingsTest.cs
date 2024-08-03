@@ -45,7 +45,7 @@ public class SettingsTest
             .SetProcessExecutionTimeout(TimeSpan.FromMilliseconds(1_000));
 
         settings.ProcessToolPath.Should().Be("/path/to/dotnet");
-        settings.ProcessEnvironmentVariables.Should().ContainSingle(x => x.Key == "key" && x.Value == "value");
+        settings.ProcessEnvironmentVariables.Should().ContainSingle(x => x.Key == "key" && x.Value.Equals("value"));
         settings.ProcessExecutionTimeout.Should().Be(1_000);
     }
 

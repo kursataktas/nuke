@@ -336,7 +336,7 @@
   "dataClasses": [
     {
       "name": "ReSharperSettingsBase",
-      "baseClass": "ToolSettings",
+      "baseClass": "ToolOptions",
       "extensionMethods": true,
       "properties": [
         {
