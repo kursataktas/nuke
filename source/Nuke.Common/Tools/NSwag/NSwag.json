@@ -1036,6 +1036,7 @@
       "name": "NSwagRuntime",
       "type": "string",
       "format": "{value}",
+      "position": 1,
       "customImpl": true,
       "customValue": true
     }

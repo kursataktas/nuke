@@ -17,8 +17,8 @@
           {
             "name": "TargetAssemblyWithConfigs",
             "type": "LookupTable<string, string>",
-            "format": "{value}",
-            "itemFormat": "{key} {value}",
+            "format": "{key} {value}",
+            "position": 1,
             "help": "Assemblies to test, and their related related configuration files (ending with .json or .config)."
           },
           {

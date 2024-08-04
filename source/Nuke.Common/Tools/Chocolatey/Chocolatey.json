@@ -95,6 +95,7 @@
             "name": "PathToNuspec",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "Path to nuspec"
           },
           {
@@ -114,8 +115,8 @@
             "type": "Dictionary<string, object>",
             "format": "-- {key}={value}",
             "separator": " ",
-            "help": "You can pass arbitrary property value pairs through to nuspecs. These will replace variables formatted as <em>$property$</em> with the value passed.",
-            "isTailArgument": true
+            "position": -1,
+            "help": "You can pass arbitrary property value pairs through to nuspecs. These will replace variables formatted as <em>$property$</em> with the value passed."
           }
         ]
       }
@@ -131,6 +132,7 @@
             "name": "PathToNuGetPackage",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "Path to Nuget package (.nupkg)."
           },
           {
@@ -281,8 +283,8 @@
             "type": "Dictionary<string, object>",
             "format": "-- {key}={value}",
             "separator": " ",
-            "help": "You can pass arbitrary property value pairs through to templates. This really unlocks your ability to create packages automatically!",
-            "isTailArgument": true
+            "position": -1,
+            "help": "You can pass arbitrary property value pairs through to templates. This really unlocks your ability to create packages automatically!"
           }
         ]
       }
@@ -446,6 +448,7 @@
         "name": "Filter",
         "type": "string",
         "format": "{value}",
+        "position": 1,
         "help": "Search filter."
       },
       {

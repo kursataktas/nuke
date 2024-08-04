@@ -19,7 +19,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "TargetExecutable",
@@ -59,7 +60,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "TargetExecutable",
@@ -93,7 +95,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "OutputFile",
@@ -118,7 +121,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "Source",
@@ -138,7 +142,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "Source",
@@ -170,7 +175,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "Source",
@@ -208,7 +214,8 @@
           {
             "name": "Configuration",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "Source",

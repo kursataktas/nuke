@@ -28,6 +28,7 @@
             "name": "TargetPath",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "createOverload": true,
             "help": "Target path."
           },
@@ -101,6 +102,7 @@
             "name": "TargetPath",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "createOverload": true,
             "help": "Target path."
           },
@@ -127,6 +129,7 @@
             "name": "Source",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "Defines files included into the duplicates search. Use Visual Studio solution or project files, Ant-like wildcards or specific source file and folder names. Paths should be either absolute or relative to the working directory."
           },
           {

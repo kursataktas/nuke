@@ -19,7 +19,8 @@
           {
             "name": "ConfigFile",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "ChangesFile",
@@ -270,7 +271,8 @@
           {
             "name": "DependencyFile",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "IntermediateFolder",
@@ -302,7 +304,8 @@
           {
             "name": "ArchiveFile",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "PrintHelpMessage",
@@ -328,7 +331,8 @@
           {
             "name": "Command",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           }
         ]
       }
@@ -396,7 +400,8 @@
           {
             "name": "ConfigFile",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "Content",
@@ -453,6 +458,7 @@
             "type": "List<string>",
             "format": "{value}",
             "separator": " ",
+            "position": 1,
             "help": "The projects for which the metadata should be built."
           },
           {
@@ -613,7 +619,8 @@
           {
             "name": "Folder",
             "type": "string",
-            "format": "{value}"
+            "format": "{value}",
+            "position": 1
           },
           {
             "name": "Host",
@@ -647,6 +654,7 @@
             "type": "string",
             "format": "{value}",
             "separator": " ",
+            "position": 1,
             "help": "The command to execute."
           },
           {
@@ -708,7 +716,8 @@
       {
         "name": "ConfigFile",
         "type": "string",
-        "format": "{value}"
+        "format": "{value}",
+        "position": 1
       },
       {
         "name": "ChangesFile",

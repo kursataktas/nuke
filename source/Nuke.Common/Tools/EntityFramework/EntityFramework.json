@@ -41,6 +41,7 @@
             "name": "Migration",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "The target migration. Migrations may be identified by name or by ID. The number 0 is a special case that means before the first migration and causes all migrations to be reverted. If no migration is specified, the command defaults to the last migration."
           },
           {
@@ -74,12 +75,14 @@
             "name": "Connection",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "The connection string to the database. For ASP.NET Core 2.x projects, the value can be <em>name=&lt;name of connection string&gt;</em>. In that case the name comes from the configuration sources that are set up for the project."
           },
           {
             "name": "Provider",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "The provider to use. Typically this is the name of the NuGet package, for example: <c>Microsoft.EntityFrameworkCore.SqlServer.</c>"
           },
           {
@@ -182,6 +185,7 @@
             "name": "Name",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "The name of the migration."
           },
           {
@@ -278,12 +282,14 @@
             "name": "From",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "The starting migration. Migrations may be identified by name or by ID. The number 0 is a special case that means <em>before the first migration</em>. Defaults to 0."
           },
           {
             "name": "To",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "help": "The ending migration. Defaults to the last migration."
           },
           {

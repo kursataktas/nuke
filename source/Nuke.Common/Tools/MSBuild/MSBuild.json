@@ -15,6 +15,7 @@
             "name": "TargetPath",
             "type": "string",
             "format": "{value}",
+            "position": 1,
             "createOverload": true,
             "help": "The solution or project file on which MSBuild is executed."
           },
@@ -46,8 +47,8 @@
             "name": "TargetPlatform",
             "type": "MSBuildTargetPlatform",
             "format": "/p:Platform={value}",
-            "help": "The target platform for which the project is built to run on.",
-            "formatter": "FormatPlatform"
+            "formatter": "FormatPlatform",
+            "help": "The target platform for which the project is built to run on."
           },
           {
             "name": "Properties",
