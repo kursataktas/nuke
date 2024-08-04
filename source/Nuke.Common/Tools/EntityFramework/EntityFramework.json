@@ -56,15 +56,13 @@
       "help": "The <c>dotnet ef dbcontext info</c> command is used to get information about a <c>DbContext</c> type.",
       "postfix": "DbContextInfo",
       "definiteArgument": "ef dbcontext info",
-      "settingsClass": {
-      }
+      "settingsClass": {}
     },
     {
       "help": "The <c>dotnet ef dbcontext list</c> command is used to list available <c>DbContext</c> types.",
       "postfix": "DbContextList",
       "definiteArgument": "ef dbcontext list",
-      "settingsClass": {
-      }
+      "settingsClass": {}
     },
     {
       "help": "The <c>dotnet ef dbcontext scaffold</c> command is used to generate code for a <c>DbContext</c> and entity types for a database. In order for this command to generate an entity type, the database table must have a primary key.",

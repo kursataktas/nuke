@@ -110,8 +110,7 @@
           {
             "name": "FileKeyValueParameters",
             "type": "Dictionary<string, string>",
-            "format": "-{value}",
-            "itemFormat": "{key} {value}",
+            "format": "-{key} {value}",
             "secret": false,
             "help": "Key-value pairs passed in when using the <c>-File</c> option."
           },

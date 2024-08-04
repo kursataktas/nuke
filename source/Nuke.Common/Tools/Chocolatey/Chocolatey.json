@@ -112,8 +112,7 @@
           {
             "name": "Properties",
             "type": "Dictionary<string, object>",
-            "format": "-- {value}",
-            "itemFormat": "{key}={value}",
+            "format": "-- {key}={value}",
             "separator": " ",
             "help": "You can pass arbitrary property value pairs through to nuspecs. These will replace variables formatted as <em>$property$</em> with the value passed.",
             "isTailArgument": true
@@ -280,8 +279,7 @@
           {
             "name": "Properties",
             "type": "Dictionary<string, object>",
-            "format": "-- {value}",
-            "itemFormat": "{key}={value}",
+            "format": "-- {key}={value}",
             "separator": " ",
             "help": "You can pass arbitrary property value pairs through to templates. This really unlocks your ability to create packages automatically!",
             "isTailArgument": true

@@ -42,8 +42,7 @@
           {
             "name": "Parameters",
             "type": "Dictionary<string, string>",
-            "format": "--testparam={value}",
-            "itemFormat": "{key}={value}",
+            "format": "--testparam={key}={value}",
             "help": "A test parameter specified in the form NAME=VALUE for consumption by tests. Multiple parameters must be specified separated using a <c>--testparam</c> option for each."
           },
           {

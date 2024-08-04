@@ -171,8 +171,7 @@
           {
             "name": "PackageVersions",
             "type": "Dictionary<string, string>",
-            "format": "--package={value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--package={key}:{value}",
             "help": "Version number to use for a step or package in the release. Format: <c>--package=StepNameOrPackageId:Version</c>."
           },
           {
@@ -292,8 +291,7 @@
           {
             "name": "Variables",
             "type": "Dictionary<string, string>",
-            "format": "--variable={value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--variable={key}:{value}",
             "help": "Values for any prompted variables in the format Label:Value. For JSON values, embedded quotation marks should be escaped with a backslash."
           },
           {
@@ -404,8 +402,7 @@
           {
             "name": "Variables",
             "type": "Dictionary<string, string>",
-            "format": "--variable={value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--variable={key}:{value}",
             "help": "Values for any prompted variables. For JSON values, embedded quotation marks should be escaped with a backslash. "
           },
           {

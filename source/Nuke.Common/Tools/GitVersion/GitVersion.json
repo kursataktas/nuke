@@ -59,8 +59,7 @@
           {
             "name": "ConfigurationOverride",
             "type": "Dictionary<string, object>",
-            "format": "/overrideconfig {value}",
-            "itemFormat": "{key}={value}",
+            "format": "/overrideconfig {key}={value}",
             "help": "Overrides GitVersion config values inline (semicolon-separated key value pairs e.g. <c>/overrideconfig tag-prefix=Foo</c>). Currently supported config overrides: <c>tag-prefix</c>."
           },
           {
