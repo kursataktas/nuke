@@ -32,7 +32,7 @@ public abstract partial class ToolTasks
         return GetToolPath();
     }
 
-    protected virtual partial string GetToolPath(ToolOptions options = null)
+    protected virtual partial string GetToolPath(ToolOptions options)
     {
         var toolType = GetType();
         return toolType.GetCustomAttribute<ToolAttribute>().NotNull().GetToolPath(options);

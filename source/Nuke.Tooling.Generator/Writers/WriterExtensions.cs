@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Nuke.Common.Utilities;
 
 namespace Nuke.CodeGeneration.Writers;
 
@@ -49,7 +48,7 @@ public static class WriterExtensions
     public static T WriteLine<T>(this T writerWrapper, [CanBeNull] string text)
         where T : IWriterWrapper
     {
-        if (!text.IsNullOrWhiteSpace())
+        if (text != null)
             writerWrapper.Writer.WriteLine(text);
         return writerWrapper;
     }

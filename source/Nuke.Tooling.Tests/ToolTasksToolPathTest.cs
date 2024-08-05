@@ -3,6 +3,7 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using FluentAssertions;
 using Nuke.Common.Tooling;
@@ -49,6 +50,7 @@ public class ToolTasksToolPathTest
 file class SimpleTool : ToolTasks;
 
 [Command(Type = typeof(SimpleTool))]
+[TypeConverter(typeof(TypeConverter<SimpleToolPathToolOptions>))]
 file class SimpleToolPathToolOptions : ToolOptions;
 
 [NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.exe")]

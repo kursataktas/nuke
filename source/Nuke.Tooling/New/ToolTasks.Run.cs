@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
+using Nuke.Common.Utilities.Collections;
 
 namespace Nuke.Tooling;
 
@@ -40,8 +41,15 @@ partial class ToolTasks
         where T : ToolTasks, new()
     {
         var output = Run<T>(options);
-        var result = new T().GetResult<TResult>(options, output);
-        return (Result: (TResult)result, Output: output);
+        try
+        {
+            var result = new T().GetResult<TResult>(options, output);
+            return (Result: (TResult)result, Output: output);
+        }
+        catch (Exception exception)
+        {
+            throw new Exception($"Cannot parse {typeof(TResult).Name} from output:".Concat(output.Select(x => x.Text)).JoinNewLine(), exception);
+        }
     }
 
 #if NET6_0_OR_GREATER

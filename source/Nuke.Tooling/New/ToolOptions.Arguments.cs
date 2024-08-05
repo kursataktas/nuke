@@ -36,8 +36,7 @@ public class ArgumentAttribute : Attribute
     public Type FormatterType { get; set; }
     public string FormatterMethod { get; set; }
 
-    public string ListSeparator { get; set; }
-    public string PairSeparator { get; set; }
+    public string Separator { get; set; }
 }
 
 public class BuilderAttribute : Attribute
@@ -119,7 +118,8 @@ partial class ToolOptions
             else
             {
                 value = token.ToObject<string>();
-                if (new[] { typeof(bool), typeof(bool?) }.Contains(type))
+                if (new[] { typeof(bool), typeof(bool?) }.Contains(type) ||
+                    (type == typeof(object) && new[] { bool.TrueString, bool.FalseString }.Contains(value)))
                     value = value.ToLowerInvariant();
             }
 
@@ -145,7 +145,7 @@ partial class ToolOptions
             var valueType = property.PropertyType.GetScalarType();
             var values = token.Value<JArray>().Select(x => Parse(x, valueType));
 
-            if (attribute.ListSeparator == null)
+            if (attribute.Separator == null)
             {
                 return from value in values
                        from part in formatParts
@@ -158,10 +158,10 @@ partial class ToolOptions
                 if (valueStart == -1)
                     return [part];
 
-                if (attribute.ListSeparator.IsNullOrWhiteSpace())
+                if (attribute.Separator.IsNullOrWhiteSpace())
                     return values.Select(x => part.Replace(ValuePlaceholder, x));
 
-                return [part.Replace(ValuePlaceholder, values.Join(attribute.ListSeparator))];
+                return [part.Replace(ValuePlaceholder, values.Join(attribute.Separator))];
             });
         }
 
@@ -170,7 +170,7 @@ partial class ToolOptions
             var valueType = property.PropertyType.GetGenericArguments().Last();
             var pairs = token.Value<JObject>().Properties().Select(x => (Key: x.Name, Value: Parse(x, valueType)));
 
-            if (attribute.PairSeparator == null)
+            if (attribute.Separator == null)
             {
                 return from pair in pairs
                        from part in formatParts
@@ -185,18 +185,18 @@ partial class ToolOptions
                 if (pairStart == -1)
                     return [part];
 
-                if (attribute.PairSeparator.IsNullOrWhiteSpace())
+                if (attribute.Separator.IsNullOrWhiteSpace())
                     return pairs.Select(x => part.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
 
                 var pairPart = part.Substring(pairStart, pairLength);
                 var formattedPairs = pairs.Select(x => pairPart.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
-                return [part.Substring(startIndex: 0, length: pairStart) + formattedPairs.Join(attribute.PairSeparator)];
+                return [part.Substring(startIndex: 0, length: pairStart) + formattedPairs.Join(attribute.Separator)];
             });
         }
 
         IEnumerable<string> GetLookupArguments()
         {
-            Assert.True(attribute.PairSeparator == null);
+            Assert.True(attribute.Separator == null);
 
             var valueType = property.PropertyType.GetGenericArguments().Last();
             var pairs = token.Value<JObject>().Properties()

@@ -42,7 +42,7 @@ public static class DataClassGenerator
             .WriteLine("[PublicAPI]")
             .WriteObsoleteAttributeWhenObsolete(dataClass)
             .WriteLine("[ExcludeFromCodeCoverage]")
-            .WriteLine("[Serializable]")
+            .WriteLine($"[TypeConverter(typeof(TypeConverter<{dataClass.Name}>))]")
             .WriteLine(GetCommandAttribute())
             .WriteLine($"public partial class {dataClass.Name} : {baseType}")
             .WriteBlock(w => w
@@ -101,8 +101,9 @@ public static class DataClassGenerator
         var attributeArguments = new (string Name, string Value)[]
         {
             (nameof(ArgumentAttribute.Format), property.Format?.DoubleQuote()),
+            (nameof(ArgumentAttribute.Position), property.Position?.ToString().ToLowerInvariant()),
             (nameof(ArgumentAttribute.Secret), property.Secret?.ToString().ToLowerInvariant()),
-            (nameof(ArgumentAttribute.ListSeparator), property.Separator?.ToString().DoubleQuote()),
+            (nameof(ArgumentAttribute.Separator), property.Separator?.DoubleQuote()),
             (nameof(ArgumentAttribute.FormatterMethod), property.Formatter?.Apply(x => $"nameof({x})")),
         }.Where(x => x.Item2 != null)
         .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();

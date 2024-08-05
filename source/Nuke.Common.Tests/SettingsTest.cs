@@ -29,10 +29,10 @@ public class SettingsTest
         configurator.Invoke(new T()).GetProcessArguments().RenderForOutput().Should().Be(arguments);
     }
 
-    private static void Assert2<T>(Configure<T> configurator, string arguments)
+    private static void Assert<T>(T options, string arguments)
         where T : ToolOptions, new()
     {
-        configurator.Invoke(new T()).GetArguments().JoinSpace().Should().Be(arguments);
+        options.GetArguments().JoinSpace().Should().Be(arguments);
     }
 
     [Fact]
@@ -55,21 +55,21 @@ public class SettingsTest
         var projectFile = RootDirectory / "source" / "Nuke.Common" / "Nuke.Common.csproj";
         var solutionFile = RootDirectory / "nuke-common.sln";
 
-        Assert<MSBuildSettings>(x => x
+        Assert(new MSBuildSettings()
                 .SetProjectFile(projectFile)
                 .SetTargetPlatform(MSBuildTargetPlatform.MSIL)
                 .SetConfiguration("Release")
                 .DisableNodeReuse()
                 .EnableNoLogo(),
-            $"{projectFile.ToString().DoubleQuoteIfNeeded()} /nodeReuse:False /nologo /p:Platform=AnyCPU /p:Configuration=Release");
+            $"{projectFile.ToString().DoubleQuoteIfNeeded()} /p:Platform=AnyCPU /p:Configuration=Release /nodeReuse:false /nologo");
 
-        Assert<MSBuildSettings>(x => x
+        Assert(new MSBuildSettings()
                 .SetProjectFile(solutionFile)
                 .SetTargetPlatform(MSBuildTargetPlatform.MSIL)
                 .EnableNodeReuse()
                 .DisableNoLogo()
                 .ToggleRunCodeAnalysis(),
-            $"{solutionFile.ToString().DoubleQuoteIfNeeded()} /nodeReuse:True /p:Platform=\"Any CPU\" /p:RunCodeAnalysis=True");
+            $"{solutionFile.ToString().DoubleQuoteIfNeeded()} /p:Platform=\"Any CPU\" /nodeReuse:true /p:RunCodeAnalysis=true");
     }
 
     [Fact]
@@ -107,10 +107,26 @@ public class SettingsTest
     [Fact]
     public void TestCorFlags()
     {
-        Assert2<CorFlagsSettings>(x => x
+        Assert(new CorFlagsSettings()
                 .SetAssembly("assembly")
                 .EnablePrefer32Bit()
                 .DisableILOnly(),
             "assembly -32BITPREF+ -ILONLY-");
+    }
+
+    [Fact]
+    public void TestDotNet()
+    {
+        Assert(new DotNetTestSettings()
+                .AddRunSetting("key", "value")
+                .AddRunSetting("foo", "bar")
+                .EnableNoLogo(),
+            "test --nologo -- key=value foo=bar");
+
+        Assert(new DotNetRunSettings()
+                .AddApplicationArguments("arg1")
+                .AddApplicationArguments("arg2")
+                .SetProperty("foo", "bar"),
+            "run /property:foo=bar -- arg1 arg2");
     }
 }

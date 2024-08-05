@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
+using JetBrains.Annotations;
 using Nuke.Common.Utilities.Collections;
 using Nuke.Tooling;
 using Xunit;
@@ -24,6 +25,7 @@ public class ToolOptionsArgumentsTest
         Assert<BoolToolOptions>(new { Flag = false }, []);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class BoolToolOptions : ToolOptions
     {
         [Argument(Format = "/bool:{value}")] public bool Bool => Get<bool>(() => Bool);
@@ -39,6 +41,7 @@ public class ToolOptionsArgumentsTest
         options.GetSecrets().Should().Equal("secret-value");
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class StringToolOptions : ToolOptions
     {
         [Argument(Format = "--string {value}")] public string String => Get<string>(() => String);
@@ -51,6 +54,7 @@ public class ToolOptionsArgumentsTest
         Assert<ImplicitToolOptions>(new { String = "value" }, ["implicit argument", "--string", "value"]);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     [Command(Arguments = "implicit argument")]
     private class ImplicitToolOptions : ToolOptions
     {
@@ -66,6 +70,7 @@ public class ToolOptionsArgumentsTest
         // ReSharper restore SimilarAnonymousTypeNearby
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class OrderToolOptions : ToolOptions
     {
         [Argument(Format = "/flag1")] public bool Flag1 => Get<bool>(() => Flag1);
@@ -87,6 +92,7 @@ public class ToolOptionsArgumentsTest
             arguments: ["first", "second", "middle", "second-last", "last"]);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class PositionToolOptions : ToolOptions
     {
         [Argument(Format = "{value}")] public string Middle => Get<string>(() => Middle);
@@ -104,6 +110,7 @@ public class ToolOptionsArgumentsTest
         Assert<FormatToolOptions>(new { Minutes = TimeSpan.FromMinutes(10) }, ["10"]);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class FormatToolOptions : ToolOptions
     {
         [Argument(Format = "{value}", FormatterMethod = nameof(FormatTime))]
@@ -133,11 +140,12 @@ public class ToolOptionsArgumentsTest
         Assert<ListToolOptions>(new { FormattedList = new[] { "true", "false" } }, ["--param=TRUE", "--param=FALSE"]);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class ListToolOptions : ToolOptions
     {
         [Argument(Format = "--param {value}")] public IReadOnlyList<string> SimpleList => Get<List<string>>(() => SimpleList);
-        [Argument(Format = "--param {value}", ListSeparator = "+")] public IReadOnlyList<string> SeparatorList => Get<List<string>>(() => SeparatorList);
-        [Argument(Format = "--param {value}", ListSeparator = " ")] public IReadOnlyList<string> WhitespaceList => Get<List<string>>(() => SeparatorList);
+        [Argument(Format = "--param {value}", Separator = "+")] public IReadOnlyList<string> SeparatorList => Get<List<string>>(() => SeparatorList);
+        [Argument(Format = "--param {value}", Separator = " ")] public IReadOnlyList<string> WhitespaceList => Get<List<string>>(() => SeparatorList);
         [Argument(Format = "--param={value}", FormatterMethod = nameof(Format))] public IReadOnlyList<bool> FormattedList => Get<List<bool>>(() => FormattedList);
 
         private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();
@@ -156,21 +164,23 @@ public class ToolOptionsArgumentsTest
         Assert<DictionaryToolOptions>(new { FormattedDictionary = boolDictionary }, ["/p:key1=TRUE", "/p:key2=FALSE"]);
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class DictionaryToolOptions : ToolOptions
     {
         [Argument(Format = "-p {key}={value}")] public IReadOnlyDictionary<string, object> SimpleDictionary => Get<Dictionary<string, object>>(() => SimpleDictionary);
         [Argument(Format = "-p {key} {value}")] public IReadOnlyDictionary<string, object> Simple2Dictionary => Get<Dictionary<string, object>>(() => Simple2Dictionary);
-        [Argument(Format = "/p:{key}={value}", PairSeparator = ";")] public IReadOnlyDictionary<string, object> SeparatorDictionary => Get<Dictionary<string, object>>(() => SeparatorDictionary);
-        [Argument(Format = "-- {key}={value}", PairSeparator = " ")] public IReadOnlyDictionary<string, object> WhitespaceDictionary => Get<Dictionary<string, object>>(() => WhitespaceDictionary);
+        [Argument(Format = "/p:{key}={value}", Separator = ";")] public IReadOnlyDictionary<string, object> SeparatorDictionary => Get<Dictionary<string, object>>(() => SeparatorDictionary);
+        [Argument(Format = "-- {key}={value}", Separator = " ")] public IReadOnlyDictionary<string, object> WhitespaceDictionary => Get<Dictionary<string, object>>(() => WhitespaceDictionary);
         [Argument(Format = "/p:{key}={value}", FormatterMethod = nameof(Format))] public IReadOnlyDictionary<string, bool> FormattedDictionary => Get<Dictionary<string, bool>>(() => FormattedDictionary);
 
         private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class LookupToolOptions : ToolOptions
     {
-        [Argument(Format = "--param {key}={value}", ListSeparator = ",", PairSeparator = " ")] public ILookup<string, object> SimpleLookup => Get<LookupTable<string, object>>(() => SimpleLookup);
-        [Argument(Format = "--param {key} {value}", ListSeparator = ",", PairSeparator = " ")] public ILookup<string, object> Simple2Lookup => Get<LookupTable<string, object>>(() => Simple2Lookup);
+        // [Argument(Format = "--param {key}={value}", Separator = ",", Separator = " ")] public ILookup<string, object> SimpleLookup => Get<LookupTable<string, object>>(() => SimpleLookup);
+        // [Argument(Format = "--param {key} {value}", Separator = ",", Separator = " ")] public ILookup<string, object> Simple2Lookup => Get<LookupTable<string, object>>(() => Simple2Lookup);
     }
 
     [Fact]

@@ -5,22 +5,46 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 
 namespace Nuke.Tooling;
 
-[JsonObject(MemberSerialization.OptIn)]
+[TypeConverter(typeof(TypeConverter<Options>))]
 public class Options
 {
-    private static JsonConverter LookupTableConverter = new CustomConverter(typeof(LookupTable<,>), "_dictionary");
-    private static JsonConverter OptionsBuilderConverter = new CustomConverter(typeof(Options), "InternalOptions");
+    public class TypeConverter<T> : TypeConverter
+    {
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return destinationType == typeof(string);
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            return JsonConvert.SerializeObject(value, JsonSerializerSettings);
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            return JsonConvert.DeserializeObject<T>((string)value, JsonSerializerSettings);
+        }
+    }
+
+    private static JsonConverter LookupTableConverter = new ObjectFromFieldConverter(typeof(LookupTable<,>), "_dictionary");
+    private static JsonConverter OptionsBuilderConverter = new ObjectFromFieldConverter(typeof(Options), "InternalOptions");
 
     internal static JsonSerializer JsonSerializer = new() { Converters = { LookupTableConverter, OptionsBuilderConverter } };
     internal static JsonSerializerSettings JsonSerializerSettings = new() { Converters = new[] { LookupTableConverter, OptionsBuilderConverter } };

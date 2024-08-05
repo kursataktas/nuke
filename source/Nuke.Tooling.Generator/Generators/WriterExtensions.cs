@@ -72,7 +72,7 @@ public static class WriterExtensions
                     ? property.Format.Substring(startIndex: 0, valueIndex).TrimEnd(':', '=', ' ')
                     : $"&lt;{property.Name.ToInstance()}&gt;";
             if (!argument.Any(char.IsLetter))
-                Log.Warning("Format for property {ClassName}{PropertyName} is all non-letters", property.DataClass.Tool.Name, property.Name);
+                Log.Warning("Format for property {ClassName}.{PropertyName} is all non-letters", property.DataClass.Tool.Name, property.Name);
             return argument;
         }
 

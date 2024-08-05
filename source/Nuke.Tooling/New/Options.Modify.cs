@@ -13,8 +13,8 @@ public static class OptionsExtensions
     internal static T Modify<T>(this T builder, Action<Options> modification = null)
         where T : Options
     {
-        var serializedObject = JsonConvert.SerializeObject(builder, Options.JsonSerializerSettings);
-        var copiedObject = JsonConvert.DeserializeObject<T>(serializedObject, Options.JsonSerializerSettings);
+        var serializedObject = JsonConvert.SerializeObject(builder);
+        var copiedObject = JsonConvert.DeserializeObject<T>(serializedObject);
         modification?.Invoke(copiedObject);
         return copiedObject;
     }

@@ -3,11 +3,11 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nuke.CodeGeneration.Model;
 using Nuke.CodeGeneration.Writers;
 using Nuke.Common.Utilities;
+using Serilog;
 
 // ReSharper disable UnusedMethodReturnValue.Local
 
@@ -29,7 +29,6 @@ public static class DataClassExtensionGenerator
             .WriteLine("#endregion");
     }
 
-    // TODO [3]: less naming? -> value
     private static void WriteMethods(DataClassWriter writer, Property property)
     {
         if (property.CustomImpl)
@@ -81,6 +80,7 @@ public static class DataClassExtensionGenerator
         // List<T>
         if (property.IsList())
         {
+            CheckPlural(property);
             var valueType = property.GetListValueType();
             writer
                 // Set
@@ -133,10 +133,10 @@ public static class DataClassExtensionGenerator
         // Dictionary<TKey, TValue>
         if (property.IsDictionary())
         {
+            CheckPlural(property);
             if (!property.OnlyDelegates)
             {
                 var (keyType, valueType) = property.GetDictionaryKeyValueTypes();
-                var propertySingular = property.Name.ToSingular();
 
                 writer
                     // Set
@@ -148,19 +148,19 @@ public static class DataClassExtensionGenerator
                     // Set item
                     .WriteMethod(
                         property,
-                        name: $"Set{propertySingular}",
+                        name: $"Set{property.Name.ToSingular()}",
                         additionalParameters: [$"{keyType} k", $"{valueType} v"],
                         modification: $"SetDictionary(() => {access}, k, v)")
                     // Add
                     .WriteMethod(
                         property,
-                        name: $"Add{propertySingular}",
+                        name: $"Add{property.Name.ToSingular()}",
                         additionalParameters: [$"{keyType} k", $"{valueType} v"],
                         modification: $"AddDictionary(() => {access}, k, v)")
                     // Remove
                     .WriteMethod(
                         property,
-                        name: $"Remove{propertySingular}",
+                        name: $"Remove{property.Name.ToSingular()}",
                         additionalParameters: [$"{keyType} k"],
                         modification: $"RemoveDictionary(() => {access}, k)")
                     // Clear
@@ -233,9 +233,10 @@ public static class DataClassExtensionGenerator
             // List<T>
             if (delegateProperty.IsList())
             {
+                CheckPlural(delegateProperty);
                 var valueType = delegateProperty.GetListValueType();
                 var propertyPlural = delegateProperty.Name.ToPlural();
-                var separator = delegateProperty.Separator.ToString().DoubleQuote();
+                var separator = delegateProperty.Separator.DoubleQuote();
 
                 writer
                     // Set
@@ -290,91 +291,44 @@ public static class DataClassExtensionGenerator
         }
     }
 
-    private static void WriteDictionaryDelegateExtensions(DataClassWriter writer, Property property, Property delegateProperty)
-    {
-
-    }
-
     private static void WriteLookupExtensions(DataClassWriter writer, Property property)
     {
-        var propertyInstance = property.Name.ToInstance();
-        var (keyType, valueType) = property.GetLookupTableKeyValueTypes();
-        var propertySingular = property.Name.ToSingular();
-        var propertySingularInstance = property.Name.ToSingular().ToInstance();
-        var keyInstance = $"{propertyInstance}Key";
-        var valueInstance = $"{propertyInstance}Value";
-        var valueInstances = $"{propertyInstance}Values";
-        var propertyAccess = $"toolSettings.{property.Name}Internal";
-
-        // TODO: params
-        // TODO: remove by key
-        writer
-            .WriteSummaryExtension($"Sets {property.GetCrefTag()} to a new lookup table", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Set{property.Name}",
-                $"ILookup<{keyType}, {valueType}> {propertyInstance}",
-                $"{propertyAccess} = {propertyInstance}.ToLookupTable(StringComparer.OrdinalIgnoreCase);")
-            .WriteSummaryExtension($"Clears {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Clear{property.Name}",
-                $"{propertyAccess}.Clear();")
-            .WriteSummaryExtension($"Adds new values for the given key to {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Add{property.Name}",
-                new[] { $"{keyType} {keyInstance}", $"params {valueType}[] {valueInstances}" },
-                $"{propertyAccess}.AddRange({keyInstance}, {valueInstances});")
-            .WriteSummaryExtension($"Adds new values for the given key to {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Add{property.Name}",
-                new[] { $"{keyType} {keyInstance}", $"IEnumerable<{valueType}> {valueInstances}" },
-                $"{propertyAccess}.AddRange({keyInstance}, {valueInstances});")
-            .WriteSummaryExtension($"Removes a single {propertySingularInstance} from {property.GetCrefTag()}", property)
-            .WriteObsoleteAttributeWhenObsolete(property)
-            .WriteMethod($"Remove{propertySingular}",
-                new[] { $"{keyType} {keyInstance}", $"{valueType} {valueInstance}" },
-                $"{propertyAccess}.Remove({keyInstance}, {valueInstance});");
-    }
-
-    private static DataClassWriter WriteMethod(this DataClassWriter writer, string name, Property property, string modification)
-    {
-        var attributes = property.Secret ?? false ? "[Secret] " : string.Empty;
-        return writer.WriteMethod(name, $"{attributes}{property.GetNullableType()} {property.Name.ToInstance().EscapeParameter()}", modification);
-    }
-
-    private static DataClassWriter WriteMethod(
-        this DataClassWriter writer,
-        string name,
-        string additionalParameter,
-        params string[] modifications)
-    {
-        return writer.WriteMethod(name, new[] { additionalParameter }, modifications);
-    }
-
-    private static DataClassWriter WriteMethod(this DataClassWriter writer, string name, string modification)
-    {
-        return writer.WriteMethod(name, new[] { modification });
-    }
-
-    private static DataClassWriter WriteMethod(this DataClassWriter writer, string name, string[] modifications)
-    {
-        return writer.WriteMethod(name, new string[0], modifications);
-    }
-
-    private static DataClassWriter WriteMethod(
-        this DataClassWriter writer,
-        string name,
-        IEnumerable<string> additionalParameters,
-        params string[] modifications)
-    {
-        // NOTE: methods cannot be generic because constraints are not taken into account for overload resolution
-        var parameters = new[] { "this T toolSettings" }.Concat(additionalParameters);
-        return writer
-            .WriteLine("[Pure]")
-            .WriteLine($"public static T {name}<T>({parameters.JoinCommaSpace()}) where T : {writer.DataClass.Name}")
-            .WriteBlock(w => w
-                .WriteLine("toolSettings = toolSettings.NewInstance();")
-                .ForEachWriteLine(modifications)
-                .WriteLine("return toolSettings;"));
+        // var propertyInstance = property.Name.ToInstance();
+        // var (keyType, valueType) = property.GetLookupTableKeyValueTypes();
+        // var propertySingular = property.Name.ToSingular();
+        // var propertySingularInstance = property.Name.ToSingular().ToInstance();
+        // var keyInstance = $"{propertyInstance}Key";
+        // var valueInstance = $"{propertyInstance}Value";
+        // var valueInstances = $"{propertyInstance}Values";
+        // var propertyAccess = $"toolSettings.{property.Name}Internal";
+        //
+        // // TODO: params
+        // // TODO: remove by key
+        // writer
+        //     .WriteSummaryExtension($"Sets {property.GetCrefTag()} to a new lookup table", property)
+        //     .WriteObsoleteAttributeWhenObsolete(property)
+        //     .WriteMethod($"Set{property.Name}",
+        //         $"ILookup<{keyType}, {valueType}> {propertyInstance}",
+        //         $"{propertyAccess} = {propertyInstance}.ToLookupTable(StringComparer.OrdinalIgnoreCase);")
+        //     .WriteSummaryExtension($"Clears {property.GetCrefTag()}", property)
+        //     .WriteObsoleteAttributeWhenObsolete(property)
+        //     .WriteMethod($"Clear{property.Name}",
+        //         $"{propertyAccess}.Clear();")
+        //     .WriteSummaryExtension($"Adds new values for the given key to {property.GetCrefTag()}", property)
+        //     .WriteObsoleteAttributeWhenObsolete(property)
+        //     .WriteMethod($"Add{property.Name}",
+        //         new[] { $"{keyType} {keyInstance}", $"params {valueType}[] {valueInstances}" },
+        //         $"{propertyAccess}.AddRange({keyInstance}, {valueInstances});")
+        //     .WriteSummaryExtension($"Adds new values for the given key to {property.GetCrefTag()}", property)
+        //     .WriteObsoleteAttributeWhenObsolete(property)
+        //     .WriteMethod($"Add{property.Name}",
+        //         new[] { $"{keyType} {keyInstance}", $"IEnumerable<{valueType}> {valueInstances}" },
+        //         $"{propertyAccess}.AddRange({keyInstance}, {valueInstances});")
+        //     .WriteSummaryExtension($"Removes a single {propertySingularInstance} from {property.GetCrefTag()}", property)
+        //     .WriteObsoleteAttributeWhenObsolete(property)
+        //     .WriteMethod($"Remove{propertySingular}",
+        //         new[] { $"{keyType} {keyInstance}", $"{valueType} {valueInstance}" },
+        //         $"{propertyAccess}.Remove({keyInstance}, {valueInstance});");
     }
 
     private static DataClassWriter WriteMethod(
@@ -395,5 +349,11 @@ public static class DataClassExtensionGenerator
             .WriteLine($"[Pure] {builder}")
             .WriteObsoleteAttributeWhenObsolete(property)
             .WriteLine($"{signature} => {implementation};");
+    }
+
+    private static void CheckPlural(Property property)
+    {
+        if (property.Name.ToPlural() != property.Name)
+            Log.Warning("Property {Class}.{Property} should be pluralized", property.DataClass.Name, property.Name);
     }
 }

@@ -7,20 +7,26 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Nuke.Common.Tooling;
+using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using Nuke.Tooling;
+using VerifyXunit;
 using Xunit;
 
 namespace Nuke.Common.Tests;
 
 public class OptionsTest
 {
-    private string ScalarValue;
-    private List<int> ListValue;
-    private ReadOnlyDictionary<string, string> DictionaryValue;
-    private LookupTable<string, string> LookupValue;
+    // ReSharper disable UnassignedGetOnlyAutoProperty
+    private string ScalarValue { get; }
+    private List<int> ListValue { get; }
+    private ReadOnlyDictionary<string, string> DictionaryValue { get; }
+    private LookupTable<string, string> LookupValue { get; }
+    private Options NestedValue { get; }
+    // ReSharper restore UnassignedGetOnlyAutoProperty
 
     [Fact]
     public void TestScalar()
@@ -52,7 +58,7 @@ public class OptionsTest
         var options = new Options();
 
         options.Set(() => ListValue, new[] { 1, 2, 3 });
-        options.Modify().Get<List<int>>(() => ListValue).Should().ContainInOrder(1, 2, 3);
+        options.Modify().Get<List<int>>(() => ListValue).Should().Equal(1, 2, 3);
 
         options.AddCollection(() => ListValue, [4, 5]);
         options.Modify().Get<List<int>>(() => ListValue).Should().EndWith(new[] { 4, 5 });
@@ -93,10 +99,8 @@ public class OptionsTest
 
         options.AddLookup(() => LookupValue, "key", "value3");
         options.AddLookup(() => LookupValue, "key2", "value1");
-        options.Modify().Get<LookupTable<string, string>>(() => LookupValue).Should()
-            .Contain(x => x.Key == "key" && x.Last() == "value3");
-        options.Modify().Get<LookupTable<string, string>>(() => LookupValue).Should()
-            .Contain(x => x.Key == "key2");
+        options.Modify().Get<LookupTable<string, string>>(() => LookupValue).Should().Contain(x => x.Key == "key" && x.Last() == "value3");
+        options.Modify().Get<LookupTable<string, string>>(() => LookupValue).Should().Contain(x => x.Key == "key2");
 
         options.RemoveLookup(() => LookupValue, "key", "value2");
         options.RemoveLookup(() => LookupValue, "key2");
@@ -106,9 +110,35 @@ public class OptionsTest
         options.ClearLookup(() => LookupValue);
         options.Modify().Get<LookupTable<string, string>>(() => LookupValue).Should().BeEmpty();
     }
+
+    [Fact]
+    public void TestNested()
+    {
+        var options = new Options()
+            .Set(() => NestedValue, new Options()
+                .Set(() => ScalarValue, "scalar-value")
+                .Set(() => ListValue, new[] { 1, 2, 3 })
+                .Set(() => DictionaryValue, new Dictionary<string, object> { ["key"] = "value" })
+                .Set(() => LookupValue, new LookupTable<string, int> { ["key"] = new[] { 1, 2, 3 } }));
+
+        var nestedOptions = options.Get<Options>(() => NestedValue);
+        nestedOptions.Get<string>(() => ScalarValue).Should().Be("scalar-value");
+    }
+
+    [Fact]
+    public Task TestSerialization()
+    {
+        var options = new Options()
+            .Set(() => ScalarValue, "scalar-value")
+            .Set(() => ListValue, new[] { 1, 2, 3 })
+            .Set(() => DictionaryValue, new Dictionary<string, object> { ["key"] = "value" })
+            .Set(() => LookupValue, new LookupTable<string, int> { ["key"] = new[] { 1, 2, 3 } });
+        options.Set(() => NestedValue, options);
+
+        return Verifier.Verify(options.ToJson(Options.JsonSerializerSettings));
+    }
 }
 
-[Serializable]
 [TypeConverter(typeof(TypeConverter<CustomEnumeration>))]
 public class CustomEnumeration : Enumeration
 {

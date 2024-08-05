@@ -15,8 +15,8 @@ public static class DelegateHelper
 {
     public static IDictionary<string, object> Toggle(IReadOnlyDictionary<string, object> dictionary, string key)
     {
-        var newDictionary = dictionary.ToDictionary(x => x.Key, x => x.Value);
-        newDictionary[key] = !dictionary.ContainsKey(key) || !ReflectionUtility.Convert<bool>(dictionary[key].ToString());
+        var newDictionary = dictionary?.ToDictionary(x => x.Key, x => x.Value) ?? new Dictionary<string, object>();
+        newDictionary[key] = !newDictionary.ContainsKey(key) || !ReflectionUtility.Convert<bool>(newDictionary[key].ToString());
         return newDictionary;
     }
 

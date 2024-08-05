@@ -17,7 +17,7 @@ public abstract partial class ToolTasks
             : _ => null;
     }
 
-    protected virtual partial Func<IProcess, object> GetExitHandler(ToolOptions options = null)
+    protected virtual partial Func<IProcess, object> GetExitHandler(ToolOptions options)
     {
         return x => x.AssertZeroExitCode();
     }

@@ -8,7 +8,7 @@ using Nuke.Common.Utilities;
 
 namespace Nuke.Tooling;
 
-public class CustomConverter(Type type, string name) : JsonConverter
+public class ObjectFromFieldConverter(Type type, string name) : JsonConverter
 {
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
