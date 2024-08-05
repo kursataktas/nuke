@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/MinVer/MinVer.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.MinVer;
+
 /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -40,7 +43,7 @@ public partial class MinVerTasks : ToolTasks
 /// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<MinVerSettings>))]
 [Command(Type = typeof(MinVerTasks), Command = nameof(MinVerTasks.MinVer))]
 public partial class MinVerSettings : ToolOptions
 {
@@ -64,7 +67,7 @@ public partial class MinVerSettings : ToolOptions
 /// <summary>Used within <see cref="MinVerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<MinVer>))]
 public partial class MinVer : Options
 {
     /// <summary></summary>

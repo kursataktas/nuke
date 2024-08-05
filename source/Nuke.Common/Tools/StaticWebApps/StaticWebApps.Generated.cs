@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/StaticWebApps/StaticWebApps.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.StaticWebApps;
+
 /// <summary><p>The Static Web Apps CLI, also known as SWA CLI, serves as a local development tool for <a href="https://docs.microsoft.com/azure/static-web-apps">Azure Static Web Apps</a>. It can:<ul><li>Serve static app assets, or proxy to your app dev server</li><li>Serve API requests, or proxy to APIs running in Azure Functions Core Tools</li><li>Emulate authentication and authorization</li><li>Emulate Static Web Apps configuration, including routing</li></ul></p><p>For more details, visit the <a href="https://docs.microsoft.com/en-us/azure/static-web-apps/local-development">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -49,7 +52,7 @@ public partial class StaticWebAppsTasks : ToolTasks
 /// <summary>Used within <see cref="StaticWebAppsTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<StaticWebAppsStartSettings>))]
 [Command(Type = typeof(StaticWebAppsTasks), Command = nameof(StaticWebAppsTasks.StaticWebAppsStart), Arguments = "start")]
 public partial class StaticWebAppsStartSettings : ToolOptions
 {
@@ -83,7 +86,7 @@ public partial class StaticWebAppsStartSettings : ToolOptions
 /// <summary>Used within <see cref="StaticWebAppsTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<StaticWebAppsDeploySettings>))]
 [Command(Type = typeof(StaticWebAppsTasks), Command = nameof(StaticWebAppsTasks.StaticWebAppsDeploy), Arguments = "deploy")]
 public partial class StaticWebAppsDeploySettings : ToolOptions
 {

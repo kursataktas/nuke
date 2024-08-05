@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/VSWhere/VSWhere.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.VSWhere;
+
 /// <summary><p>VSWhere is designed to be a redistributable, single-file executable that can be used in build or deployment scripts to find where Visual Studio - or other products in the Visual Studio family - is located.</p><p>For more details, visit the <a href="https://github.com/Microsoft/vswhere">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class VSWhereTasks : ToolTasks
 /// <summary>Used within <see cref="VSWhereTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<VSWhereSettings>))]
 [Command(Type = typeof(VSWhereTasks), Command = nameof(VSWhereTasks.VSWhere))]
 public partial class VSWhereSettings : ToolOptions
 {
@@ -60,9 +63,9 @@ public partial class VSWhereSettings : ToolOptions
     /// <summary>Also searches prereleases. By default, only releases are searched.</summary>
     [Argument(Format = "-prerelease")] public bool? Prerelease => Get<bool?>(() => Prerelease);
     /// <summary>One or more product IDs to find. Defaults to Community, Professional, and Enterprise. Specify <em>*</em> by itself to search all product instances installed.</summary>
-    [Argument(Format = "-products {value}", ListSeparator = " ")] public IReadOnlyList<string> Products => Get<List<string>>(() => Products);
+    [Argument(Format = "-products {value}", Separator = " ")] public IReadOnlyList<string> Products => Get<List<string>>(() => Products);
     /// <summary>One or more workload or component IDs required when finding instances. All specified IDs must be installed unless -requiresAny is specified. See <a href="https://aka.ms/vs/workloads"/> for a list of workload and component IDs.</summary>
-    [Argument(Format = "-requires {value}", ListSeparator = " ")] public IReadOnlyList<string> Requires => Get<List<string>>(() => Requires);
+    [Argument(Format = "-requires {value}", Separator = " ")] public IReadOnlyList<string> Requires => Get<List<string>>(() => Requires);
     /// <summary>Find instances with any one or more workload or components IDs passed to <c>-requires</c>.</summary>
     [Argument(Format = "-requiresAny")] public bool? RequiresAny => Get<bool?>(() => RequiresAny);
     /// <summary>A version range for instances to find. Example: <c>[15.0,16.0)</c> will find versions <em>15.*</em>.</summary>
@@ -75,7 +78,7 @@ public partial class VSWhereSettings : ToolOptions
 /// <summary>Used within <see cref="VSWhereTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<VSWhereCatalog>))]
 public partial class VSWhereCatalog : Options
 {
     /// <summary></summary>
@@ -118,7 +121,7 @@ public partial class VSWhereCatalog : Options
 /// <summary>Used within <see cref="VSWhereTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<VSWhereResult>))]
 public partial class VSWhereResult : Options
 {
     /// <summary></summary>

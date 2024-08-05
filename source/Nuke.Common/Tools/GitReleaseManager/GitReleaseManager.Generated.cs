@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/GitReleaseManager/GitReleaseManager.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.GitReleaseManager;
+
 /// <summary><p>GitReleaseManager is a tool that will help create a set of release notes for your application/product. It does this using the collection of issues which are stored on the GitHub Issue Tracker for your application/product.<para/>By inspecting the issues that have been assigned to a particular milestone, GitReleaseManager creates a set of release notes, in markdown format, which are then used to create a Release on GitHub.<para/>In addition to creating a Release, GitReleaseManager can be used to publish a release, close a milestone, and also to export the complete set of release notes for your application/product.</p><p>For more details, visit the <a href="https://gitreleasemanager.readthedocs.io">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -77,12 +80,12 @@ public partial class GitReleaseManagerTasks : ToolTasks
 /// <summary>Used within <see cref="GitReleaseManagerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitReleaseManagerAddAssetsSettings>))]
 [Command(Type = typeof(GitReleaseManagerTasks), Command = nameof(GitReleaseManagerTasks.GitReleaseManagerAddAssets), Arguments = "addasset")]
 public partial class GitReleaseManagerAddAssetsSettings : ToolOptions
 {
     /// <summary>Paths to the files to include in the release.</summary>
-    [Argument(Format = "--assets {value}", ListSeparator = ",")] public IReadOnlyList<string> AssetPaths => Get<List<string>>(() => AssetPaths);
+    [Argument(Format = "--assets {value}", Separator = ",")] public IReadOnlyList<string> AssetPaths => Get<List<string>>(() => AssetPaths);
     /// <summary>The name of the release. Typically this is the generated SemVer Version Number.</summary>
     [Argument(Format = "--tagName {value}")] public string TagName => Get<string>(() => TagName);
     /// <summary>The username to access GitHub with.</summary>
@@ -105,7 +108,7 @@ public partial class GitReleaseManagerAddAssetsSettings : ToolOptions
 /// <summary>Used within <see cref="GitReleaseManagerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitReleaseManagerCloseSettings>))]
 [Command(Type = typeof(GitReleaseManagerTasks), Command = nameof(GitReleaseManagerTasks.GitReleaseManagerClose), Arguments = "close")]
 public partial class GitReleaseManagerCloseSettings : ToolOptions
 {
@@ -131,12 +134,12 @@ public partial class GitReleaseManagerCloseSettings : ToolOptions
 /// <summary>Used within <see cref="GitReleaseManagerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitReleaseManagerCreateSettings>))]
 [Command(Type = typeof(GitReleaseManagerTasks), Command = nameof(GitReleaseManagerTasks.GitReleaseManagerCreate), Arguments = "create")]
 public partial class GitReleaseManagerCreateSettings : ToolOptions
 {
     /// <summary>Paths to the files to include in the release.</summary>
-    [Argument(Format = "--assets {value}", ListSeparator = ",")] public IReadOnlyList<string> AssetPaths => Get<List<string>>(() => AssetPaths);
+    [Argument(Format = "--assets {value}", Separator = ",")] public IReadOnlyList<string> AssetPaths => Get<List<string>>(() => AssetPaths);
     /// <summary>The commit to tag. Can be a branch or SHA. Defaults to repository's default branch.</summary>
     [Argument(Format = "--targetcommitish {value}")] public string TargetCommitish => Get<string>(() => TargetCommitish);
     /// <summary>The milestone to use.</summary>
@@ -167,7 +170,7 @@ public partial class GitReleaseManagerCreateSettings : ToolOptions
 /// <summary>Used within <see cref="GitReleaseManagerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitReleaseManagerExportSettings>))]
 [Command(Type = typeof(GitReleaseManagerTasks), Command = nameof(GitReleaseManagerTasks.GitReleaseManagerExport), Arguments = "export")]
 public partial class GitReleaseManagerExportSettings : ToolOptions
 {
@@ -195,7 +198,7 @@ public partial class GitReleaseManagerExportSettings : ToolOptions
 /// <summary>Used within <see cref="GitReleaseManagerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitReleaseManagerPublishSettings>))]
 [Command(Type = typeof(GitReleaseManagerTasks), Command = nameof(GitReleaseManagerTasks.GitReleaseManagerPublish), Arguments = "publish")]
 public partial class GitReleaseManagerPublishSettings : ToolOptions
 {

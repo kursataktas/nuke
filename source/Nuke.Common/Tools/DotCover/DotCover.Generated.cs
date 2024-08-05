@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/DotCover/DotCover.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.DotCover;
+
 /// <summary><p>dotCover is a .NET unit testing and code coverage tool that works right in Visual Studio, helps you know to what extent your code is covered with unit tests, provides great ways to visualize code coverage, and is Continuous Integration ready. dotCover calculates and reports statement-level code coverage in applications targeting .NET Framework, Silverlight, and .NET Core.</p><p>For more details, visit the <a href="https://www.jetbrains.com/dotcover">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -23,7 +26,7 @@ namespace Nuke.Common.Tools.DotCover;
 public partial class DotCoverTasks : ToolTasks
 {
     public static string DotCoverPath => new DotCoverTasks().GetToolPath();
-    public const string PackageId = "JetBrains.dotCover.DotNetCliTool";
+    public const string PackageId = "JetBrains.dotCover.DotNetCliTool|JetBrains.dotCover.CommandLineTools";
     /// <summary><p>dotCover is a .NET unit testing and code coverage tool that works right in Visual Studio, helps you know to what extent your code is covered with unit tests, provides great ways to visualize code coverage, and is Continuous Integration ready. dotCover calculates and reports statement-level code coverage in applications targeting .NET Framework, Silverlight, and .NET Core.</p><p>For more details, visit the <a href="https://www.jetbrains.com/dotcover">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> DotCover(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<DotCoverTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>dotCover is a .NET unit testing and code coverage tool that works right in Visual Studio, helps you know to what extent your code is covered with unit tests, provides great ways to visualize code coverage, and is Continuous Integration ready. dotCover calculates and reports statement-level code coverage in applications targeting .NET Framework, Silverlight, and .NET Core.</p><p>For more details, visit the <a href="https://www.jetbrains.com/dotcover">official website</a>.</p></summary>
@@ -94,12 +97,12 @@ public partial class DotCoverTasks : ToolTasks
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverAnalyseSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverAnalyse), Arguments = "analyse")]
 public partial class DotCoverAnalyseSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>File name of the program to analyse.</summary>
     [Argument(Format = "--TargetExecutable={value}")] public string TargetExecutable => Get<string>(() => TargetExecutable);
     /// <summary>A type of the report. The default value is <c>XML</c>.</summary>
@@ -119,21 +122,21 @@ public partial class DotCoverAnalyseSettings : ToolOptions
     /// <summary>Specifies whether dotCover should analyse the 'target arguments' string and convert relative paths to absolute ones. The default is <c>true</c>.</summary>
     [Argument(Format = "--AnalyseTargetArguments={value}")] public bool? AnalyseTargetArguments => Get<bool?>(() => AnalyseTargetArguments);
     /// <summary>Allows including assemblies that were not loaded in the specified scope into coverage results. Ant-style patterns are supported here (e.g. <c>ProjectFolder/**/*.dll</c>).</summary>
-    [Argument(Format = "--Scope={value}", ListSeparator = ";")] public IReadOnlyList<string> Scope => Get<List<string>>(() => Scope);
+    [Argument(Format = "--Scope={value}", Separator = ";")] public IReadOnlyList<string> Scope => Get<List<string>>(() => Scope);
     /// <summary>Specifies coverage filters using the following syntax: <c>+:module=*;class=*;function=*;</c>. Use <c>-:myassembly</c> to exclude an assembly from code coverage. Asterisk wildcard (*) is supported here.</summary>
-    [Argument(Format = "--Filters={value}", ListSeparator = ";")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
+    [Argument(Format = "--Filters={value}", Separator = ";")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
     /// <summary>Specifies attribute filters using the following syntax: <c>filter1;filter2;...</c>. Asterisk wildcard (*) is supported here.</summary>
-    [Argument(Format = "--AttributeFilters={value}", ListSeparator = ";")] public IReadOnlyList<string> AttributeFilters => Get<List<string>>(() => AttributeFilters);
+    [Argument(Format = "--AttributeFilters={value}", Separator = ";")] public IReadOnlyList<string> AttributeFilters => Get<List<string>>(() => AttributeFilters);
     /// <summary>Disables default (automatically added) filters.</summary>
     [Argument(Format = "--DisableDefaultFilters")] public bool? DisableDefaultFilters => Get<bool?>(() => DisableDefaultFilters);
     /// <summary>Specifies additional symbol search paths. Paths to symbol servers (starting with <em>srv*</em> prefix) are supported here.</summary>
-    [Argument(Format = "--SymbolSearchPaths={value}", ListSeparator = ";")] public IReadOnlyList<string> SymbolSearchPaths => Get<List<string>>(() => SymbolSearchPaths);
+    [Argument(Format = "--SymbolSearchPaths={value}", Separator = ";")] public IReadOnlyList<string> SymbolSearchPaths => Get<List<string>>(() => SymbolSearchPaths);
     /// <summary>Allows dotCover to search for PDB files on a symbol server.</summary>
     [Argument(Format = "--AllowSymbolServerAccess")] public bool? AllowSymbolServerAccess => Get<bool?>(() => AllowSymbolServerAccess);
     /// <summary>Returns the exit code of the target executable in case coverage analysis succeeded.</summary>
     [Argument(Format = "--ReturnTargetExitCode")] public bool? ReturnTargetExitCode => Get<bool?>(() => ReturnTargetExitCode);
     /// <summary>Specifies process filters. Syntax: <c>+:process1;-:process2</c>.</summary>
-    [Argument(Format = "--ProcessFilters={value}", ListSeparator = ";")] public IReadOnlyList<string> ProcessFilters => Get<List<string>>(() => ProcessFilters);
+    [Argument(Format = "--ProcessFilters={value}", Separator = ";")] public IReadOnlyList<string> ProcessFilters => Get<List<string>>(() => ProcessFilters);
     /// <summary>Enables logging and specifies log file name.</summary>
     [Argument(Format = "--LogFile={value}")] public string LogFile => Get<string>(() => LogFile);
 }
@@ -142,12 +145,12 @@ public partial class DotCoverAnalyseSettings : ToolOptions
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverCoverSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverCover), Arguments = "cover")]
 public partial class DotCoverCoverSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>File name of the program to analyse.</summary>
     [Argument(Format = "--TargetExecutable={value}")] public string TargetExecutable => Get<string>(() => TargetExecutable);
     /// <summary>Path to the resulting coverage snapshot.</summary>
@@ -165,21 +168,21 @@ public partial class DotCoverCoverSettings : ToolOptions
     /// <summary>Specifies whether dotCover should analyse the 'target arguments' string and convert relative paths to absolute ones. The default is <c>true</c>.</summary>
     [Argument(Format = "--AnalyseTargetArguments={value}")] public bool? AnalyseTargetArguments => Get<bool?>(() => AnalyseTargetArguments);
     /// <summary>Allows including assemblies that were not loaded in the specified scope into coverage results. Ant-style patterns are supported here (e.g. <c>ProjectFolder/**/*.dll</c>).</summary>
-    [Argument(Format = "--Scope={value}", ListSeparator = ";")] public IReadOnlyList<string> Scope => Get<List<string>>(() => Scope);
+    [Argument(Format = "--Scope={value}", Separator = ";")] public IReadOnlyList<string> Scope => Get<List<string>>(() => Scope);
     /// <summary>Specifies coverage filters using the following syntax: <c>+:module=*;class=*;function=*;</c>. Use <c>-:myassembly</c> to exclude an assembly from code coverage. Asterisk wildcard (*) is supported here.</summary>
-    [Argument(Format = "--Filters={value}", ListSeparator = ";")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
+    [Argument(Format = "--Filters={value}", Separator = ";")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
     /// <summary>Specifies attribute filters using the following syntax: <c>filter1;filter2;...</c>. Asterisk wildcard (*) is supported here.</summary>
-    [Argument(Format = "--AttributeFilters={value}", ListSeparator = ";")] public IReadOnlyList<string> AttributeFilters => Get<List<string>>(() => AttributeFilters);
+    [Argument(Format = "--AttributeFilters={value}", Separator = ";")] public IReadOnlyList<string> AttributeFilters => Get<List<string>>(() => AttributeFilters);
     /// <summary>Disables default (automatically added) filters.</summary>
     [Argument(Format = "--DisableDefaultFilters")] public bool? DisableDefaultFilters => Get<bool?>(() => DisableDefaultFilters);
     /// <summary>Specifies additional symbol search paths. Paths to symbol servers (starting with <em>srv*</em> prefix) are supported here.</summary>
-    [Argument(Format = "--SymbolSearchPaths={value}", ListSeparator = ";")] public IReadOnlyList<string> SymbolSearchPaths => Get<List<string>>(() => SymbolSearchPaths);
+    [Argument(Format = "--SymbolSearchPaths={value}", Separator = ";")] public IReadOnlyList<string> SymbolSearchPaths => Get<List<string>>(() => SymbolSearchPaths);
     /// <summary>Allows dotCover to search for PDB files on a symbol server.</summary>
     [Argument(Format = "--AllowSymbolServerAccess")] public bool? AllowSymbolServerAccess => Get<bool?>(() => AllowSymbolServerAccess);
     /// <summary>Returns the exit code of the target executable in case coverage analysis succeeded.</summary>
     [Argument(Format = "--ReturnTargetExitCode")] public bool? ReturnTargetExitCode => Get<bool?>(() => ReturnTargetExitCode);
     /// <summary>Specifies process filters. Syntax: <c>+:process1;-:process2</c>.</summary>
-    [Argument(Format = "--ProcessFilters={value}", ListSeparator = ";")] public IReadOnlyList<string> ProcessFilters => Get<List<string>>(() => ProcessFilters);
+    [Argument(Format = "--ProcessFilters={value}", Separator = ";")] public IReadOnlyList<string> ProcessFilters => Get<List<string>>(() => ProcessFilters);
     /// <summary>Enables logging and specifies log file name.</summary>
     [Argument(Format = "--LogFile={value}")] public string LogFile => Get<string>(() => LogFile);
 }
@@ -188,12 +191,12 @@ public partial class DotCoverCoverSettings : ToolOptions
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverCoverDotNetSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverCoverDotNet), Arguments = "dotnet")]
 public partial class DotCoverCoverDotNetSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>Path to the resulting coverage snapshot.</summary>
     [Argument(Format = "--Output={value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>A type of the report. The default value is <c>XML</c>.</summary>
@@ -209,21 +212,21 @@ public partial class DotCoverCoverDotNetSettings : ToolOptions
     /// <summary>Specifies whether dotCover should analyse the 'target arguments' string and convert relative paths to absolute ones. The default is <c>true</c>.</summary>
     [Argument(Format = "--AnalyseTargetArguments={value}")] public bool? AnalyseTargetArguments => Get<bool?>(() => AnalyseTargetArguments);
     /// <summary>Allows including assemblies that were not loaded in the specified scope into coverage results. Ant-style patterns are supported here (e.g. <c>ProjectFolder/**/*.dll</c>).</summary>
-    [Argument(Format = "--Scope={value}", ListSeparator = ";")] public IReadOnlyList<string> Scope => Get<List<string>>(() => Scope);
+    [Argument(Format = "--Scope={value}", Separator = ";")] public IReadOnlyList<string> Scope => Get<List<string>>(() => Scope);
     /// <summary>Specifies coverage filters using the following syntax: <c>+:module=*;class=*;function=*;</c>. Use <c>-:myassembly</c> to exclude an assembly from code coverage. Asterisk wildcard (*) is supported here.</summary>
-    [Argument(Format = "--Filters={value}", ListSeparator = ";")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
+    [Argument(Format = "--Filters={value}", Separator = ";")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
     /// <summary>Specifies attribute filters using the following syntax: <c>filter1;filter2;...</c>. Asterisk wildcard (*) is supported here.</summary>
-    [Argument(Format = "--AttributeFilters={value}", ListSeparator = ";")] public IReadOnlyList<string> AttributeFilters => Get<List<string>>(() => AttributeFilters);
+    [Argument(Format = "--AttributeFilters={value}", Separator = ";")] public IReadOnlyList<string> AttributeFilters => Get<List<string>>(() => AttributeFilters);
     /// <summary>Disables default (automatically added) filters.</summary>
     [Argument(Format = "--DisableDefaultFilters")] public bool? DisableDefaultFilters => Get<bool?>(() => DisableDefaultFilters);
     /// <summary>Specifies additional symbol search paths. Paths to symbol servers (starting with <em>srv*</em> prefix) are supported here.</summary>
-    [Argument(Format = "--SymbolSearchPaths={value}", ListSeparator = ";")] public IReadOnlyList<string> SymbolSearchPaths => Get<List<string>>(() => SymbolSearchPaths);
+    [Argument(Format = "--SymbolSearchPaths={value}", Separator = ";")] public IReadOnlyList<string> SymbolSearchPaths => Get<List<string>>(() => SymbolSearchPaths);
     /// <summary>Allows dotCover to search for PDB files on a symbol server.</summary>
     [Argument(Format = "--AllowSymbolServerAccess")] public bool? AllowSymbolServerAccess => Get<bool?>(() => AllowSymbolServerAccess);
     /// <summary>Returns the exit code of the target executable in case coverage analysis succeeded.</summary>
     [Argument(Format = "--ReturnTargetExitCode")] public bool? ReturnTargetExitCode => Get<bool?>(() => ReturnTargetExitCode);
     /// <summary>Specifies process filters. Syntax: <c>+:process1;-:process2</c>.</summary>
-    [Argument(Format = "--ProcessFilters={value}", ListSeparator = ";")] public IReadOnlyList<string> ProcessFilters => Get<List<string>>(() => ProcessFilters);
+    [Argument(Format = "--ProcessFilters={value}", Separator = ";")] public IReadOnlyList<string> ProcessFilters => Get<List<string>>(() => ProcessFilters);
     /// <summary>Enables logging and specifies log file name.</summary>
     [Argument(Format = "--LogFile={value}")] public string LogFile => Get<string>(() => LogFile);
 }
@@ -232,14 +235,14 @@ public partial class DotCoverCoverDotNetSettings : ToolOptions
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverDeleteSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverDelete), Arguments = "delete")]
 public partial class DotCoverDeleteSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>List of snapshot files.</summary>
-    [Argument(Format = "--Source={value}", ListSeparator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
+    [Argument(Format = "--Source={value}", Separator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
     /// <summary>Enables logging and specifies log file name.</summary>
     [Argument(Format = "--LogFile={value}")] public string LogFile => Get<string>(() => LogFile);
 }
@@ -248,14 +251,14 @@ public partial class DotCoverDeleteSettings : ToolOptions
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverMergeSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverMerge), Arguments = "merge")]
 public partial class DotCoverMergeSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>List of snapshot files.</summary>
-    [Argument(Format = "--Source={value}", ListSeparator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
+    [Argument(Format = "--Source={value}", Separator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
     /// <summary>File name for the merged snapshot.</summary>
     [Argument(Format = "--Output={value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>Directory for auxiliary files. Set to the system temp by default.</summary>
@@ -268,14 +271,14 @@ public partial class DotCoverMergeSettings : ToolOptions
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverReportSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverReport), Arguments = "report")]
 public partial class DotCoverReportSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>List of snapshot files.</summary>
-    [Argument(Format = "--Source={value}", ListSeparator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
+    [Argument(Format = "--Source={value}", Separator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
     /// <summary>Resulting report file name.</summary>
     [Argument(Format = "--Output={value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>A type of the report. The default value is <c>XML</c>.</summary>
@@ -290,12 +293,12 @@ public partial class DotCoverReportSettings : ToolOptions
 /// <summary>Used within <see cref="DotCoverTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotCoverZipSettings>))]
 [Command(Type = typeof(DotCoverTasks), Command = nameof(DotCoverTasks.DotCoverZip), Arguments = "zip")]
 public partial class DotCoverZipSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Configuration => Get<string>(() => Configuration);
+    [Argument(Format = "{value}", Position = 1)] public string Configuration => Get<string>(() => Configuration);
     /// <summary>Coverage snapshot file name.</summary>
     [Argument(Format = "--Source={value}")] public string Source => Get<string>(() => Source);
     /// <summary>Zipped snapshot file name.</summary>

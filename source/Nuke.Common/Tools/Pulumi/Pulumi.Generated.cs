@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Pulumi/Pulumi.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Pulumi;
+
 /// <summary><p>Pulumi is an <a href="https://github.com/pulumi/pulumi">open source</a> infrastructure as code tool for creating, deploying and managing cloud infrastructure. Pulumi works with traditional infrastructure like VMs, networks, and databases, in addition to modern architectures, including containers, Kubernetes clusters, and serverless functions. Pulumi supports dozens of public, private, and hybrid cloud service providers.</p><p>For more details, visit the <a href="https://www.pulumi.com/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -265,7 +268,7 @@ public partial class PulumiTasks : ToolTasks
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiUpSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiUp), Arguments = "up")]
 public partial class PulumiUpSettings : ToolOptions
 {
@@ -345,7 +348,7 @@ public partial class PulumiUpSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiPreviewSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiPreview), Arguments = "preview")]
 public partial class PulumiPreviewSettings : ToolOptions
 {
@@ -421,7 +424,7 @@ public partial class PulumiPreviewSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiConfigSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiConfig), Arguments = "config")]
 public partial class PulumiConfigSettings : ToolOptions
 {
@@ -459,7 +462,7 @@ public partial class PulumiConfigSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiConfigCopySettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiConfigCopy), Arguments = "config cp")]
 public partial class PulumiConfigCopySettings : ToolOptions
 {
@@ -493,12 +496,12 @@ public partial class PulumiConfigCopySettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiConfigGetSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiConfigGet), Arguments = "config get")]
 public partial class PulumiConfigGetSettings : ToolOptions
 {
     /// <summary>The key to the key-value pair in the configuration.</summary>
-    [Argument(Format = "{value}")] public string Key => Get<string>(() => Key);
+    [Argument(Format = "{value}", Position = 1)] public string Key => Get<string>(() => Key);
     /// <summary>Serialize the preview diffs, operations, and overall output as JSON.</summary>
     [Argument(Format = "--json")] public bool? Json => Get<bool?>(() => Json);
     /// <summary>The key contains a path to a property in a map or list to set.</summary>
@@ -529,7 +532,7 @@ public partial class PulumiConfigGetSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiConfigRefreshSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiConfigRefresh), Arguments = "config refresh")]
 public partial class PulumiConfigRefreshSettings : ToolOptions
 {
@@ -561,12 +564,12 @@ public partial class PulumiConfigRefreshSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiConfigRemoveSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiConfigRemove), Arguments = "config rm")]
 public partial class PulumiConfigRemoveSettings : ToolOptions
 {
     /// <summary>The key to the key-value pair in the configuration.</summary>
-    [Argument(Format = "{value}")] public string Key => Get<string>(() => Key);
+    [Argument(Format = "{value}", Position = 1)] public string Key => Get<string>(() => Key);
     /// <summary>The key contains a path to a property in a map or list to set.</summary>
     [Argument(Format = "--path {value}")] public string Path => Get<string>(() => Path);
     /// <summary>Colorize output. Choices are: always, never, raw, auto (default <c>auto</c>).</summary>
@@ -595,14 +598,14 @@ public partial class PulumiConfigRemoveSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiConfigSetSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiConfigSet), Arguments = "config set")]
 public partial class PulumiConfigSetSettings : ToolOptions
 {
     /// <summary>The key to the key-value pair in the configuration.</summary>
-    [Argument(Format = "{value}")] public string Key => Get<string>(() => Key);
+    [Argument(Format = "{value}", Position = 1)] public string Key => Get<string>(() => Key);
     /// <summary>The new value for specified configuration key.</summary>
-    [Argument(Format = "{value}")] public string Value => Get<string>(() => Value);
+    [Argument(Format = "{value}", Position = 1)] public string Value => Get<string>(() => Value);
     /// <summary>The key contains a path to a property in a map or list to set.</summary>
     [Argument(Format = "--path {value}")] public string Path => Get<string>(() => Path);
     /// <summary>Save the value as plaintext (unencrypted).</summary>
@@ -635,7 +638,7 @@ public partial class PulumiConfigSetSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStack), Arguments = "stack")]
 public partial class PulumiStackSettings : ToolOptions
 {
@@ -675,12 +678,12 @@ public partial class PulumiStackSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackChangeSecretsProviderSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackChangeSecretsProvider), Arguments = "stack change-secrets-provider")]
 public partial class PulumiStackChangeSecretsProviderSettings : ToolOptions
 {
     /// <summary>The name of the new secrets provider.</summary>
-    [Argument(Format = "{value}")] public string NewSecretsProvider => Get<string>(() => NewSecretsProvider);
+    [Argument(Format = "{value}", Position = 1)] public string NewSecretsProvider => Get<string>(() => NewSecretsProvider);
     /// <summary>Colorize output. Choices are: always, never, raw, auto (default <c>auto</c>).</summary>
     [Argument(Format = "--color {value}")] public string Color => Get<string>(() => Color);
     /// <summary>Run pulumi as if it had been started in another directory.</summary>
@@ -707,7 +710,7 @@ public partial class PulumiStackChangeSecretsProviderSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackExportSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackExport), Arguments = "stack export")]
 public partial class PulumiStackExportSettings : ToolOptions
 {
@@ -743,12 +746,12 @@ public partial class PulumiStackExportSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackGraphSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackGraph), Arguments = "stack graph")]
 public partial class PulumiStackGraphSettings : ToolOptions
 {
     /// <summary>A file that will have a Graphviz DOT graph written to it.</summary>
-    [Argument(Format = "{value}")] public string File => Get<string>(() => File);
+    [Argument(Format = "{value}", Position = 1)] public string File => Get<string>(() => File);
     /// <summary>Sets the color of dependency edges in the graph (default <c>#246C60</c>).</summary>
     [Argument(Format = "--dependency-edge-color {value}")] public string DependencyEdgeColor => Get<string>(() => DependencyEdgeColor);
     /// <summary>Ignores edges introduced by dependency resource relationships.</summary>
@@ -783,7 +786,7 @@ public partial class PulumiStackGraphSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackHistorySettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackHistory), Arguments = "stack history")]
 public partial class PulumiStackHistorySettings : ToolOptions
 {
@@ -817,7 +820,7 @@ public partial class PulumiStackHistorySettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackImportSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackImport), Arguments = "stack import")]
 public partial class PulumiStackImportSettings : ToolOptions
 {
@@ -851,12 +854,12 @@ public partial class PulumiStackImportSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackInitSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackInit), Arguments = "stack init")]
 public partial class PulumiStackInitSettings : ToolOptions
 {
     /// <summary>The stack name, optionally preceded by the organization name and a slash: <c>[&lt;org-name&gt;/]&lt;stack-name&gt;</c></summary>
-    [Argument(Format = "{value}")] public string OrganizationAndName => Get<string>(() => OrganizationAndName);
+    [Argument(Format = "{value}", Position = 1)] public string OrganizationAndName => Get<string>(() => OrganizationAndName);
     /// <summary>The name of the stack to copy existing config from.</summary>
     [Argument(Format = "--copy-config-from {value}")] public string CopyConfigFrom => Get<string>(() => CopyConfigFrom);
     /// <summary>The type of the provider that should be used to encrypt and decrypt secrets (possible choices: <c>default</c>, <c>passphrase</c>, <c>awskms</c>, <c>azurekeyvault</c>, <c>gcpkms</c>, <c>hashivault</c>) (default <c>default</c>).</summary>
@@ -887,7 +890,7 @@ public partial class PulumiStackInitSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackListSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackList), Arguments = "stack ls")]
 public partial class PulumiStackListSettings : ToolOptions
 {
@@ -927,12 +930,12 @@ public partial class PulumiStackListSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackOutputSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackOutput), Arguments = "stack output")]
 public partial class PulumiStackOutputSettings : ToolOptions
 {
     /// <summary>The name of the property whose output value should be listed. This is optional.</summary>
-    [Argument(Format = "{value}")] public string PropertyName => Get<string>(() => PropertyName);
+    [Argument(Format = "{value}", Position = 1)] public string PropertyName => Get<string>(() => PropertyName);
     /// <summary>Emit output as JSON.</summary>
     [Argument(Format = "--json")] public bool? Json => Get<bool?>(() => Json);
     /// <summary>Display outputs which are marked as secret in plaintext.</summary>
@@ -963,12 +966,12 @@ public partial class PulumiStackOutputSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackRenameSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackRename), Arguments = "stack rename")]
 public partial class PulumiStackRenameSettings : ToolOptions
 {
     /// <summary>The new name for the stack.</summary>
-    [Argument(Format = "{value}")] public string NewStackName => Get<string>(() => NewStackName);
+    [Argument(Format = "{value}", Position = 1)] public string NewStackName => Get<string>(() => NewStackName);
     /// <summary>Colorize output. Choices are: always, never, raw, auto (default <c>auto</c>).</summary>
     [Argument(Format = "--color {value}")] public string Color => Get<string>(() => Color);
     /// <summary>Run pulumi as if it had been started in another directory.</summary>
@@ -995,12 +998,12 @@ public partial class PulumiStackRenameSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackRemoveSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackRemove), Arguments = "stack rm")]
 public partial class PulumiStackRemoveSettings : ToolOptions
 {
     /// <summary>The name for the stack to be removed.</summary>
-    [Argument(Format = "{value}")] public string StackName => Get<string>(() => StackName);
+    [Argument(Format = "{value}", Position = 1)] public string StackName => Get<string>(() => StackName);
     /// <summary>Forces deletion of the stack, leaving behind any resources managed by the stack.</summary>
     [Argument(Format = "--force")] public bool? Force => Get<bool?>(() => Force);
     /// <summary>Do not delete the corresponding Pulumi.&lt;stack-name&gt;.yaml configuration file for the stack.</summary>
@@ -1033,12 +1036,12 @@ public partial class PulumiStackRemoveSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackSelectSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackSelect), Arguments = "stack select")]
 public partial class PulumiStackSelectSettings : ToolOptions
 {
     /// <summary>The name of the stack that should be selected.</summary>
-    [Argument(Format = "{value}")] public string StackName => Get<string>(() => StackName);
+    [Argument(Format = "{value}", Position = 1)] public string StackName => Get<string>(() => StackName);
     /// <summary>If selected stack does not exist, create it.</summary>
     [Argument(Format = "--create")] public bool? Create => Get<bool?>(() => Create);
     /// <summary>Use with <c>--create</c> flag, The type of the provider that should be used to encrypt and decrypt secrets (possible choices: <c>default</c>, <c>passphrase</c>, <c>awskms</c>, <c>azurekeyvault</c>, <c>gcpkms</c>, <c>hashivault</c>) (default <c>default</c>).</summary>
@@ -1069,14 +1072,14 @@ public partial class PulumiStackSelectSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackTagSetSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackTagSet), Arguments = "stack tag set")]
 public partial class PulumiStackTagSetSettings : ToolOptions
 {
     /// <summary>The name of the tag to be set.</summary>
-    [Argument(Format = "{value}")] public string Name => Get<string>(() => Name);
+    [Argument(Format = "{value}", Position = 1)] public string Name => Get<string>(() => Name);
     /// <summary>The value of the tag to be set.</summary>
-    [Argument(Format = "{value}")] public string Value => Get<string>(() => Value);
+    [Argument(Format = "{value}", Position = 2)] public string Value => Get<string>(() => Value);
     /// <summary>Colorize output. Choices are: always, never, raw, auto (default <c>auto</c>).</summary>
     [Argument(Format = "--color {value}")] public string Color => Get<string>(() => Color);
     /// <summary>Run pulumi as if it had been started in another directory.</summary>
@@ -1103,12 +1106,12 @@ public partial class PulumiStackTagSetSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackTagGetSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackTagGet), Arguments = "stack tag get")]
 public partial class PulumiStackTagGetSettings : ToolOptions
 {
     /// <summary>The name of the tag to be set.</summary>
-    [Argument(Format = "{value}")] public string Name => Get<string>(() => Name);
+    [Argument(Format = "{value}", Position = 1)] public string Name => Get<string>(() => Name);
     /// <summary>Colorize output. Choices are: always, never, raw, auto (default <c>auto</c>).</summary>
     [Argument(Format = "--color {value}")] public string Color => Get<string>(() => Color);
     /// <summary>Run pulumi as if it had been started in another directory.</summary>
@@ -1135,12 +1138,12 @@ public partial class PulumiStackTagGetSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackTagRemoveSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackTagRemove), Arguments = "stack tag rm")]
 public partial class PulumiStackTagRemoveSettings : ToolOptions
 {
     /// <summary>The name of the tag to be set.</summary>
-    [Argument(Format = "{value}")] public string Name => Get<string>(() => Name);
+    [Argument(Format = "{value}", Position = 1)] public string Name => Get<string>(() => Name);
     /// <summary>Colorize output. Choices are: always, never, raw, auto (default <c>auto</c>).</summary>
     [Argument(Format = "--color {value}")] public string Color => Get<string>(() => Color);
     /// <summary>Run pulumi as if it had been started in another directory.</summary>
@@ -1167,7 +1170,7 @@ public partial class PulumiStackTagRemoveSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiStackTagListSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiStackTagList), Arguments = "stack tag ls")]
 public partial class PulumiStackTagListSettings : ToolOptions
 {
@@ -1199,12 +1202,12 @@ public partial class PulumiStackTagListSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiNewSettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiNew), Arguments = "new")]
 public partial class PulumiNewSettings : ToolOptions
 {
     /// <summary>The template or URL to base the new stack off of.</summary>
-    [Argument(Format = "{value}")] public string Template => Get<string>(() => Template);
+    [Argument(Format = "{value}", Position = 1)] public string Template => Get<string>(() => Template);
     /// <summary>Config to save.</summary>
     [Argument(Format = "--config {value}")] public IReadOnlyList<string> Config => Get<List<string>>(() => Config);
     /// <summary>Config keys contain a path to a property in a map or list to set.</summary>
@@ -1253,7 +1256,7 @@ public partial class PulumiNewSettings : ToolOptions
 /// <summary>Used within <see cref="PulumiTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PulumiDestroySettings>))]
 [Command(Type = typeof(PulumiTasks), Command = nameof(PulumiTasks.PulumiDestroy), Arguments = "destroy")]
 public partial class PulumiDestroySettings : ToolOptions
 {

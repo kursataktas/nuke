@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/GitLink/GitLink.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.GitLink;
+
 /// <summary><p>GitLink makes symbol servers obsolete which saves you both time with uploading source files with symbols and the user no longer has to specify custom symbol servers (such as symbolsource.org). The advantage of GitLink is that it is fully customized for Git. It also works with GitHub or BitBucket urls so it does not require a local git repository to work. This makes it perfectly usable in continuous integration servers such as Continua CI. Updating all the pdb files is very fast. A solution with over 85 projects will be handled in less than 30 seconds. When using GitLink, the user no longer has to specify symbol servers. The only requirement is to ensure the check the Enable source server support option in Visual Studio.</p><p>For more details, visit the <a href="https://github.com/GitTools/GitLink/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -50,12 +53,12 @@ public partial class GitLinkTasks : ToolTasks
 /// <summary>Used within <see cref="GitLinkTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitLink2Settings>))]
 [Command(Type = typeof(GitLinkTasks), Command = nameof(GitLinkTasks.GitLink2))]
 public partial class GitLink2Settings : ToolOptions
 {
     /// <summary>The directory containing the solution with the pdb files.</summary>
-    [Argument(Format = "{value}")] public string SolutionDirectory => Get<string>(() => SolutionDirectory);
+    [Argument(Format = "{value}", Position = 1)] public string SolutionDirectory => Get<string>(() => SolutionDirectory);
     /// <summary>Url to remote git repository.</summary>
     [Argument(Format = "-u {value}")] public string RepositoryUrl => Get<string>(() => RepositoryUrl);
     /// <summary>Solution file name.</summary>
@@ -86,12 +89,12 @@ public partial class GitLink2Settings : ToolOptions
 /// <summary>Used within <see cref="GitLinkTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitLink3Settings>))]
 [Command(Type = typeof(GitLinkTasks), Command = nameof(GitLinkTasks.GitLink3))]
 public partial class GitLink3Settings : ToolOptions
 {
     /// <summary>The PDB to add source indexing to.</summary>
-    [Argument(Format = "{value}")] public string PdbFile => Get<string>(() => PdbFile);
+    [Argument(Format = "{value}", Position = 1)] public string PdbFile => Get<string>(() => PdbFile);
     /// <summary>The method for SRCSRV to retrieve source code. One of &lt;Http|Powershell&gt;. Default is Http.</summary>
     [Argument(Format = "--method {value}")] public GitLinkSourceCodeRetrieval Method => Get<GitLinkSourceCodeRetrieval>(() => Method);
     /// <summary>Url to remote git repository.</summary>

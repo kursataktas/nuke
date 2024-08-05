@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/BenchmarkDotNet/BenchmarkDotNet.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.BenchmarkDotNet;
+
 /// <summary><p>Powerful .NET library for benchmarking</p><p>For more details, visit the <a href="https://benchmarkdotnet.org/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,18 +44,18 @@ public partial class BenchmarkDotNetTasks : ToolTasks
 /// <summary>Used within <see cref="BenchmarkDotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<BenchmarkDotNetSettings>))]
 [Command(Type = typeof(BenchmarkDotNetTasks), Command = nameof(BenchmarkDotNetTasks.BenchmarkDotNet))]
 public partial class BenchmarkDotNetSettings : ToolOptions
 {
     /// <summary>The assembly with the benchmarks (required).</summary>
-    [Argument(Format = "{value}")] public string AssemblyFile => Get<string>(() => AssemblyFile);
+    [Argument(Format = "{value}", Position = 1)] public string AssemblyFile => Get<string>(() => AssemblyFile);
     /// <summary>Dry/Short/Medium/Long or Default</summary>
     [Argument(Format = "--job {value}")] public BenchmarkDotNetJob Job => Get<BenchmarkDotNetJob>(() => Job);
     /// <summary>Full target framework moniker for .NET Core and .NET. For Mono just 'Mono', for CoreRT just 'CoreRT'. First one will be marked as baseline!</summary>
-    [Argument(Format = "--runtimes {value}", ListSeparator = " ")] public IReadOnlyList<string> Runtimes => Get<List<string>>(() => Runtimes);
+    [Argument(Format = "--runtimes {value}", Separator = " ")] public IReadOnlyList<string> Runtimes => Get<List<string>>(() => Runtimes);
     /// <summary>GitHub/StackOverflow/RPlot/CSV/JSON/HTML/XML</summary>
-    [Argument(Format = "--exporters {value}", ListSeparator = " ")] public IReadOnlyList<BenchmarkDotNetExporter> Exporters => Get<List<BenchmarkDotNetExporter>>(() => Exporters);
+    [Argument(Format = "--exporters {value}", Separator = " ")] public IReadOnlyList<BenchmarkDotNetExporter> Exporters => Get<List<BenchmarkDotNetExporter>>(() => Exporters);
     /// <summary>Prints memory statistics</summary>
     [Argument(Format = "--memory")] public bool? MemoryStats => Get<bool?>(() => MemoryStats);
     /// <summary>Prints threading statistics</summary>
@@ -74,11 +77,11 @@ public partial class BenchmarkDotNetSettings : ToolOptions
     /// <summary>Displays all statistics (min, max &amp; more)</summary>
     [Argument(Format = "--allStats")] public bool? DisplayAllStatistics => Get<bool?>(() => DisplayAllStatistics);
     /// <summary>Categories to run. If few are provided, only the benchmarks which belong to all of them are going to be executed</summary>
-    [Argument(Format = "--allCategories {value}", ListSeparator = " ")] public IReadOnlyList<string> AllCategories => Get<List<string>>(() => AllCategories);
+    [Argument(Format = "--allCategories {value}", Separator = " ")] public IReadOnlyList<string> AllCategories => Get<List<string>>(() => AllCategories);
     /// <summary>Any Categories to run</summary>
-    [Argument(Format = "--anyCategories {value}", ListSeparator = " ")] public IReadOnlyList<string> AnyCategories => Get<List<string>>(() => AnyCategories);
+    [Argument(Format = "--anyCategories {value}", Separator = " ")] public IReadOnlyList<string> AnyCategories => Get<List<string>>(() => AnyCategories);
     /// <summary>Run all methods with given attribute (applied to class or method)</summary>
-    [Argument(Format = "--attribute {value}", ListSeparator = " ")] public IReadOnlyList<string> AttributeNames => Get<List<string>>(() => AttributeNames);
+    [Argument(Format = "--attribute {value}", Separator = " ")] public IReadOnlyList<string> AttributeNames => Get<List<string>>(() => AttributeNames);
     /// <summary>Prints single table with results for all benchmarks</summary>
     [Argument(Format = "--join {value}")] public bool? Join => Get<bool?>(() => Join);
     /// <summary>Determines if all auto-generated files should be kept or removed after running the benchmarks.</summary>
@@ -86,13 +89,13 @@ public partial class BenchmarkDotNetSettings : ToolOptions
     /// <summary>Determines if the exported result files should not be overwritten (by default they are overwritten).</summary>
     [Argument(Format = "--noOverwrite")] public bool? DontOverwriteResults => Get<bool?>(() => DontOverwriteResults);
     /// <summary>Hardware Counters</summary>
-    [Argument(Format = "--counters {value}", ListSeparator = "+")] public IReadOnlyList<string> HardwareCounters => Get<List<string>>(() => HardwareCounters);
+    [Argument(Format = "--counters {value}", Separator = "+")] public IReadOnlyList<string> HardwareCounters => Get<List<string>>(() => HardwareCounters);
     /// <summary>Path to dotnet CLI (optional).</summary>
     [Argument(Format = "--cli {value}")] public string CliPath => Get<string>(() => CliPath);
     /// <summary>The directory to restore packages to (optional).</summary>
     [Argument(Format = "--packages {value}")] public string RestorePath => Get<string>(() => RestorePath);
     /// <summary>Path(s) to CoreRun (optional).</summary>
-    [Argument(Format = "--coreRun {value}", ListSeparator = " ")] public IReadOnlyList<string> CoreRunPaths => Get<List<string>>(() => CoreRunPaths);
+    [Argument(Format = "--coreRun {value}", Separator = " ")] public IReadOnlyList<string> CoreRunPaths => Get<List<string>>(() => CoreRunPaths);
     /// <summary>Optional path to Mono which should be used for running benchmarks.</summary>
     [Argument(Format = "--monoPath {value}")] public string MonoPath => Get<string>(() => MonoPath);
     /// <summary>Optional version of private CLR build used as the value of <c>COMPLUS_Version</c> env var.</summary>

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/GitVersion/GitVersion.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.GitVersion;
+
 /// <summary><p>GitVersion is a tool to help you achieve Semantic Versioning on your project.</p><p>For more details, visit the <a href="http://gitversion.readthedocs.io/en/stable/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -40,12 +43,12 @@ public partial class GitVersionTasks : ToolTasks
 /// <summary>Used within <see cref="GitVersionTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<GitVersionSettings>))]
 [Command(Type = typeof(GitVersionTasks), Command = nameof(GitVersionTasks.GitVersion))]
 public partial class GitVersionSettings : ToolOptions
 {
     /// <summary>The directory containing .git. If not defined current directory is used. (Must be first argument).</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>Displays the version of GitVersion.</summary>
     [Argument(Format = "/version")] public bool? Version => Get<bool?>(() => Version);
     /// <summary>Runs GitVersion with additional diagnostic information (requires git.exe to be installed).</summary>
@@ -59,13 +62,13 @@ public partial class GitVersionSettings : ToolOptions
     /// <summary>Outputs the effective GitVersion config (defaults + custom from GitVersion.yml) in yaml format.</summary>
     [Argument(Format = "/showconfig")] public bool? ShowConfig => Get<bool?>(() => ShowConfig);
     /// <summary>Overrides GitVersion config values inline (semicolon-separated key value pairs e.g. <c>/overrideconfig tag-prefix=Foo</c>). Currently supported config overrides: <c>tag-prefix</c>.</summary>
-    [Argument(Format = "/overrideconfig {value}")] public IReadOnlyDictionary<string, object> ConfigurationOverride => Get<Dictionary<string, object>>(() => ConfigurationOverride);
+    [Argument(Format = "/overrideconfig {key}={value}")] public IReadOnlyDictionary<string, object> ConfigurationOverride => Get<Dictionary<string, object>>(() => ConfigurationOverride);
     /// <summary>Bypasses the cache, result will not be written to the cache.</summary>
     [Argument(Format = "/nocache")] public bool? NoCache => Get<bool?>(() => NoCache);
     /// <summary>Will recursively search for all 'AssemblyInfo.cs' files in the git repo and update them.</summary>
     [Argument(Format = "/updateassemblyinfo")] public bool? UpdateAssemblyInfo => Get<bool?>(() => UpdateAssemblyInfo);
     /// <summary>Specify name of AssemblyInfo files to update.</summary>
-    [Argument(Format = "/updateassemblyinfofilename {value}", ListSeparator = " ")] public IReadOnlyList<string> UpdateAssemblyInfoFileNames => Get<List<string>>(() => UpdateAssemblyInfoFileNames);
+    [Argument(Format = "/updateassemblyinfofilename {value}", Separator = " ")] public IReadOnlyList<string> UpdateAssemblyInfoFileNames => Get<List<string>>(() => UpdateAssemblyInfoFileNames);
     /// <summary>If the assembly info file specified with <c>/updateassemblyinfo</c> or <c>/updateassemblyinfofilename</c> is not found, it will be created with these attributes: AssemblyFileVersion, AssemblyVersion and AssemblyInformationalVersion.</summary>
     [Argument(Format = "/ensureassemblyinfo")] public bool? EnsureAssemblyInfo => Get<bool?>(() => EnsureAssemblyInfo);
     /// <summary>Url to remote git repository.</summary>

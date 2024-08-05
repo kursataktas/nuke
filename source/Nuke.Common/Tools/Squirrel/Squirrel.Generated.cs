@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Squirrel/Squirrel.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Squirrel;
+
 /// <summary><p>Squirrel is both a set of tools and a library, to completely manage both installation and updating your Desktop Windows application, written in either C# or any other language (i.e., Squirrel can manage native C++ applications).</p><p>For more details, visit the <a href="https://github.com/Squirrel/Squirrel.Windows">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class SquirrelTasks : ToolTasks
 /// <summary>Used within <see cref="SquirrelTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<SquirrelSettings>))]
 [Command(Type = typeof(SquirrelTasks), Command = nameof(SquirrelTasks.Squirrel))]
 public partial class SquirrelSettings : ToolOptions
 {
@@ -86,7 +89,7 @@ public partial class SquirrelSettings : ToolOptions
     /// <summary>Arguments that will be used when starting executable.</summary>
     [Argument(Format = "--process-start-args={value}")] public string ProcessStartArguments => Get<string>(() => ProcessStartArguments);
     /// <summary>Comma-separated string of shortcut locations, e.g. 'Desktop,StartMenu'.</summary>
-    [Argument(Format = "--shortcut-locations={value}", ListSeparator = ",")] public IReadOnlyList<string> ShortcutLocations => Get<List<string>>(() => ShortcutLocations);
+    [Argument(Format = "--shortcut-locations={value}", Separator = ",")] public IReadOnlyList<string> ShortcutLocations => Get<List<string>>(() => ShortcutLocations);
     /// <summary>Don't generate an MSI package.</summary>
     [Argument(Format = "--no-msi")] public bool? GenerateNoMsi => Get<bool?>(() => GenerateNoMsi);
     /// <summary>Don't generate delta packages to save time</summary>

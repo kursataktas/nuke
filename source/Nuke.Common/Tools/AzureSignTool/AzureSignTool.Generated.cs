@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/AzureSignTool/AzureSignTool.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.AzureSignTool;
+
 /// <summary><p>Azure Sign Tool is similar to <c>signtool</c> in the Windows SDK, with the major difference being that it uses Azure Key Vault for performing the signing process. The usage is like <c>signtool</c>, except with a limited set of options for signing and options for authenticating to Azure Key Vault.</p><p>For more details, visit the <a href="https://github.com/vcsjones/AzureSignTool">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class AzureSignToolTasks : ToolTasks
 /// <summary>Used within <see cref="AzureSignToolTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<AzureSignToolSettings>))]
 [Command(Type = typeof(AzureSignToolTasks), Command = nameof(AzureSignToolTasks.AzureSignTool), Arguments = "sign")]
 public partial class AzureSignToolSettings : ToolOptions
 {
@@ -90,7 +93,7 @@ public partial class AzureSignToolSettings : ToolOptions
     /// <summary>When signing multiple files, specifies the maximum number of concurrent operations. Setting this value does not guarentee that number of concurrent operations will be performed. If this value is unspecified, the system will use the default based on the number of available processor threads. Setting this value to <c>1</c> disable concurrent signing.</summary>
     [Argument(Format = "--max-degree-of-parallelism {value}")] public int? MaxDegreeOfParallelism => Get<int?>(() => MaxDegreeOfParallelism);
     /// <summary>Files to sign.</summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> Files => Get<List<string>>(() => Files);
+    [Argument(Format = "{value}", Position = -1)] public IReadOnlyList<string> Files => Get<List<string>>(() => Files);
 }
 #endregion
 #region AzureSignToolSettingsExtensions

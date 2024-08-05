@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/OctoVersion/OctoVersion.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.OctoVersion;
+
 /// <summary><p>For more details, visit the <a href="https://github.com/OctopusDeploy/OctoVersion">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -50,14 +53,14 @@ public partial class OctoVersionTasks : ToolTasks
 /// <summary>Used within <see cref="OctoVersionTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctoVersionGetVersionSettings>))]
 [Command(Type = typeof(OctoVersionTasks), Command = nameof(OctoVersionTasks.OctoVersionGetVersion), Arguments = "octoversion")]
 public partial class OctoVersionGetVersionSettings : ToolOptions
 {
     /// <summary>Pass in the name of the branch. If not set, OctoVersion will attempt to derive it, but this may lead to incorrect values.</summary>
     [Argument(Format = "--CurrentBranch {value}")] public string CurrentBranch => Get<string>(() => CurrentBranch);
     /// <summary>Names of branches that will not get a pre-release suffix. Defaults to 'main' (with legacy support for 'master').</summary>
-    [Argument(Format = "--NonPreReleaseTags {value}", ListSeparator = " ")] public IReadOnlyList<string> NonPreReleaseTags => Get<List<string>>(() => NonPreReleaseTags);
+    [Argument(Format = "--NonPreReleaseTags {value}", Separator = " ")] public IReadOnlyList<string> NonPreReleaseTags => Get<List<string>>(() => NonPreReleaseTags);
     /// <summary>Path to the Git repository. If not set, assumes that the current working folder is the root of the repository</summary>
     [Argument(Format = "--RepositoryPath {value}")] public string RepositoryPath => Get<string>(() => RepositoryPath);
     /// <summary>Override the calculated Major with a specific value.</summary>
@@ -86,14 +89,14 @@ public partial class OctoVersionGetVersionSettings : ToolOptions
 /// <summary>Used within <see cref="OctoVersionTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctoVersionExecuteSettings>))]
 [Command(Type = typeof(OctoVersionTasks), Command = nameof(OctoVersionTasks.OctoVersionExecute), Arguments = "octoversion")]
 public partial class OctoVersionExecuteSettings : ToolOptions
 {
     /// <summary>Pass in the name of the branch. If not set, OctoVersion will attempt to derive it, but this may lead to incorrect values.</summary>
     [Argument(Format = "--CurrentBranch {value}")] public string CurrentBranch => Get<string>(() => CurrentBranch);
     /// <summary>Names of branches that will not get a pre-release suffix. Defaults to 'main' (with legacy support for 'master').</summary>
-    [Argument(Format = "--NonPreReleaseTags {value}", ListSeparator = " ")] public IReadOnlyList<string> NonPreReleaseTags => Get<List<string>>(() => NonPreReleaseTags);
+    [Argument(Format = "--NonPreReleaseTags {value}", Separator = " ")] public IReadOnlyList<string> NonPreReleaseTags => Get<List<string>>(() => NonPreReleaseTags);
     /// <summary>Path to the Git repository. If not set, assumes that the current working folder is the root of the repository</summary>
     [Argument(Format = "--RepositoryPath {value}")] public string RepositoryPath => Get<string>(() => RepositoryPath);
     /// <summary>Override the calculated Major with a specific value.</summary>

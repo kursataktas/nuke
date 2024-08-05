@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/SonarScanner/SonarScanner.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.SonarScanner;
+
 /// <summary><p>The SonarScanner for MSBuild is the recommended way to launch a SonarQube or SonarCloud analysis for projects/solutions using MSBuild or dotnet command as build tool.</p><p>For more details, visit the <a href="https://www.sonarqube.org/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -49,7 +52,7 @@ public partial class SonarScannerTasks : ToolTasks
 /// <summary>Used within <see cref="SonarScannerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<SonarScannerBeginSettings>))]
 [Command(Type = typeof(SonarScannerTasks), Command = nameof(SonarScannerTasks.SonarScannerBegin), Arguments = "begin")]
 public partial class SonarScannerBeginSettings : ToolOptions
 {
@@ -74,29 +77,29 @@ public partial class SonarScannerBeginSettings : ToolOptions
     /// <summary>Sets the logging verbosity to detailed. Add this argument before sending logs for troubleshooting.</summary>
     [Argument(Format = "/d:sonar.verbose={value}")] public bool? Verbose => Get<bool?>(() => Verbose);
     /// <summary>Comma separated list of VSTest report files to include.</summary>
-    [Argument(Format = "/d:sonar.cs.vstest.reportsPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> VSTestReports => Get<List<string>>(() => VSTestReports);
+    [Argument(Format = "/d:sonar.cs.vstest.reportsPaths={value}", Separator = ",")] public IReadOnlyList<string> VSTestReports => Get<List<string>>(() => VSTestReports);
     /// <summary>Comma separated list of NUnit report files to include.</summary>
-    [Argument(Format = "/d:sonar.cs.nunit.reportsPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> NUnitTestReports => Get<List<string>>(() => NUnitTestReports);
+    [Argument(Format = "/d:sonar.cs.nunit.reportsPaths={value}", Separator = ",")] public IReadOnlyList<string> NUnitTestReports => Get<List<string>>(() => NUnitTestReports);
     /// <summary>Comma separated list of xUnit report files to include.</summary>
-    [Argument(Format = "/d:sonar.cs.xunit.reportsPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> XUnitTestReports => Get<List<string>>(() => XUnitTestReports);
+    [Argument(Format = "/d:sonar.cs.xunit.reportsPaths={value}", Separator = ",")] public IReadOnlyList<string> XUnitTestReports => Get<List<string>>(() => XUnitTestReports);
     /// <summary>Comma separated list of source files to exclude from analysis scope. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.exclusions={value}", ListSeparator = ",")] public IReadOnlyList<string> SourceExclusions => Get<List<string>>(() => SourceExclusions);
+    [Argument(Format = "/d:sonar.exclusions={value}", Separator = ",")] public IReadOnlyList<string> SourceExclusions => Get<List<string>>(() => SourceExclusions);
     /// <summary>Comma separated list of source files to include in analysis scope. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.inclusions={value}", ListSeparator = ",")] public IReadOnlyList<string> SourceInclusions => Get<List<string>>(() => SourceInclusions);
+    [Argument(Format = "/d:sonar.inclusions={value}", Separator = ",")] public IReadOnlyList<string> SourceInclusions => Get<List<string>>(() => SourceInclusions);
     /// <summary>Comma separated list of test files to exclude from analysis scope. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.test.exclusions={value}", ListSeparator = ",")] public IReadOnlyList<string> TestFileExclusions => Get<List<string>>(() => TestFileExclusions);
+    [Argument(Format = "/d:sonar.test.exclusions={value}", Separator = ",")] public IReadOnlyList<string> TestFileExclusions => Get<List<string>>(() => TestFileExclusions);
     /// <summary>Comma separated list of test files to include in analysis scope. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.test.inclusions={value}", ListSeparator = ",")] public IReadOnlyList<string> TestFileInclusions => Get<List<string>>(() => TestFileInclusions);
+    [Argument(Format = "/d:sonar.test.inclusions={value}", Separator = ",")] public IReadOnlyList<string> TestFileInclusions => Get<List<string>>(() => TestFileInclusions);
     /// <summary>Comma separated list of files to exclude from coverage calculations. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.coverage.exclusions={value}", ListSeparator = ",")] public IReadOnlyList<string> CoverageExclusions => Get<List<string>>(() => CoverageExclusions);
+    [Argument(Format = "/d:sonar.coverage.exclusions={value}", Separator = ",")] public IReadOnlyList<string> CoverageExclusions => Get<List<string>>(() => CoverageExclusions);
     /// <summary>Comma separated list of coverage reports in the <a href="https://docs.sonarqube.org/latest/analysis/generic-test/">Generic Test Data</a> format. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.coverageReportPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> GenericCoveragePaths => Get<List<string>>(() => GenericCoveragePaths);
+    [Argument(Format = "/d:sonar.coverageReportPaths={value}", Separator = ",")] public IReadOnlyList<string> GenericCoveragePaths => Get<List<string>>(() => GenericCoveragePaths);
     /// <summary>Comma separated list of Visual Studio Code Coverage reports to include. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.cs.vscoveragexml.reportsPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> VisualStudioCoveragePaths => Get<List<string>>(() => VisualStudioCoveragePaths);
+    [Argument(Format = "/d:sonar.cs.vscoveragexml.reportsPaths={value}", Separator = ",")] public IReadOnlyList<string> VisualStudioCoveragePaths => Get<List<string>>(() => VisualStudioCoveragePaths);
     /// <summary>Comma separated list of dotCover HTML-reports to include. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.cs.dotcover.reportsPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> DotCoverPaths => Get<List<string>>(() => DotCoverPaths);
+    [Argument(Format = "/d:sonar.cs.dotcover.reportsPaths={value}", Separator = ",")] public IReadOnlyList<string> DotCoverPaths => Get<List<string>>(() => DotCoverPaths);
     /// <summary>Comma separated list of OpenCover reports to include. Supports wildcards (<c>*</c>, <c>**</c>, <c>?</c>).</summary>
-    [Argument(Format = "/d:sonar.cs.opencover.reportsPaths={value}", ListSeparator = ",")] public IReadOnlyList<string> OpenCoverPaths => Get<List<string>>(() => OpenCoverPaths);
+    [Argument(Format = "/d:sonar.cs.opencover.reportsPaths={value}", Separator = ",")] public IReadOnlyList<string> OpenCoverPaths => Get<List<string>>(() => OpenCoverPaths);
     /// <summary>Maximum time to wait for the response of a Web Service call (in seconds). Modifying this value from the default is useful only when you're experiencing timeouts during analysis while waiting for the server to respond to Web Service calls.</summary>
     [Argument(Format = "/d:sonar.ws.timeout={value}")] public int? WebServiceTimeout => Get<int?>(() => WebServiceTimeout);
     /// <summary>Project home page.</summary>
@@ -110,7 +113,7 @@ public partial class SonarScannerBeginSettings : ToolOptions
     /// <summary>Encoding of the source files. Ex: <c>UTF-8</c> , <c>MacRoman</c> , <c>Shift_JIS</c>. This property can be replaced by the standard property <c>project.build.sourceEncoding</c> in Maven projects. The list of available encodings depends on your JVM.</summary>
     [Argument(Format = "/d:sonar.sourceEncoding={value}")] public string SourceEncoding => Get<string>(() => SourceEncoding);
     /// <summary>Comma-delimited list of file path patterns to be excluded from duplication detection.</summary>
-    [Argument(Format = "/d:sonar.cpd.exclusions={value}", ListSeparator = ",")] public IReadOnlyList<string> DuplicationExclusions => Get<List<string>>(() => DuplicationExclusions);
+    [Argument(Format = "/d:sonar.cpd.exclusions={value}", Separator = ",")] public IReadOnlyList<string> DuplicationExclusions => Get<List<string>>(() => DuplicationExclusions);
     /// <summary>Name of the branch (visible in the UI)</summary>
     [Argument(Format = "/d:sonar.branch.name={value}")] public string BranchName => Get<string>(() => BranchName);
     /// <summary>Unique identifier of your Pull Request. Must correspond to the key of the Pull Request in your ALM. e.g.: <c>sonar.pullrequest.key=5</c></summary>
@@ -134,9 +137,9 @@ public partial class SonarScannerBeginSettings : ToolOptions
     /// <summary>Sets the number of seconds that the scanner should wait for a report to be processed. Default: <c>300</c>. e.g.: <c>sonar.qualitygate.timeout=300</c></summary>
     [Argument(Format = "/d:sonar.qualitygate.timeout={value}")] public int? QualityGateTimeout => Get<int?>(() => QualityGateTimeout);
     /// <summary>This property stub allows you to insert custom key/value pairs into the analysis context, which will also be passed forward to webhooks.</summary>
-    [Argument(Format = "/d:sonar.analysis.{value}")] public IReadOnlyDictionary<string, string> AdditionalAnalysisParameters => Get<Dictionary<string, string>>(() => AdditionalAnalysisParameters);
+    [Argument(Format = "/d:sonar.analysis.{key}={value}")] public IReadOnlyDictionary<string, string> AdditionalAnalysisParameters => Get<Dictionary<string, string>>(() => AdditionalAnalysisParameters);
     /// <summary>Specifies an additional SonarQube analysis parameter, you can add this argument multiple times.</summary>
-    [Argument(Format = "/d:{value}")] public IReadOnlyDictionary<string, string> AdditionalParameters => Get<Dictionary<string, string>>(() => AdditionalParameters);
+    [Argument(Format = "/d:{key}={value}")] public IReadOnlyDictionary<string, string> AdditionalParameters => Get<Dictionary<string, string>>(() => AdditionalParameters);
     /// <summary>Specifies the path to a client certificate used to access SonarQube. The certificate must be password protected.</summary>
     [Argument(Format = "/d:sonar.clientcert.path={value}")] public string ClientCertificatePath => Get<string>(() => ClientCertificatePath);
     /// <summary>Specifies the password for the client certificate used to access SonarQube. Required if a client certificate is used.</summary>
@@ -149,7 +152,7 @@ public partial class SonarScannerBeginSettings : ToolOptions
 /// <summary>Used within <see cref="SonarScannerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<SonarScannerEndSettings>))]
 [Command(Type = typeof(SonarScannerTasks), Command = nameof(SonarScannerTasks.SonarScannerEnd), Arguments = "end")]
 public partial class SonarScannerEndSettings : ToolOptions
 {

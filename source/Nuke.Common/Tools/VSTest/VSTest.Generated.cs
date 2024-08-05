@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/VSTest/VSTest.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.VSTest;
+
 /// <summary><p>VSTest.Console.exe is the command-line command that is used to run tests. You can specify several options in any order on the VSTest.Console.exe command line.</p><p>For more details, visit the <a href="https://msdn.microsoft.com/en-us/library/jj155796.aspx">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,16 +44,16 @@ public partial class VSTestTasks : ToolTasks
 /// <summary>Used within <see cref="VSTestTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<VSTestSettings>))]
 [Command(Type = typeof(VSTestTasks), Command = nameof(VSTestTasks.VSTest))]
 public partial class VSTestSettings : ToolOptions
 {
     /// <summary>Run tests from the specified files. Separate multiple test file names with spaces.</summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> TestAssemblies => Get<List<string>>(() => TestAssemblies);
+    [Argument(Format = "{value}", Position = 1)] public IReadOnlyList<string> TestAssemblies => Get<List<string>>(() => TestAssemblies);
     /// <summary>Run tests with additional settings such as data collectors.</summary>
     [Argument(Format = "/Settings:{value}")] public string SettingsFile => Get<string>(() => SettingsFile);
     /// <summary>Run tests with names that match the provided values. To provide multiple values, separate them by commas.</summary>
-    [Argument(Format = "/Tests:{value}", ListSeparator = ",")] public IReadOnlyList<string> Tests => Get<List<string>>(() => Tests);
+    [Argument(Format = "/Tests:{value}", Separator = ",")] public IReadOnlyList<string> Tests => Get<List<string>>(() => Tests);
     /// <summary>Specifies that the tests be executed in parallel. By default up to all available cores on the machine may be used. The number of cores to use can be configured by using a settings file.</summary>
     [Argument(Format = "/Parallel")] public bool? Parallel => Get<bool?>(() => Parallel);
     /// <summary>Enables data diagnostic adapter CodeCoverage in the test run.</summary>
@@ -66,7 +69,7 @@ public partial class VSTestSettings : ToolOptions
     /// <summary>Target .NET Framework version to be used for test execution.</summary>
     [Argument(Format = "/Framework:{value}")] public VsTestFramework Framework => Get<VsTestFramework>(() => Framework);
     /// <summary>Run tests that match the given expression.<para/><c>&lt;Expression&gt;</c> is of the format <c>&lt;property&gt;=&lt;value&gt;[|&lt;Expression&gt;]</c>.<para/>The <c>/TestCaseFilter</c> command line option cannot be used with the <c>/Tests</c> command line option.<para/>For information about creating and using expressions, see <a href="https://github.com/Microsoft/vstest-docs/blob/master/docs/filter.md">TestCase filter</a>.</summary>
-    [Argument(Format = "/TestCaseFilter:{value}", ListSeparator = "|")] public IReadOnlyList<string> TestCaseFilters => Get<List<string>>(() => TestCaseFilters);
+    [Argument(Format = "/TestCaseFilter:{value}", Separator = "|")] public IReadOnlyList<string> TestCaseFilters => Get<List<string>>(() => TestCaseFilters);
     /// <summary>Specify a logger for test results. Example: To log results into a Visual Studio Test Results File (TRX) use <c>/Logger:trx</c>.</summary>
     [Argument(Format = "/Logger:{value}")] public string Logger => Get<string>(() => Logger);
     /// <summary>Lists discovered tests from the given test container.</summary>

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Npm/Npm.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Npm;
+
 /// <summary><p>npm is the package manager for the Node JavaScript platform. It puts modules in place so that node can find them, and manages dependency conflicts intelligently.<para/>It is extremely configurable to support a wide variety of use cases. Most commonly, it is used to publish, discover, install, and develop node programs.</p><p>For more details, visit the <a href="https://www.npmjs.com/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -58,7 +61,7 @@ public partial class NpmTasks : ToolTasks
 /// <summary>Used within <see cref="NpmTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NpmCiSettings>))]
 [Command(Type = typeof(NpmTasks), Command = nameof(NpmTasks.NpmCi), Arguments = "ci")]
 public partial class NpmCiSettings : ToolOptions
 {
@@ -68,12 +71,12 @@ public partial class NpmCiSettings : ToolOptions
 /// <summary>Used within <see cref="NpmTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NpmInstallSettings>))]
 [Command(Type = typeof(NpmTasks), Command = nameof(NpmTasks.NpmInstall), Arguments = "install")]
 public partial class NpmInstallSettings : ToolOptions
 {
     /// <summary>List of packages to be installed.</summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> Packages => Get<List<string>>(() => Packages);
+    [Argument(Format = "{value}", Position = 1)] public IReadOnlyList<string> Packages => Get<List<string>>(() => Packages);
     /// <summary>Causes npm to not install modules listed in devDependencies.</summary>
     [Argument(Format = "--production")] public bool? Production => Get<bool?>(() => Production);
     /// <summary>Forces npm to fetch remote resources even if a local copy exists on disk.</summary>
@@ -104,14 +107,14 @@ public partial class NpmInstallSettings : ToolOptions
 /// <summary>Used within <see cref="NpmTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NpmRunSettings>))]
 [Command(Type = typeof(NpmTasks), Command = nameof(NpmTasks.NpmRun), Arguments = "run")]
 public partial class NpmRunSettings : ToolOptions
 {
     /// <summary>The command to be executed.</summary>
-    [Argument(Format = "{value}")] public string Command => Get<string>(() => Command);
+    [Argument(Format = "{value}", Position = 1)] public string Command => Get<string>(() => Command);
     /// <summary>Arguments passed to the script.</summary>
-    [Argument(Format = "-- {value}", ListSeparator = " ")] public IReadOnlyList<string> Arguments => Get<List<string>>(() => Arguments);
+    [Argument(Format = "-- {value}", Position = -1, Separator = " ")] public IReadOnlyList<string> Arguments => Get<List<string>>(() => Arguments);
 }
 #endregion
 #region NpmCiSettingsExtensions

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/DocFX/DocFX.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.DocFX;
+
 /// <summary><p>DocFX is an API documentation generator for .NET, and currently it supports C# and VB. It generates API reference documentation from triple-slash comments in your source code. It also allows you to use Markdown files to create additional topics such as tutorials and how-tos, and to customize the generated reference documentation. DocFX builds a static HTML website from your source code and Markdown files, which can be easily hosted on any web servers (for example, <em>github.io</em>). Also, DocFX provides you the flexibility to customize the layout and style of your website through templates. If you are interested in creating your own website with your own styles, you can follow <a href="http://dotnet.github.io/docfx/tutorial/howto_create_custom_template.html">how to create custom template</a> to create custom templates.</p><p>For more details, visit the <a href="https://dotnet.github.io/docfx/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -122,18 +125,18 @@ public partial class DocFXTasks : ToolTasks
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXBuildSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXBuild), Arguments = "build")]
 public partial class DocFXBuildSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string ConfigFile => Get<string>(() => ConfigFile);
+    [Argument(Format = "{value}", Position = 1)] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary>Set changes file.</summary>
     [Argument(Format = "--changesFile={value}")] public string ChangesFile => Get<string>(() => ChangesFile);
     /// <summary>If set to true, docfx create a new intermediate folder for cache files, historical cache data will be cleaned up.</summary>
     [Argument(Format = "--cleanupCacheHistory")] public bool? CleanupCacheHistory => Get<bool?>(() => CleanupCacheHistory);
     /// <summary>Specify content files for generating documentation.</summary>
-    [Argument(Format = "--content={value}", ListSeparator = ",")] public IReadOnlyList<string> Content => Get<List<string>>(() => Content);
+    [Argument(Format = "--content={value}", Separator = ",")] public IReadOnlyList<string> Content => Get<List<string>>(() => Content);
     /// <summary>Disable fetching Git related information for articles. By default it is enabled and may have side effect on performance when the repo is large.</summary>
     [Argument(Format = "--disableGitFeatures")] public bool? DisableGitFeatures => Get<bool?>(() => DisableGitFeatures);
     /// <summary>If set to true, template will not be actually applied to the documents. This option is always used with --exportRawModel or --exportViewModel is set so that only raw model files or view model files are generated.</summary>
@@ -149,7 +152,7 @@ public partial class DocFXBuildSettings : ToolOptions
     /// <summary>Specify a JSON file path containing fileMetadata settings, as similar to {"fileMetadata":{"key":"value"}}. It overrides the fileMetadata settings from the config file.</summary>
     [Argument(Format = "--fileMetadataFile={value}")] public string FileMetadataFilePath => Get<string>(() => FileMetadataFilePath);
     /// <summary>Specify a list of JSON file path containing fileMetadata settings, as similar to {"key":"value"}. It overrides the fileMetadata settings from the config file.</summary>
-    [Argument(Format = "--fileMetadataFiles={value}", ListSeparator = ",")] public IReadOnlyList<string> FileMetadataFilePaths => Get<List<string>>(() => FileMetadataFilePaths);
+    [Argument(Format = "--fileMetadataFiles={value}", Separator = ",")] public IReadOnlyList<string> FileMetadataFilePaths => Get<List<string>>(() => FileMetadataFilePaths);
     /// <summary>Force to re-process the documentation in post processors. It will be cascaded from force option.</summary>
     [Argument(Format = "--forcePostProcess")] public bool? ForcePostProcess => Get<bool?>(() => ForcePostProcess);
     /// <summary>Force re-build all the documentation.</summary>
@@ -159,7 +162,7 @@ public partial class DocFXBuildSettings : ToolOptions
     /// <summary>Specify a JSON file path containing globalMetadata settings, as similar to {"globalMetadata":{"key":"value"}}. It overrides the globalMetadata settings from the config file.</summary>
     [Argument(Format = "--globalMetadataFile={value}")] public string GlobalMetadataFilePath => Get<string>(() => GlobalMetadataFilePath);
     /// <summary>Specify a list of JSON file path containing globalMetadata settings, as similar to {"key":"value"}. It overrides the globalMetadata settings from the config file.</summary>
-    [Argument(Format = "--globalMetadataFiles={value}", ListSeparator = ",")] public IReadOnlyList<string> GlobalMetadataFilePaths => Get<List<string>>(() => GlobalMetadataFilePaths);
+    [Argument(Format = "--globalMetadataFiles={value}", Separator = ",")] public IReadOnlyList<string> GlobalMetadataFilePaths => Get<List<string>>(() => GlobalMetadataFilePaths);
     /// <summary>Specify the hostname of the hosted website (e.g., 'localhost' or '*').</summary>
     [Argument(Format = "--hostname={value}")] public string Host => Get<string>(() => Host);
     /// <summary>Set folder for intermediate build results.</summary>
@@ -181,29 +184,29 @@ public partial class DocFXBuildSettings : ToolOptions
     /// <summary>The output folder for files generated for debugging purpose when in debug mode. If not specified, it is ${TempPath}/docfx.</summary>
     [Argument(Format = "--debugOutput={value}")] public string OutputFolderForDebugFiles => Get<string>(() => OutputFolderForDebugFiles);
     /// <summary>Specify overwrite files used by content files.</summary>
-    [Argument(Format = "--overwrite={value}", ListSeparator = ",")] public IReadOnlyList<string> Overwrite => Get<List<string>>(() => Overwrite);
+    [Argument(Format = "--overwrite={value}", Separator = ",")] public IReadOnlyList<string> Overwrite => Get<List<string>>(() => Overwrite);
     /// <summary>Specify the port of the hosted website.</summary>
     [Argument(Format = "--port={value}")] public int? Port => Get<int?>(() => Port);
     /// <summary>Set the order of post processors in plugins.</summary>
-    [Argument(Format = "--postProcessors={value}", ListSeparator = ",")] public IReadOnlyList<string> PostProcessors => Get<List<string>>(() => PostProcessors);
+    [Argument(Format = "--postProcessors={value}", Separator = ",")] public IReadOnlyList<string> PostProcessors => Get<List<string>>(() => PostProcessors);
     /// <summary>Print help message for this sub-command.</summary>
     [Argument(Format = "--help")] public bool? PrintHelpMessage => Get<bool?>(() => PrintHelpMessage);
     /// <summary>Specify the output folder for the raw model. If not set, the raw model will be generated to the same folder as the output documentation.</summary>
     [Argument(Format = "--rawModelOutputFolder={value}")] public string RawModelOutputFolder => Get<string>(() => RawModelOutputFolder);
     /// <summary>Specify resources used by content files.</summary>
-    [Argument(Format = "--resource={value}", ListSeparator = ",")] public IReadOnlyList<string> Resource => Get<List<string>>(() => Resource);
+    [Argument(Format = "--resource={value}", Separator = ",")] public IReadOnlyList<string> Resource => Get<List<string>>(() => Resource);
     /// <summary>Please provide the license key for validating schema using NewtonsoftJson.Schema here.</summary>
     [Argument(Format = "--schemaLicense={value}")] public string SchemaLicense => Get<string>(() => SchemaLicense);
     /// <summary>Host the generated documentation to a website.</summary>
     [Argument(Format = "--serve")] public bool? Serve => Get<bool?>(() => Serve);
     /// <summary>Specify the template name to apply to. If not specified, output YAML file will not be transformed.</summary>
-    [Argument(Format = "--template={value}", ListSeparator = ",")] public IReadOnlyList<string> Templates => Get<List<string>>(() => Templates);
+    [Argument(Format = "--template={value}", Separator = ",")] public IReadOnlyList<string> Templates => Get<List<string>>(() => Templates);
     /// <summary>Specify which theme to use. By default 'default' theme is offered.</summary>
-    [Argument(Format = "--theme={value}", ListSeparator = ",")] public IReadOnlyList<string> Themes => Get<List<string>>(() => Themes);
+    [Argument(Format = "--theme={value}", Separator = ",")] public IReadOnlyList<string> Themes => Get<List<string>>(() => Themes);
     /// <summary>Specify the output folder for the view model. If not set, the view model will be generated to the same folder as the output documentation.</summary>
     [Argument(Format = "--viewModelOutputFolder={value}")] public string ViewModelOutputFolder => Get<string>(() => ViewModelOutputFolder);
     /// <summary>Specify the urls of xrefmap used by content files.</summary>
-    [Argument(Format = "--xref={value}", ListSeparator = ",")] public IReadOnlyList<string> XRefMaps => Get<List<string>>(() => XRefMaps);
+    [Argument(Format = "--xref={value}", Separator = ",")] public IReadOnlyList<string> XRefMaps => Get<List<string>>(() => XRefMaps);
     /// <summary>Specify the correlation id used for logging.</summary>
     [Argument(Format = "--correlationId={value}")] public string CorrelationId => Get<string>(() => CorrelationId);
     /// <summary>Specify the file name to save processing log.</summary>
@@ -220,12 +223,12 @@ public partial class DocFXBuildSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXDependencySettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXDependency), Arguments = "dependency")]
 public partial class DocFXDependencySettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string DependencyFile => Get<string>(() => DependencyFile);
+    [Argument(Format = "{value}", Position = 1)] public string DependencyFile => Get<string>(() => DependencyFile);
     /// <summary>The intermediate folder that store cache files.</summary>
     [Argument(Format = "--intermediateFolder={value}")] public string IntermediateFolder => Get<string>(() => IntermediateFolder);
     /// <summary>Print help message for this sub-command.</summary>
@@ -238,12 +241,12 @@ public partial class DocFXDependencySettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXDownloadSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXDownload), Arguments = "download")]
 public partial class DocFXDownloadSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string ArchiveFile => Get<string>(() => ArchiveFile);
+    [Argument(Format = "{value}", Position = 1)] public string ArchiveFile => Get<string>(() => ArchiveFile);
     /// <summary>Print help message for this sub-command.</summary>
     [Argument(Format = "--help")] public bool? PrintHelpMessage => Get<bool?>(() => PrintHelpMessage);
     /// <summary>Specify the url of xrefmap.</summary>
@@ -254,19 +257,19 @@ public partial class DocFXDownloadSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXHelpSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXHelp), Arguments = "help")]
 public partial class DocFXHelpSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Command => Get<string>(() => Command);
+    [Argument(Format = "{value}", Position = 1)] public string Command => Get<string>(() => Command);
 }
 #endregion
 #region DocFXInitSettings
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXInitSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXInit), Arguments = "init")]
 public partial class DocFXInitSettings : ToolOptions
 {
@@ -290,14 +293,14 @@ public partial class DocFXInitSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXMergeSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXMerge), Arguments = "merge")]
 public partial class DocFXMergeSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string ConfigFile => Get<string>(() => ConfigFile);
+    [Argument(Format = "{value}", Position = 1)] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary>Specifies content files for generating documentation.</summary>
-    [Argument(Format = "--content={value}", ListSeparator = ",")] public IReadOnlyList<string> Content => Get<List<string>>(() => Content);
+    [Argument(Format = "--content={value}", Separator = ",")] public IReadOnlyList<string> Content => Get<List<string>>(() => Content);
     /// <summary>Specify a JSON file path containing fileMetadata settings, as similar to {"fileMetadata":{"key":"value"}}. It overrides the fileMetadata settings from the config file.</summary>
     [Argument(Format = "--fileMetadataFile={value}")] public string FileMetadataFilePath => Get<string>(() => FileMetadataFilePath);
     /// <summary>Specify global metadata key-value pair in json format. It overrides the globalMetadata settings from the config file.</summary>
@@ -307,7 +310,7 @@ public partial class DocFXMergeSettings : ToolOptions
     /// <summary>Print help message for this sub-command.</summary>
     [Argument(Format = "--help")] public bool? PrintHelpMessage => Get<bool?>(() => PrintHelpMessage);
     /// <summary>Specify metadata names that need to be merged into toc file.</summary>
-    [Argument(Format = "--tocMetadata={value}", ListSeparator = ",")] public IReadOnlyList<string> TocMetadata => Get<List<string>>(() => TocMetadata);
+    [Argument(Format = "--tocMetadata={value}", Separator = ",")] public IReadOnlyList<string> TocMetadata => Get<List<string>>(() => TocMetadata);
     /// <summary>Specify the correlation id used for logging.</summary>
     [Argument(Format = "--correlationId={value}")] public string CorrelationId => Get<string>(() => CorrelationId);
     /// <summary>Specify the file name to save processing log.</summary>
@@ -324,12 +327,12 @@ public partial class DocFXMergeSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXMetadataSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXMetadata), Arguments = "metadata")]
 public partial class DocFXMetadataSettings : ToolOptions
 {
     /// <summary>The projects for which the metadata should be built.</summary>
-    [Argument(Format = "{value}", ListSeparator = " ")] public IReadOnlyList<string> Projects => Get<List<string>>(() => Projects);
+    [Argument(Format = "{value}", Position = 1, Separator = " ")] public IReadOnlyList<string> Projects => Get<List<string>>(() => Projects);
     /// <summary>Disable the default API filter (default filter only generate public or protected APIs).</summary>
     [Argument(Format = "--disableDefaultFilter")] public bool? DisableDefaultFilter => Get<bool?>(() => DisableDefaultFilter);
     /// <summary>Disable fetching Git related information for articles. By default it is enabled and may have side effect on performance when the repo is large.</summary>
@@ -341,7 +344,7 @@ public partial class DocFXMetadataSettings : ToolOptions
     /// <summary>Specify the name to use for the global namespace.</summary>
     [Argument(Format = "--globalNamespaceId={value}")] public string GlobalNamespaceId => Get<string>(() => GlobalNamespaceId);
     /// <summary>--property &lt;n1&gt;=&lt;v1&gt;;&lt;n2&gt;=&lt;v2&gt; An optional set of MSBuild properties used when interpreting project files. These are the same properties that are passed to msbuild via the /property:&lt;n1&gt;=&lt;v1&gt;;&lt;n2&gt;=&lt;v2&gt; command line argument.</summary>
-    [Argument(Format = "--property={value}", ListSeparator = ";")] public IReadOnlyDictionary<string, string> MSBuildProperties => Get<Dictionary<string, string>>(() => MSBuildProperties);
+    [Argument(Format = "--property {key}={value}", Separator = ";")] public IReadOnlyDictionary<string, string> MSBuildProperties => Get<Dictionary<string, string>>(() => MSBuildProperties);
     /// <summary>Specify the output base directory.</summary>
     [Argument(Format = "--output={value}")] public string OutputFolder => Get<string>(() => OutputFolder);
     /// <summary>Preserve the existing xml comment tags inside 'summary' triple slash comments.</summary>
@@ -366,7 +369,7 @@ public partial class DocFXMetadataSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXPdfSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXPdf), Arguments = "pdf")]
 public partial class DocFXPdfSettings : ToolOptions
 {
@@ -395,13 +398,13 @@ public partial class DocFXPdfSettings : ToolOptions
     /// <summary>Specify the output folder for the raw files, if not specified, raw files will by default be saved to _raw subfolder under output folder if keepRawFiles is set to true.</summary>
     [Argument(Format = "--rawOutputFolder={value}")] public string RawOutputFolder => Get<string>(() => RawOutputFolder);
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string ConfigFile => Get<string>(() => ConfigFile);
+    [Argument(Format = "{value}", Position = 1)] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary>Set changes file.</summary>
     [Argument(Format = "--changesFile={value}")] public string ChangesFile => Get<string>(() => ChangesFile);
     /// <summary>If set to true, docfx create a new intermediate folder for cache files, historical cache data will be cleaned up.</summary>
     [Argument(Format = "--cleanupCacheHistory")] public bool? CleanupCacheHistory => Get<bool?>(() => CleanupCacheHistory);
     /// <summary>Specify content files for generating documentation.</summary>
-    [Argument(Format = "--content={value}", ListSeparator = ",")] public IReadOnlyList<string> Content => Get<List<string>>(() => Content);
+    [Argument(Format = "--content={value}", Separator = ",")] public IReadOnlyList<string> Content => Get<List<string>>(() => Content);
     /// <summary>Disable fetching Git related information for articles. By default it is enabled and may have side effect on performance when the repo is large.</summary>
     [Argument(Format = "--disableGitFeatures")] public bool? DisableGitFeatures => Get<bool?>(() => DisableGitFeatures);
     /// <summary>If set to true, template will not be actually applied to the documents. This option is always used with --exportRawModel or --exportViewModel is set so that only raw model files or view model files are generated.</summary>
@@ -417,7 +420,7 @@ public partial class DocFXPdfSettings : ToolOptions
     /// <summary>Specify a JSON file path containing fileMetadata settings, as similar to {"fileMetadata":{"key":"value"}}. It overrides the fileMetadata settings from the config file.</summary>
     [Argument(Format = "--fileMetadataFile={value}")] public string FileMetadataFilePath => Get<string>(() => FileMetadataFilePath);
     /// <summary>Specify a list of JSON file path containing fileMetadata settings, as similar to {"key":"value"}. It overrides the fileMetadata settings from the config file.</summary>
-    [Argument(Format = "--fileMetadataFiles={value}", ListSeparator = ",")] public IReadOnlyList<string> FileMetadataFilePaths => Get<List<string>>(() => FileMetadataFilePaths);
+    [Argument(Format = "--fileMetadataFiles={value}", Separator = ",")] public IReadOnlyList<string> FileMetadataFilePaths => Get<List<string>>(() => FileMetadataFilePaths);
     /// <summary>Force to re-process the documentation in post processors. It will be cascaded from force option.</summary>
     [Argument(Format = "--forcePostProcess")] public bool? ForcePostProcess => Get<bool?>(() => ForcePostProcess);
     /// <summary>Force re-build all the documentation.</summary>
@@ -427,7 +430,7 @@ public partial class DocFXPdfSettings : ToolOptions
     /// <summary>Specify a JSON file path containing globalMetadata settings, as similar to {"globalMetadata":{"key":"value"}}. It overrides the globalMetadata settings from the config file.</summary>
     [Argument(Format = "--globalMetadataFile={value}")] public string GlobalMetadataFilePath => Get<string>(() => GlobalMetadataFilePath);
     /// <summary>Specify a list of JSON file path containing globalMetadata settings, as similar to {"key":"value"}. It overrides the globalMetadata settings from the config file.</summary>
-    [Argument(Format = "--globalMetadataFiles={value}", ListSeparator = ",")] public IReadOnlyList<string> GlobalMetadataFilePaths => Get<List<string>>(() => GlobalMetadataFilePaths);
+    [Argument(Format = "--globalMetadataFiles={value}", Separator = ",")] public IReadOnlyList<string> GlobalMetadataFilePaths => Get<List<string>>(() => GlobalMetadataFilePaths);
     /// <summary>Specify the hostname of the hosted website (e.g., 'localhost' or '*').</summary>
     [Argument(Format = "--hostname={value}")] public string Host => Get<string>(() => Host);
     /// <summary>Set folder for intermediate build results.</summary>
@@ -449,29 +452,29 @@ public partial class DocFXPdfSettings : ToolOptions
     /// <summary>The output folder for files generated for debugging purpose when in debug mode. If not specified, it is ${TempPath}/docfx.</summary>
     [Argument(Format = "--debugOutput={value}")] public string OutputFolderForDebugFiles => Get<string>(() => OutputFolderForDebugFiles);
     /// <summary>Specify overwrite files used by content files.</summary>
-    [Argument(Format = "--overwrite={value}", ListSeparator = ",")] public IReadOnlyList<string> Overwrite => Get<List<string>>(() => Overwrite);
+    [Argument(Format = "--overwrite={value}", Separator = ",")] public IReadOnlyList<string> Overwrite => Get<List<string>>(() => Overwrite);
     /// <summary>Specify the port of the hosted website.</summary>
     [Argument(Format = "--port={value}")] public int? Port => Get<int?>(() => Port);
     /// <summary>Set the order of post processors in plugins.</summary>
-    [Argument(Format = "--postProcessors={value}", ListSeparator = ",")] public IReadOnlyList<string> PostProcessors => Get<List<string>>(() => PostProcessors);
+    [Argument(Format = "--postProcessors={value}", Separator = ",")] public IReadOnlyList<string> PostProcessors => Get<List<string>>(() => PostProcessors);
     /// <summary>Print help message for this sub-command.</summary>
     [Argument(Format = "--help")] public bool? PrintHelpMessage => Get<bool?>(() => PrintHelpMessage);
     /// <summary>Specify the output folder for the raw model. If not set, the raw model will be generated to the same folder as the output documentation.</summary>
     [Argument(Format = "--rawModelOutputFolder={value}")] public string RawModelOutputFolder => Get<string>(() => RawModelOutputFolder);
     /// <summary>Specify resources used by content files.</summary>
-    [Argument(Format = "--resource={value}", ListSeparator = ",")] public IReadOnlyList<string> Resource => Get<List<string>>(() => Resource);
+    [Argument(Format = "--resource={value}", Separator = ",")] public IReadOnlyList<string> Resource => Get<List<string>>(() => Resource);
     /// <summary>Please provide the license key for validating schema using NewtonsoftJson.Schema here.</summary>
     [Argument(Format = "--schemaLicense={value}")] public string SchemaLicense => Get<string>(() => SchemaLicense);
     /// <summary>Host the generated documentation to a website.</summary>
     [Argument(Format = "--serve")] public bool? Serve => Get<bool?>(() => Serve);
     /// <summary>Specify the template name to apply to. If not specified, output YAML file will not be transformed.</summary>
-    [Argument(Format = "--template={value}", ListSeparator = ",")] public IReadOnlyList<string> Templates => Get<List<string>>(() => Templates);
+    [Argument(Format = "--template={value}", Separator = ",")] public IReadOnlyList<string> Templates => Get<List<string>>(() => Templates);
     /// <summary>Specify which theme to use. By default 'default' theme is offered.</summary>
-    [Argument(Format = "--theme={value}", ListSeparator = ",")] public IReadOnlyList<string> Themes => Get<List<string>>(() => Themes);
+    [Argument(Format = "--theme={value}", Separator = ",")] public IReadOnlyList<string> Themes => Get<List<string>>(() => Themes);
     /// <summary>Specify the output folder for the view model. If not set, the view model will be generated to the same folder as the output documentation.</summary>
     [Argument(Format = "--viewModelOutputFolder={value}")] public string ViewModelOutputFolder => Get<string>(() => ViewModelOutputFolder);
     /// <summary>Specify the urls of xrefmap used by content files.</summary>
-    [Argument(Format = "--xref={value}", ListSeparator = ",")] public IReadOnlyList<string> XRefMaps => Get<List<string>>(() => XRefMaps);
+    [Argument(Format = "--xref={value}", Separator = ",")] public IReadOnlyList<string> XRefMaps => Get<List<string>>(() => XRefMaps);
     /// <summary>Specify the correlation id used for logging.</summary>
     [Argument(Format = "--correlationId={value}")] public string CorrelationId => Get<string>(() => CorrelationId);
     /// <summary>Specify the file name to save processing log.</summary>
@@ -488,12 +491,12 @@ public partial class DocFXPdfSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXServeSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXServe), Arguments = "serve")]
 public partial class DocFXServeSettings : ToolOptions
 {
     /// <summary></summary>
-    [Argument(Format = "{value}")] public string Folder => Get<string>(() => Folder);
+    [Argument(Format = "{value}", Position = 1)] public string Folder => Get<string>(() => Folder);
     /// <summary>Specify the hostname of the hosted website [localhost].</summary>
     [Argument(Format = "--hostname={value}")] public string Host => Get<string>(() => Host);
     /// <summary>Specify the port of the hosted website [8080].</summary>
@@ -506,12 +509,12 @@ public partial class DocFXServeSettings : ToolOptions
 /// <summary>Used within <see cref="DocFXTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DocFXTemplateSettings>))]
 [Command(Type = typeof(DocFXTasks), Command = nameof(DocFXTasks.DocFXTemplate), Arguments = "template")]
 public partial class DocFXTemplateSettings : ToolOptions
 {
     /// <summary>The command to execute.</summary>
-    [Argument(Format = "{value}", ListSeparator = " ")] public string Command => Get<string>(() => Command);
+    [Argument(Format = "{value}", Position = 1, Separator = " ")] public string Command => Get<string>(() => Command);
     /// <summary>If specified, all the available templates will be exported.</summary>
     [Argument(Format = "--all")] public bool? All => Get<bool?>(() => All);
     /// <summary>Specify the output folder path for the exported templates.</summary>

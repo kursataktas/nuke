@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Boots/Boots.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Boots;
+
 /// <summary><p>boots is a .NET global tool for <c>bootstrapping</c> <c>vsix</c> and <c>pkg</c> files.</p><p>For more details, visit the <a href="https://github.com/jonathanpeppers/boots">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class BootsTasks : ToolTasks
 /// <summary>Used within <see cref="BootsTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<BootsSettings>))]
 [Command(Type = typeof(BootsTasks), Command = nameof(BootsTasks.Boots))]
 public partial class BootsSettings : ToolOptions
 {

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Paket/Paket.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Paket;
+
 /// <summary><p>Paket is a dependency manager for .NET and mono projects, which is designed to work well with <a href="https://www.nuget.org/">NuGet</a> packages and also enables referencing files directly from <a href="https://fsprojects.github.io/Paket/git-dependencies.html">Git repositories</a> or any <a href="https://fsprojects.github.io/Paket/http-dependencies.html">HTTP resource</a>. It enables precise and predictable control over what packages the projects within your application reference.</p><p>If you want to learn how to use Paket then read the <a href="https://fsprojects.github.io/Paket/getting-started.html"><em>Getting started</em> tutorial</a> and take a look at the <a href="https://fsprojects.github.io/Paket/faq.html">FAQs</a>.</p><p>If you are already using NuGet for package management in your solution then you can learn about the upgrade process in the <a href="https://fsprojects.github.io/Paket/getting-started.html#Automatic-NuGet-conversion">convert from NuGet</a> section.</p><p>For more details, visit the <a href="https://fsprojects.github.io/paket">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -68,12 +71,12 @@ public partial class PaketTasks : ToolTasks
 /// <summary>Used within <see cref="PaketTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PaketUpdateSettings>))]
 [Command(Type = typeof(PaketTasks), Command = nameof(PaketTasks.PaketUpdate), Arguments = "update")]
 public partial class PaketUpdateSettings : ToolOptions
 {
     /// <summary>NuGet package ID.</summary>
-    [Argument(Format = "{value}")] public string PackageId => Get<string>(() => PackageId);
+    [Argument(Format = "{value}", Position = 1)] public string PackageId => Get<string>(() => PackageId);
     /// <summary>Dependency version constraint.</summary>
     [Argument(Format = "--version {value}")] public string PackageVersion => Get<string>(() => PackageVersion);
     /// <summary>Dependency group to update. Default is <em>all groups</em>.</summary>
@@ -112,7 +115,7 @@ public partial class PaketUpdateSettings : ToolOptions
 /// <summary>Used within <see cref="PaketTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PaketRestoreSettings>))]
 [Command(Type = typeof(PaketTasks), Command = nameof(PaketTasks.PaketRestore), Arguments = "restore")]
 public partial class PaketRestoreSettings : ToolOptions
 {
@@ -148,7 +151,7 @@ public partial class PaketRestoreSettings : ToolOptions
 /// <summary>Used within <see cref="PaketTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PaketPushSettings>))]
 [Command(Type = typeof(PaketTasks), Command = nameof(PaketTasks.PaketPush), Arguments = "push")]
 public partial class PaketPushSettings : ToolOptions
 {
@@ -174,12 +177,12 @@ public partial class PaketPushSettings : ToolOptions
 /// <summary>Used within <see cref="PaketTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<PaketPackSettings>))]
 [Command(Type = typeof(PaketTasks), Command = nameof(PaketTasks.PaketPack), Arguments = "pack")]
 public partial class PaketPackSettings : ToolOptions
 {
     /// <summary>Output directory for .nupkg files.</summary>
-    [Argument(Format = "{value}")] public string OutputDirectory => Get<string>(() => OutputDirectory);
+    [Argument(Format = "{value}", Position = 1)] public string OutputDirectory => Get<string>(() => OutputDirectory);
     /// <summary>Build configuration that should be packaged. Default is <em>Release</em>.</summary>
     [Argument(Format = "--build-config {value}")] public string BuildConfiguration => Get<string>(() => BuildConfiguration);
     /// <summary>Build platform that should be packaged. Default is <em>check all known platform targets</em>.</summary>
@@ -191,7 +194,7 @@ public partial class PaketPackSettings : ToolOptions
     /// <summary>Exclude paket.template file by package ID.</summary>
     [Argument(Format = "--exclude {value}")] public IReadOnlyList<string> Exclude => Get<List<string>>(() => Exclude);
     /// <summary>Package IDs with version numbers.</summary>
-    [Argument(Format = "--specific-version {value}")] public IReadOnlyDictionary<string, string> SpecificVersions => Get<Dictionary<string, string>>(() => SpecificVersions);
+    [Argument(Format = "--specific-version {key} {value}")] public IReadOnlyDictionary<string, string> SpecificVersions => Get<Dictionary<string, string>>(() => SpecificVersions);
     /// <summary>Specify release notes for the package.</summary>
     [Argument(Format = "--release-notes {value}")] public string ReleaseNotes => Get<string>(() => ReleaseNotes);
     /// <summary>Use version requirements from paket.lock instead of paket.dependencies.</summary>

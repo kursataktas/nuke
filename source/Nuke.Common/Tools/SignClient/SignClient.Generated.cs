@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/SignClient/SignClient.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.SignClient;
+
 /// <summary><p>Code Signing client for Authenticode, NuGet, VSIX, and more</p><p>For more details, visit the <a href="https://discoverdot.net/projects/sign-service">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class SignClientTasks : ToolTasks
 /// <summary>Used within <see cref="SignClientTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<SignClientSignSettings>))]
 [Command(Type = typeof(SignClientTasks), Command = nameof(SignClientTasks.SignClientSign), Arguments = "sign")]
 public partial class SignClientSignSettings : ToolOptions
 {

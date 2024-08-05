@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/ReSharper/ReSharper.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.ReSharper;
+
 /// <summary><p>For more details, visit the <a href="https://www.jetbrains.com/help/resharper/ReSharper_Command_Line_Tools.html">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -59,12 +62,12 @@ public partial class ReSharperTasks : ToolTasks
 /// <summary>Used within <see cref="ReSharperTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ReSharperInspectCodeSettings>))]
 [Command(Type = typeof(ReSharperTasks), Command = nameof(ReSharperTasks.ReSharperInspectCode), Arguments = "inspectcode")]
 public partial class ReSharperInspectCodeSettings : ReSharperSettingsBase
 {
     /// <summary>Target path.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>Lets you set the output file. By default, the output file is saved in the <em>%TEMP%</em> directory.</summary>
     [Argument(Format = "--output={value}")] public string Output => Get<string>(() => Output);
     /// <summary>By default, InspectCode writes its output in <c>XML</c> format. If necessary, you can specify other output formats with this parameter.</summary>
@@ -84,7 +87,7 @@ public partial class ReSharperInspectCodeSettings : ReSharperSettingsBase
     /// <summary>Default settings are overridden from the <a href="https://www.jetbrains.com/help/resharper/Sharing_Configuration_Options.html#solution-team-shared-layer">team-shared layer</a>, if it exists. If necessary, you can use this parameter to specify another <c>.DotSettings</c> file, which will override all other settings.</summary>
     [Argument(Format = "--settings={value}")] public string Settings => Get<string>(() => Settings);
     /// <summary>Disables specified <a href="https://www.jetbrains.com/help/resharper/Sharing_Configuration_Options.html#layers">settings layers</a>. Accepted values: <c>GlobalAll</c>, <c>GlobalPerProduct</c>, <c>SolutionShared</c>, <c>SolutionPersonal</c>.</summary>
-    [Argument(Format = "--disable-settings-layers={value}", ListSeparator = ";")] public IReadOnlyList<ReSharperSettingsLayers> DisableSettingsLayers => Get<List<ReSharperSettingsLayers>>(() => DisableSettingsLayers);
+    [Argument(Format = "--disable-settings-layers={value}", Separator = ";")] public IReadOnlyList<ReSharperSettingsLayers> DisableSettingsLayers => Get<List<ReSharperSettingsLayers>>(() => DisableSettingsLayers);
     /// <summary>Suppresses global, solution and project settings profile usage. Equivalent to using <c>--disable-settings-layers: GlobalAll; GlobalPerProduct; SolutionShared; SolutionPersonal; ProjectShared; ProjectPersonal</c></summary>
     [Argument(Format = "--no-buildin-settings")] public bool? NoBuiltinSettings => Get<bool?>(() => NoBuiltinSettings);
     /// <summary>Lets you specify a custom location for the ReSharper caches. By default, the <em>%LOCALAPPDATA%</em> directory is used, unless there are settings files, in which case the one specified there is used. This parameter can be helpful if you want to use a fast SSD disk for the cache or if you want to store all your build processing data in a single place.</summary>
@@ -98,7 +101,7 @@ public partial class ReSharperInspectCodeSettings : ReSharperSettingsBase
     /// <summary>use this option to add execution details of CleanupCode to the output. If you have problems with CleanupCode, these details will be helpful when contacting the <a href="https://resharper-support.jetbrains.com/">support team</a>.</summary>
     [Argument(Format = "--debug")] public bool? Debug => Get<bool?>(() => Debug);
     /// <summary>Lets you override MSBuild properties. You can set each property separately ( <c>--properties:prop1=val1</c> <c>--properties:prop2=val2</c>), or use a semicolon to separate multiple properties <c>--properties:prop1=val1;prop2=val2</c>.<para/>Note that the semicolon cannot be used inside values, for example: <c>--properties:ReferencePath="r:\reference1\;r:\reference2\"</c>. In such cases, add each value separately using another <c>--properties</c> parameter — the values will be combined.<para/>The specified properties are applied to all analyzed projects. Currently, there is no direct way to set a property to a specific project only. The workaround is to create a custom property in this project and assign it to the desired property, then use the custom property in CleanupCode parameters.</summary>
-    [Argument(Format = "--properties={value}")] public IReadOnlyDictionary<string, string> Properties => Get<Dictionary<string, string>>(() => Properties);
+    [Argument(Format = "--properties:{key}={value}")] public IReadOnlyDictionary<string, string> Properties => Get<Dictionary<string, string>>(() => Properties);
     /// <summary>Use this option to specify the exact MSBuild version. For example 12.0: <c>--toolset=12.0</c>. By default the highest available MSBuild version is used. This option might not work if you have several installations with the same version, for example 16.0 from Visual Studio 2019 and 16.0 from .NET Core 3.x.</summary>
     [Argument(Format = "--toolset={value}")] public ReSharperMSBuildToolset Toolset => Get<ReSharperMSBuildToolset>(() => Toolset);
     /// <summary>Use this option to specify the exact path to MSBuild. This might be helpful if you have a custom MSBuild installation and want to use it with CleanupCode, for example: <c>--toolset-path="C:\tools\msbuild\bin\MsBuild.exe"</c></summary>
@@ -110,31 +113,31 @@ public partial class ReSharperInspectCodeSettings : ReSharperSettingsBase
     /// <summary>Mono path. Empty to ignore Mono. Not specified for autodetect. Example: <c>--mono=/Library/Frameworks/Mono.framework/Versions/Current/bin/mono.</c></summary>
     [Argument(Format = "--mono={value}")] public string MonoPath => Get<string>(() => MonoPath);
     /// <summary>Names of custom MSBuild targets that will be executed to get referenced assemblies of projects. The targets are defined either in the project file or in the <c>.targets</c> file. Multiple values are separated with the semicolon. For example, <c>--targets-for-references="GetReferences"</c>.</summary>
-    [Argument(Format = "--targets-for-references={value}", ListSeparator = ";")] public IReadOnlyList<string> ReferenceTargets => Get<List<string>>(() => ReferenceTargets);
+    [Argument(Format = "--targets-for-references={value}", Separator = ";")] public IReadOnlyList<string> ReferenceTargets => Get<List<string>>(() => ReferenceTargets);
     /// <summary>Names of custom MSBuild targets that will be executed to get other items (for example, a Compile item) of projects. The targets are defined either in the project file or in the <c>.targets</c> file. Multiple values are separated with the semicolon. For example, <c>--targets-for-items="GetCompileItems"</c>.</summary>
-    [Argument(Format = "--targets-for-items={value}", ListSeparator = ";")] public IReadOnlyList<string> ItemTargets => Get<List<string>>(() => ItemTargets);
+    [Argument(Format = "--targets-for-items={value}", Separator = ";")] public IReadOnlyList<string> ItemTargets => Get<List<string>>(() => ItemTargets);
     /// <summary>Relative path(s) or wildcards that define the files to include/exclude during the cleanup. If both <c>--include</c> and <c>--exclude</c> are defined and cover the same set of files, <c>--exclude</c> will have higher priority. To specify multiple paths or wildcards, separate them with the semicolon or use the <c>--include</c>/<c>--exclude</c> parameters several times.</summary>
-    [Argument(Format = "--include={value}", ListSeparator = ";")] public IReadOnlyList<string> Include => Get<List<string>>(() => Include);
+    [Argument(Format = "--include={value}", Separator = ";")] public IReadOnlyList<string> Include => Get<List<string>>(() => Include);
     /// <summary>Relative path(s) or wildcards that define the files to include/exclude during the cleanup. If both <c>--include</c> and <c>--exclude</c> are defined and cover the same set of files, <c>--exclude</c> will have higher priority. To specify multiple paths or wildcards, separate them with the semicolon or use the <c>--include</c>/<c>--exclude</c> parameters several times.</summary>
-    [Argument(Format = "--exclude={value}", ListSeparator = ";")] public IReadOnlyList<string> Exclude => Get<List<string>>(() => Exclude);
+    [Argument(Format = "--exclude={value}", Separator = ";")] public IReadOnlyList<string> Exclude => Get<List<string>>(() => Exclude);
 }
 #endregion
 #region ReSharperCleanupCodeSettings
 /// <summary>Used within <see cref="ReSharperTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ReSharperCleanupCodeSettings>))]
 [Command(Type = typeof(ReSharperTasks), Command = nameof(ReSharperTasks.ReSharperCleanupCode), Arguments = "cleanupcode")]
 public partial class ReSharperCleanupCodeSettings : ReSharperSettingsBase
 {
     /// <summary>Target path.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>A code cleanup profile that lists cleanup tasks to execute.<p/>By default, CleanupCode will apply code cleanup tasks specified in the <a href="https://www.jetbrains.com/help/resharper/Code_Cleanup__Index.html#profiles">Built-in: Full Cleanup profile</a>, that is all <a href="https://www.jetbrains.com/help/resharper/Code_Cleanup__Index.html#tasks">available cleanup tasks</a> tasks except <a href="https://www.jetbrains.com/help/resharper/File_Header_Style.html">updating file header</a>. </summary>
     [Argument(Format = "--profile={value}")] public string Profile => Get<string>(() => Profile);
     /// <summary>Default settings are overridden from the <a href="https://www.jetbrains.com/help/resharper/Sharing_Configuration_Options.html#solution-team-shared-layer">team-shared layer</a>, if it exists. If necessary, you can use this parameter to specify another <c>.DotSettings</c> file, which will override all other settings.</summary>
     [Argument(Format = "--settings={value}")] public string Settings => Get<string>(() => Settings);
     /// <summary>Disables specified <a href="https://www.jetbrains.com/help/resharper/Sharing_Configuration_Options.html#layers">settings layers</a>. Accepted values: <c>GlobalAll</c>, <c>GlobalPerProduct</c>, <c>SolutionShared</c>, <c>SolutionPersonal</c>.</summary>
-    [Argument(Format = "--disable-settings-layers={value}", ListSeparator = ";")] public IReadOnlyList<ReSharperSettingsLayers> DisableSettingsLayers => Get<List<ReSharperSettingsLayers>>(() => DisableSettingsLayers);
+    [Argument(Format = "--disable-settings-layers={value}", Separator = ";")] public IReadOnlyList<ReSharperSettingsLayers> DisableSettingsLayers => Get<List<ReSharperSettingsLayers>>(() => DisableSettingsLayers);
     /// <summary>Suppresses global, solution and project settings profile usage. Equivalent to using <c>--disable-settings-layers: GlobalAll; GlobalPerProduct; SolutionShared; SolutionPersonal; ProjectShared; ProjectPersonal</c></summary>
     [Argument(Format = "--no-buildin-settings")] public bool? NoBuiltinSettings => Get<bool?>(() => NoBuiltinSettings);
     /// <summary>Lets you specify a custom location for the ReSharper caches. By default, the <em>%LOCALAPPDATA%</em> directory is used, unless there are settings files, in which case the one specified there is used. This parameter can be helpful if you want to use a fast SSD disk for the cache or if you want to store all your build processing data in a single place.</summary>
@@ -148,7 +151,7 @@ public partial class ReSharperCleanupCodeSettings : ReSharperSettingsBase
     /// <summary>use this option to add execution details of CleanupCode to the output. If you have problems with CleanupCode, these details will be helpful when contacting the <a href="https://resharper-support.jetbrains.com/">support team</a>.</summary>
     [Argument(Format = "--debug")] public bool? Debug => Get<bool?>(() => Debug);
     /// <summary>Lets you override MSBuild properties. You can set each property separately ( <c>--properties:prop1=val1</c> <c>--properties:prop2=val2</c>), or use a semicolon to separate multiple properties <c>--properties:prop1=val1;prop2=val2</c>.<para/>Note that the semicolon cannot be used inside values, for example: <c>--properties:ReferencePath="r:\reference1\;r:\reference2\"</c>. In such cases, add each value separately using another <c>--properties</c> parameter — the values will be combined.<para/>The specified properties are applied to all analyzed projects. Currently, there is no direct way to set a property to a specific project only. The workaround is to create a custom property in this project and assign it to the desired property, then use the custom property in CleanupCode parameters.</summary>
-    [Argument(Format = "--properties={value}")] public IReadOnlyDictionary<string, string> Properties => Get<Dictionary<string, string>>(() => Properties);
+    [Argument(Format = "--properties:{key}={value}")] public IReadOnlyDictionary<string, string> Properties => Get<Dictionary<string, string>>(() => Properties);
     /// <summary>Use this option to specify the exact MSBuild version. For example 12.0: <c>--toolset=12.0</c>. By default the highest available MSBuild version is used. This option might not work if you have several installations with the same version, for example 16.0 from Visual Studio 2019 and 16.0 from .NET Core 3.x.</summary>
     [Argument(Format = "--toolset={value}")] public ReSharperMSBuildToolset Toolset => Get<ReSharperMSBuildToolset>(() => Toolset);
     /// <summary>Use this option to specify the exact path to MSBuild. This might be helpful if you have a custom MSBuild installation and want to use it with CleanupCode, for example: <c>--toolset-path="C:\tools\msbuild\bin\MsBuild.exe"</c></summary>
@@ -160,33 +163,33 @@ public partial class ReSharperCleanupCodeSettings : ReSharperSettingsBase
     /// <summary>Mono path. Empty to ignore Mono. Not specified for autodetect. Example: <c>--mono=/Library/Frameworks/Mono.framework/Versions/Current/bin/mono.</c></summary>
     [Argument(Format = "--mono={value}")] public string MonoPath => Get<string>(() => MonoPath);
     /// <summary>Names of custom MSBuild targets that will be executed to get referenced assemblies of projects. The targets are defined either in the project file or in the <c>.targets</c> file. Multiple values are separated with the semicolon. For example, <c>--targets-for-references="GetReferences"</c>.</summary>
-    [Argument(Format = "--targets-for-references={value}", ListSeparator = ";")] public IReadOnlyList<string> ReferenceTargets => Get<List<string>>(() => ReferenceTargets);
+    [Argument(Format = "--targets-for-references={value}", Separator = ";")] public IReadOnlyList<string> ReferenceTargets => Get<List<string>>(() => ReferenceTargets);
     /// <summary>Names of custom MSBuild targets that will be executed to get other items (for example, a Compile item) of projects. The targets are defined either in the project file or in the <c>.targets</c> file. Multiple values are separated with the semicolon. For example, <c>--targets-for-items="GetCompileItems"</c>.</summary>
-    [Argument(Format = "--targets-for-items={value}", ListSeparator = ";")] public IReadOnlyList<string> ItemTargets => Get<List<string>>(() => ItemTargets);
+    [Argument(Format = "--targets-for-items={value}", Separator = ";")] public IReadOnlyList<string> ItemTargets => Get<List<string>>(() => ItemTargets);
     /// <summary>Relative path(s) or wildcards that define the files to include/exclude during the cleanup. If both <c>--include</c> and <c>--exclude</c> are defined and cover the same set of files, <c>--exclude</c> will have higher priority. To specify multiple paths or wildcards, separate them with the semicolon or use the <c>--include</c>/<c>--exclude</c> parameters several times.</summary>
-    [Argument(Format = "--include={value}", ListSeparator = ";")] public IReadOnlyList<string> Include => Get<List<string>>(() => Include);
+    [Argument(Format = "--include={value}", Separator = ";")] public IReadOnlyList<string> Include => Get<List<string>>(() => Include);
     /// <summary>Relative path(s) or wildcards that define the files to include/exclude during the cleanup. If both <c>--include</c> and <c>--exclude</c> are defined and cover the same set of files, <c>--exclude</c> will have higher priority. To specify multiple paths or wildcards, separate them with the semicolon or use the <c>--include</c>/<c>--exclude</c> parameters several times.</summary>
-    [Argument(Format = "--exclude={value}", ListSeparator = ";")] public IReadOnlyList<string> Exclude => Get<List<string>>(() => Exclude);
+    [Argument(Format = "--exclude={value}", Separator = ";")] public IReadOnlyList<string> Exclude => Get<List<string>>(() => Exclude);
 }
 #endregion
 #region ReSharperDupFinderSettings
 /// <summary>Used within <see cref="ReSharperTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ReSharperDupFinderSettings>))]
 [Command(Type = typeof(ReSharperTasks), Command = nameof(ReSharperTasks.ReSharperDupFinder), Arguments = "dupfinder")]
 public partial class ReSharperDupFinderSettings : ToolOptions
 {
     /// <summary>Defines files included into the duplicates search. Use Visual Studio solution or project files, Ant-like wildcards or specific source file and folder names. Paths should be either absolute or relative to the working directory.</summary>
-    [Argument(Format = "{value}")] public string Source => Get<string>(() => Source);
+    [Argument(Format = "{value}", Position = 1)] public string Source => Get<string>(() => Source);
     /// <summary>Lets you set the output file.</summary>
     [Argument(Format = "--output={value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>Allows excluding files from the duplicates search. Wildcards can be used; for example, <c>*Generated.cs</c>. Note that the paths should be either absolute or relative to the working directory.</summary>
-    [Argument(Format = "--exclude={value}", ListSeparator = ";")] public IReadOnlyList<string> ExcludeFiles => Get<List<string>>(() => ExcludeFiles);
+    [Argument(Format = "--exclude={value}", Separator = ";")] public IReadOnlyList<string> ExcludeFiles => Get<List<string>>(() => ExcludeFiles);
     /// <summary>Allows excluding files that have a matching substrings in the opening comments.</summary>
-    [Argument(Format = "--exclude-by-comment={value}", ListSeparator = ";")] public IReadOnlyList<string> ExcludeComments => Get<List<string>>(() => ExcludeComments);
+    [Argument(Format = "--exclude-by-comment={value}", Separator = ";")] public IReadOnlyList<string> ExcludeComments => Get<List<string>>(() => ExcludeComments);
     /// <summary>Allows excluding code regions that have a matching substrings in their names. (e.g. <em>generated code</em> will exclude regions containing <em>Windows Form Designer generated code</em>).</summary>
-    [Argument(Format = "--exclude-code-regions={value}", ListSeparator = ";")] public IReadOnlyList<string> ExcludeCodeRegions => Get<List<string>>(() => ExcludeCodeRegions);
+    [Argument(Format = "--exclude-code-regions={value}", Separator = ";")] public IReadOnlyList<string> ExcludeCodeRegions => Get<List<string>>(() => ExcludeCodeRegions);
     /// <summary>Whether to consider similar fragments as duplicates if they have different fields. The default value is <c>false</c>.</summary>
     [Argument(Format = "--discard-fields={value}")] public bool? DiscardFields => Get<bool?>(() => DiscardFields);
     /// <summary>Whether to consider similar fragments as duplicates if they have different literals. The default value is <c>false</c>.</summary>
@@ -198,7 +201,7 @@ public partial class ReSharperDupFinderSettings : ToolOptions
     /// <summary>Allows setting a threshold for code complexity of the duplicated fragments. The fragments with lower complexity are discarded as non-duplicates. The value for this option is provided in relative units. Using this option, you can filter out equal code fragments that present no semantic duplication. E.g. you can often have the following statements in tests: <c>Assert.AreEqual(gold, result);</c>. If the <c>discard-cost</c> value is less than 10, statements like that will appear as duplicates, which is obviously unhelpful. You'll need to play a bit with this value to find a balance between avoiding false positives and missing real duplicates. The proper values will differ for different codebases.</summary>
     [Argument(Format = "--discard-cost={value}")] public int? DiscardCost => Get<int?>(() => DiscardCost);
     /// <summary>Lets you override MSBuild properties. The specified properties are applied to all analyzed projects. Currently, there is no direct way to set a property to a specific project only. The workaround is to create a custom property in this project and assign it to the desired property, then use the custom property in dupFinder parameters.</summary>
-    [Argument(Format = "--properties:{value}")] public IReadOnlyDictionary<string, string> Properties => Get<Dictionary<string, string>>(() => Properties);
+    [Argument(Format = "--properties:{key}={value}")] public IReadOnlyDictionary<string, string> Properties => Get<Dictionary<string, string>>(() => Properties);
     /// <summary>Allows normalizing type names to the last subtype in the output (default: <c>false</c>).</summary>
     [Argument(Format = "--normalize-types={value}")] public bool? NormalizeTypes => Get<bool?>(() => NormalizeTypes);
     /// <summary>If you use this parameter, the detected duplicate fragments will be embedded into the report.</summary>
@@ -219,7 +222,7 @@ public partial class ReSharperDupFinderSettings : ToolOptions
 /// <summary>Used within <see cref="ReSharperTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ReSharperSettingsBase>))]
 public partial class ReSharperSettingsBase : ToolOptions
 {
     /// <summary>Allows adding ReSharper plugins that will get included during execution. To add a plugin, specify its ID and version. Available plugins are listed in the <a href="https://resharper-plugins.jetbrains.com/">Plugin Repository</a>. The ID can be grabbed from the download URL. Using <c>ReSharperPluginLatest</c> or <c>null</c> will download the latest version.</summary>

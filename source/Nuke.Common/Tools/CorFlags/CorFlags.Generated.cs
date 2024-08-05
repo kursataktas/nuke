@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/CorFlags/CorFlags.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.CorFlags;
+
 /// <summary><p>The CorFlags Conversion tool allows you to configure the CorFlags section of the header of a portable executable image.</p><p>For more details, visit the <a href="https://docs.microsoft.com/en-us/dotnet/framework/tools/corflags-exe-corflags-conversion-tool">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -40,7 +43,7 @@ public partial class CorFlagsTasks : ToolTasks
 /// <summary>Used within <see cref="CorFlagsTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<CorFlagsSettings>))]
 [Command(Type = typeof(CorFlagsTasks), Command = nameof(CorFlagsTasks.CorFlags))]
 public partial class CorFlagsSettings : ToolOptions
 {
@@ -53,7 +56,7 @@ public partial class CorFlagsSettings : ToolOptions
     /// <summary>Forces an update even if the assembly is strong-named. <em>Important</em>: If you update a strong-named assembly, you must sign it again before executing its code.</summary>
     [Argument(Format = "-Force")] public bool? Force => Get<bool?>(() => Force);
     /// <summary>The name of the assembly for which to configure the CorFlags.</summary>
-    [Argument(Format = "{value}")] public string Assembly => Get<string>(() => Assembly);
+    [Argument(Format = "{value}", Position = 1)] public string Assembly => Get<string>(() => Assembly);
     /// <summary>Sets/clears the ILONLY flag.</summary>
     [Argument(Format = "-ILONLY{value}", FormatterMethod = nameof(FormatBoolean))] public bool? ILOnly => Get<bool?>(() => ILOnly);
     /// <summary>Sets/clears the 32BITREQUIRED flag.</summary>

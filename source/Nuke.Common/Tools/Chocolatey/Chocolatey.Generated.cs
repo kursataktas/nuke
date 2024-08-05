@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Chocolatey/Chocolatey.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Chocolatey;
+
 /// <summary><p>Chocolatey has the largest online registry of Windows packages. Chocolatey packages encapsulate everything required to manage a particular piece of software into one deployment artifact by wrapping installers, executables, zips, and/or scripts into a compiled package file.</p><p>For more details, visit the <a href="https://chocolatey.org/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -94,12 +97,12 @@ public partial class ChocolateyTasks : ToolTasks
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateySearchSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateySearch), Arguments = "search")]
 public partial class ChocolateySearchSettings : ToolOptions
 {
     /// <summary>Search filter.</summary>
-    [Argument(Format = "{value}")] public string Filter => Get<string>(() => Filter);
+    [Argument(Format = "{value}", Position = 1)] public string Filter => Get<string>(() => Filter);
     /// <summary>Source location for install. Can use special 'webpi' or 'windowsfeatures' sources. Defaults to sources.</summary>
     [Argument(Format = "--source={value}")] public string Source => Get<string>(() => Source);
     /// <summary>Only search against local machine items.</summary>
@@ -183,7 +186,7 @@ public partial class ChocolateySearchSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
@@ -194,12 +197,12 @@ public partial class ChocolateySearchSettings : ToolOptions
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateyListSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateyList), Arguments = "list")]
 public partial class ChocolateyListSettings : ToolOptions
 {
     /// <summary>Search filter.</summary>
-    [Argument(Format = "{value}")] public string Filter => Get<string>(() => Filter);
+    [Argument(Format = "{value}", Position = 1)] public string Filter => Get<string>(() => Filter);
     /// <summary>Source location for install. Can use special 'webpi' or 'windowsfeatures' sources. Defaults to sources.</summary>
     [Argument(Format = "--source={value}")] public string Source => Get<string>(() => Source);
     /// <summary>Only search against local machine items.</summary>
@@ -283,7 +286,7 @@ public partial class ChocolateyListSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
@@ -294,12 +297,12 @@ public partial class ChocolateyListSettings : ToolOptions
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateyFindSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateyFind), Arguments = "find")]
 public partial class ChocolateyFindSettings : ToolOptions
 {
     /// <summary>Search filter.</summary>
-    [Argument(Format = "{value}")] public string Filter => Get<string>(() => Filter);
+    [Argument(Format = "{value}", Position = 1)] public string Filter => Get<string>(() => Filter);
     /// <summary>Source location for install. Can use special 'webpi' or 'windowsfeatures' sources. Defaults to sources.</summary>
     [Argument(Format = "--source={value}")] public string Source => Get<string>(() => Source);
     /// <summary>Only search against local machine items.</summary>
@@ -383,7 +386,7 @@ public partial class ChocolateyFindSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
@@ -394,7 +397,7 @@ public partial class ChocolateyFindSettings : ToolOptions
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateyOutdatedSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateyOutdated), Arguments = "outdated")]
 public partial class ChocolateyOutdatedSettings : ToolOptions
 {
@@ -451,7 +454,7 @@ public partial class ChocolateyOutdatedSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
@@ -462,16 +465,18 @@ public partial class ChocolateyOutdatedSettings : ToolOptions
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateyPackSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateyPack), Arguments = "pack")]
 public partial class ChocolateyPackSettings : ToolOptions
 {
     /// <summary>Path to nuspec</summary>
-    [Argument(Format = "{value}")] public string PathToNuspec => Get<string>(() => PathToNuspec);
+    [Argument(Format = "{value}", Position = 1)] public string PathToNuspec => Get<string>(() => PathToNuspec);
     /// <summary>The version you would like to insert into the package.</summary>
     [Argument(Format = "--version={value}")] public string Version => Get<string>(() => Version);
     /// <summary>Specifies the directory for the created Chocolatey package file. If not specified, uses the current directory.</summary>
     [Argument(Format = "--output-directory={value}")] public string OutputDirectory => Get<string>(() => OutputDirectory);
+    /// <summary>You can pass arbitrary property value pairs through to nuspecs. These will replace variables formatted as <em>$property$</em> with the value passed.</summary>
+    [Argument(Format = "-- {key}={value}", Position = -1, Separator = " ")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
     /// <summary>Show debug messaging.</summary>
     [Argument(Format = "--debug")] public bool? Debug => Get<bool?>(() => Debug);
     /// <summary>Show verbose messaging. Very verbose messaging, avoid using under normal circumstances.</summary>
@@ -507,25 +512,23 @@ public partial class ChocolateyPackSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
     [Argument(Format = "--log-file={value}")] public string LogFile => Get<string>(() => LogFile);
-    /// <summary>You can pass arbitrary property value pairs through to nuspecs. These will replace variables formatted as <em>$property$</em> with the value passed.</summary>
-    [Argument(Format = "-- {value}", ListSeparator = " ")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region ChocolateyPushSettings
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateyPushSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateyPush), Arguments = "push")]
 public partial class ChocolateyPushSettings : ToolOptions
 {
     /// <summary>Path to Nuget package (.nupkg).</summary>
-    [Argument(Format = "{value}")] public string PathToNuGetPackage => Get<string>(() => PathToNuGetPackage);
+    [Argument(Format = "{value}", Position = 1)] public string PathToNuGetPackage => Get<string>(() => PathToNuGetPackage);
     /// <summary>The source we are pushing the package to. Use <a href="https://pus-h.chocolatey.org/">https://pus-h.chocolatey.org/</a> to push to <a href="https://comminty.chocolatey.org/packages">community feed</a>.</summary>
     [Argument(Format = "--source={value}")] public string Source => Get<string>(() => Source);
     /// <summary>The api key for the source. If not specified (and not local file source), does a lookup. If not specified and one is not found for an https source, push will fail.</summary>
@@ -567,7 +570,7 @@ public partial class ChocolateyPushSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
@@ -578,7 +581,7 @@ public partial class ChocolateyPushSettings : ToolOptions
 /// <summary>Used within <see cref="ChocolateyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ChocolateyNewSettings>))]
 [Command(Type = typeof(ChocolateyTasks), Command = nameof(ChocolateyTasks.ChocolateyNew), Arguments = "new")]
 public partial class ChocolateyNewSettings : ToolOptions
 {
@@ -620,6 +623,8 @@ public partial class ChocolateyNewSettings : ToolOptions
     [Argument(Format = "--remove-architecture-from-name")] public bool? RemoveArchitectureFromName => Get<bool?>(() => RemoveArchitectureFromName);
     /// <summary>Leave x86, x64, 64-bit, etc as part of the package id. Default setting is to remove architecture.</summary>
     [Argument(Format = "--include-architecture-in-name")] public bool? IncludeArchitectureInName => Get<bool?>(() => IncludeArchitectureInName);
+    /// <summary>You can pass arbitrary property value pairs through to templates. This really unlocks your ability to create packages automatically!</summary>
+    [Argument(Format = "-- {key}={value}", Position = -1, Separator = " ")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
     /// <summary>Show debug messaging.</summary>
     [Argument(Format = "--debug")] public bool? Debug => Get<bool?>(() => Debug);
     /// <summary>Show verbose messaging. Very verbose messaging, avoid using under normal circumstances.</summary>
@@ -655,13 +660,11 @@ public partial class ChocolateyNewSettings : ToolOptions
     /// <summary>Explicit proxy password (optional) to be used with username. Requires explicit proxy (`--proxy` or config setting) and user name. Overrides the default proxy password (encrypted in settings sif set).</summary>
     [Argument(Format = "--proxy-password={value}", Secret = true)] public string ProxyPassword => Get<string>(() => ProxyPassword);
     /// <summary>Comma separated list of regex locations to bypass on proxy. Requires explicit proxy (`--proxy` or config setting).</summary>
-    [Argument(Format = "--proxy-bypass-list={value}", ListSeparator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
+    [Argument(Format = "--proxy-bypass-list={value}", Separator = ",")] public IReadOnlyList<string> ProxyBypassList => Get<List<string>>(() => ProxyBypassList);
     /// <summary>Bypass proxy for local connections. Requires explicit proxy (`--proxy` or config setting).</summary>
     [Argument(Format = "--proxy-bypass-on-local")] public bool? ProxyBypassOnLocal => Get<bool?>(() => ProxyBypassOnLocal);
     /// <summary>Log File to output to in addition to regular loggers.</summary>
     [Argument(Format = "--log-file={value}")] public string LogFile => Get<string>(() => LogFile);
-    /// <summary>You can pass arbitrary property value pairs through to templates. This really unlocks your ability to create packages automatically!</summary>
-    [Argument(Format = "-- {value}", ListSeparator = " ")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region ChocolateySearchSettingsExtensions
@@ -3034,6 +3037,23 @@ public static partial class ChocolateyPackSettingsExtensions
     [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.OutputDirectory))]
     public static T ResetOutputDirectory<T>(this T o) where T : ChocolateyPackSettings => o.Modify(b => b.Remove(() => o.OutputDirectory));
     #endregion
+    #region Properties
+    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
+    public static T SetProperties<T>(this T o, IDictionary<string, object> v) where T : ChocolateyPackSettings => o.Modify(b => b.Set(() => o.Properties, v.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase)));
+    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
+    public static T SetProperty<T>(this T o, string k, object v) where T : ChocolateyPackSettings => o.Modify(b => b.SetDictionary(() => o.Properties, k, v));
+    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
+    public static T AddProperty<T>(this T o, string k, object v) where T : ChocolateyPackSettings => o.Modify(b => b.AddDictionary(() => o.Properties, k, v));
+    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
+    public static T RemoveProperty<T>(this T o, string k) where T : ChocolateyPackSettings => o.Modify(b => b.RemoveDictionary(() => o.Properties, k));
+    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
+    public static T ClearProperties<T>(this T o) where T : ChocolateyPackSettings => o.Modify(b => b.ClearDictionary(() => o.Properties));
+    #endregion
     #region Debug
     /// <inheritdoc cref="ChocolateyPackSettings.Debug"/>
     [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Debug))]
@@ -3325,23 +3345,6 @@ public static partial class ChocolateyPackSettingsExtensions
     /// <inheritdoc cref="ChocolateyPackSettings.LogFile"/>
     [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.LogFile))]
     public static T ResetLogFile<T>(this T o) where T : ChocolateyPackSettings => o.Modify(b => b.Remove(() => o.LogFile));
-    #endregion
-    #region Properties
-    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
-    public static T SetProperties<T>(this T o, IDictionary<string, object> v) where T : ChocolateyPackSettings => o.Modify(b => b.Set(() => o.Properties, v.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase)));
-    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
-    public static T SetProperty<T>(this T o, string k, object v) where T : ChocolateyPackSettings => o.Modify(b => b.SetDictionary(() => o.Properties, k, v));
-    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
-    public static T AddProperty<T>(this T o, string k, object v) where T : ChocolateyPackSettings => o.Modify(b => b.AddDictionary(() => o.Properties, k, v));
-    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
-    public static T RemoveProperty<T>(this T o, string k) where T : ChocolateyPackSettings => o.Modify(b => b.RemoveDictionary(() => o.Properties, k));
-    /// <inheritdoc cref="ChocolateyPackSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyPackSettings), Property = nameof(ChocolateyPackSettings.Properties))]
-    public static T ClearProperties<T>(this T o) where T : ChocolateyPackSettings => o.Modify(b => b.ClearDictionary(() => o.Properties));
     #endregion
 }
 #endregion
@@ -3916,6 +3919,23 @@ public static partial class ChocolateyNewSettingsExtensions
     [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.IncludeArchitectureInName))]
     public static T ToggleIncludeArchitectureInName<T>(this T o) where T : ChocolateyNewSettings => o.Modify(b => b.Set(() => o.IncludeArchitectureInName, !o.IncludeArchitectureInName));
     #endregion
+    #region Properties
+    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
+    public static T SetProperties<T>(this T o, IDictionary<string, object> v) where T : ChocolateyNewSettings => o.Modify(b => b.Set(() => o.Properties, v.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase)));
+    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
+    public static T SetProperty<T>(this T o, string k, object v) where T : ChocolateyNewSettings => o.Modify(b => b.SetDictionary(() => o.Properties, k, v));
+    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
+    public static T AddProperty<T>(this T o, string k, object v) where T : ChocolateyNewSettings => o.Modify(b => b.AddDictionary(() => o.Properties, k, v));
+    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
+    public static T RemoveProperty<T>(this T o, string k) where T : ChocolateyNewSettings => o.Modify(b => b.RemoveDictionary(() => o.Properties, k));
+    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
+    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
+    public static T ClearProperties<T>(this T o) where T : ChocolateyNewSettings => o.Modify(b => b.ClearDictionary(() => o.Properties));
+    #endregion
     #region Debug
     /// <inheritdoc cref="ChocolateyNewSettings.Debug"/>
     [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Debug))]
@@ -4207,23 +4227,6 @@ public static partial class ChocolateyNewSettingsExtensions
     /// <inheritdoc cref="ChocolateyNewSettings.LogFile"/>
     [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.LogFile))]
     public static T ResetLogFile<T>(this T o) where T : ChocolateyNewSettings => o.Modify(b => b.Remove(() => o.LogFile));
-    #endregion
-    #region Properties
-    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
-    public static T SetProperties<T>(this T o, IDictionary<string, object> v) where T : ChocolateyNewSettings => o.Modify(b => b.Set(() => o.Properties, v.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase)));
-    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
-    public static T SetProperty<T>(this T o, string k, object v) where T : ChocolateyNewSettings => o.Modify(b => b.SetDictionary(() => o.Properties, k, v));
-    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
-    public static T AddProperty<T>(this T o, string k, object v) where T : ChocolateyNewSettings => o.Modify(b => b.AddDictionary(() => o.Properties, k, v));
-    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
-    public static T RemoveProperty<T>(this T o, string k) where T : ChocolateyNewSettings => o.Modify(b => b.RemoveDictionary(() => o.Properties, k));
-    /// <inheritdoc cref="ChocolateyNewSettings.Properties"/>
-    [Pure] [Builder(Type = typeof(ChocolateyNewSettings), Property = nameof(ChocolateyNewSettings.Properties))]
-    public static T ClearProperties<T>(this T o) where T : ChocolateyNewSettings => o.Modify(b => b.ClearDictionary(() => o.Properties));
     #endregion
 }
 #endregion

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/SignTool/SignTool.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.SignTool;
+
 /// <summary><p>Sign Tool is a command-line tool that digitally signs files, verifies signatures in files, and time-stamps files.</p><p>For more details, visit the <a href="https://docs.microsoft.com/en-us/dotnet/framework/tools/signtool-exe">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -37,7 +40,7 @@ public partial class SignToolTasks : ToolTasks
 /// <summary>Used within <see cref="SignToolTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<SignToolSettings>))]
 [Command(Type = typeof(SignToolTasks), Command = nameof(SignToolTasks.SignTool), Arguments = "sign")]
 public partial class SignToolSettings : ToolOptions
 {
@@ -88,7 +91,7 @@ public partial class SignToolSettings : ToolOptions
     /// <summary>Used with the <c>/tr</c> or <c>/tseal</c> switch to request a digest algorithm used by the RFC 3161 timestamp server.</summary>
     [Argument(Format = "/td {value}")] public SignToolDigestAlgorithm TimestampServerDigestAlgorithm => Get<SignToolDigestAlgorithm>(() => TimestampServerDigestAlgorithm);
     /// <summary>Specify an OID and value to be included as an authenticated attribute in the signature. The value will be encoded as an ASN1 UTF8 string. This option may be given multiple times.</summary>
-    [Argument(Format = "/sa {value}")] public IReadOnlyDictionary<string, string> AuthenticatedAttributes => Get<Dictionary<string, string>>(() => AuthenticatedAttributes);
+    [Argument(Format = "/sa {key} {value}")] public IReadOnlyDictionary<string, string> AuthenticatedAttributes => Get<Dictionary<string, string>>(() => AuthenticatedAttributes);
     /// <summary>Add a sealing signature if the file format supports it.</summary>
     [Argument(Format = "/seal")] public bool? SealingSignature => Get<bool?>(() => SealingSignature);
     /// <summary>Create a primary signature with the intent-to-seal attribute.</summary>
@@ -128,7 +131,7 @@ public partial class SignToolSettings : ToolOptions
     /// <summary>Display additional debug information.</summary>
     [Argument(Format = "/debug")] public bool? Debug => Get<bool?>(() => Debug);
     /// <summary>Files to sign.</summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> Files => Get<List<string>>(() => Files);
+    [Argument(Format = "{value}", Position = -1)] public IReadOnlyList<string> Files => Get<List<string>>(() => Files);
 }
 #endregion
 #region SignToolSettingsExtensions

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/NerdbankGitVersioning/NerdbankGitVersioning.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.NerdbankGitVersioning;
+
 /// <summary><p>For more details, visit the <a href="https://github.com/AArnott/Nerdbank.GitVersioning">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -95,7 +98,7 @@ public partial class NerdbankGitVersioningTasks : ToolTasks
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningInstallSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningInstall), Arguments = "install")]
 public partial class NerdbankGitVersioningInstallSettings : ToolOptions
 {
@@ -104,14 +107,14 @@ public partial class NerdbankGitVersioningInstallSettings : ToolOptions
     /// <summary>The initial version to set. The default is <c>1.0-beta</c>.</summary>
     [Argument(Format = "--version {value}")] public string Version => Get<string>(() => Version);
     /// <summary>The URI(s) of the NuGet package source(s) used to determine the latest stable version of the Nerdbank.GitVersioning package. This setting overrides all of the sources specified in the NuGet.Config files.</summary>
-    [Argument(Format = "--source {value}", ListSeparator = " ")] public IReadOnlyList<string> Sources => Get<List<string>>(() => Sources);
+    [Argument(Format = "--source {value}", Separator = " ")] public IReadOnlyList<string> Sources => Get<List<string>>(() => Sources);
 }
 #endregion
 #region NerdbankGitVersioningGetVersionSettings
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningGetVersionSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningGetVersion), Arguments = "get-version")]
 public partial class NerdbankGitVersioningGetVersionSettings : ToolOptions
 {
@@ -131,7 +134,7 @@ public partial class NerdbankGitVersioningGetVersionSettings : ToolOptions
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningSetVersionSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningSetVersion), Arguments = "set-version")]
 public partial class NerdbankGitVersioningSetVersionSettings : ToolOptions
 {
@@ -145,7 +148,7 @@ public partial class NerdbankGitVersioningSetVersionSettings : ToolOptions
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningTagSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningTag), Arguments = "tag")]
 public partial class NerdbankGitVersioningTagSettings : ToolOptions
 {
@@ -159,7 +162,7 @@ public partial class NerdbankGitVersioningTagSettings : ToolOptions
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningGetCommitsSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningGetCommits), Arguments = "get-commits")]
 public partial class NerdbankGitVersioningGetCommitsSettings : ToolOptions
 {
@@ -175,7 +178,7 @@ public partial class NerdbankGitVersioningGetCommitsSettings : ToolOptions
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningCloudSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningCloud), Arguments = "cloud")]
 public partial class NerdbankGitVersioningCloudSettings : ToolOptions
 {
@@ -192,14 +195,14 @@ public partial class NerdbankGitVersioningCloudSettings : ToolOptions
     /// <summary>Defines a few common version variables as cloud build variables, with a <c>Git</c> prefix (e.g. <c>GitBuildVersion</c>, <c>GitBuildVersionSimple</c>, <c>GitAssemblyInformationalVersion</c>)</summary>
     [Argument(Format = "--common-vars")] public bool? CommonVars => Get<bool?>(() => CommonVars);
     /// <summary>Additional cloud build variables to define.</summary>
-    [Argument(Format = "--define {value}")] public IReadOnlyDictionary<string, string> Variables => Get<Dictionary<string, string>>(() => Variables);
+    [Argument(Format = "--define {key}={value}")] public IReadOnlyDictionary<string, string> Variables => Get<Dictionary<string, string>>(() => Variables);
 }
 #endregion
 #region NerdbankGitVersioningPrepareReleaseSettings
 /// <summary>Used within <see cref="NerdbankGitVersioningTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NerdbankGitVersioningPrepareReleaseSettings>))]
 [Command(Type = typeof(NerdbankGitVersioningTasks), Command = nameof(NerdbankGitVersioningTasks.NerdbankGitVersioningPrepareRelease), Arguments = "prepare-release")]
 public partial class NerdbankGitVersioningPrepareReleaseSettings : ToolOptions
 {

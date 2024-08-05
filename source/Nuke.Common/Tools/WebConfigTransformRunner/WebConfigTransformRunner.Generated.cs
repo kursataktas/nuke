@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/WebConfigTransformRunner/WebConfigTransformRunner.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.WebConfigTransformRunner;
+
 /// <summary><p>This is a commandline tool to run an ASP.Net web.config tranformation.</p><p>For more details, visit the <a href="https://github.com/erichexter/WebConfigTransformRunner">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,16 +44,16 @@ public partial class WebConfigTransformRunnerTasks : ToolTasks
 /// <summary>Used within <see cref="WebConfigTransformRunnerTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<WebConfigTransformRunnerSettings>))]
 [Command(Type = typeof(WebConfigTransformRunnerTasks), Command = nameof(WebConfigTransformRunnerTasks.WebConfigTransformRunner))]
 public partial class WebConfigTransformRunnerSettings : ToolOptions
 {
     /// <summary>The base web.config file</summary>
-    [Argument(Format = "{value}")] public string WebConfigFilename => Get<string>(() => WebConfigFilename);
+    [Argument(Format = "{value}", Position = 1)] public string WebConfigFilename => Get<string>(() => WebConfigFilename);
     /// <summary>The transformation web.config file</summary>
-    [Argument(Format = "{value}")] public string TransformFilename => Get<string>(() => TransformFilename);
+    [Argument(Format = "{value}", Position = 2)] public string TransformFilename => Get<string>(() => TransformFilename);
     /// <summary>The path to the output web.config file</summary>
-    [Argument(Format = "{value}")] public string OutputFilename => Get<string>(() => OutputFilename);
+    [Argument(Format = "{value}", Position = 3)] public string OutputFilename => Get<string>(() => OutputFilename);
 }
 #endregion
 #region WebConfigTransformRunnerSettingsExtensions

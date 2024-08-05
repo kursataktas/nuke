@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/ILRepack/ILRepack.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.ILRepack;
+
 /// <summary><p>ILRepack is meant at replacing <a href="https://github.com/dotnet/ILMerge">ILMerge</a> / <a href="https://evain.net/blog/articles/2006/11/06/an-introduction-to-mono-merge">Mono.Merge</a>.<para/>The former being closed-source (<a href="https://github.com/Microsoft/ILMerge">now open-sourced</a>), impossible to customize, slow, resource consuming and many more. The later being deprecated, unsupported, and based on an old version of Mono.Cecil.<para/>Here we're using latest (slightly modified) Cecil sources (0.9), you can find the fork <a href="https://github.com/gluck/cecil">here</a>. Mono.Posix is also required (build only, it gets merged afterwards) for executable bit set on target file.</p><p>For more details, visit the <a href="https://github.com/gluck/il-repack#readme">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class ILRepackTasks : ToolTasks
 /// <summary>Used within <see cref="ILRepackTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<ILRepackSettings>))]
 [Command(Type = typeof(ILRepackTasks), Command = nameof(ILRepackTasks.ILRepack))]
 public partial class ILRepackSettings : ToolOptions
 {
@@ -98,7 +101,7 @@ public partial class ILRepackSettings : ToolOptions
     /// <summary>Target assembly path, <c>symbol/config/doc</c> files will be written here as well.</summary>
     [Argument(Format = "--out:{value}")] public string Output => Get<string>(() => Output);
     /// <summary>Primary and other assemblies to be merged.</summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> Assemblies => Get<List<string>>(() => Assemblies);
+    [Argument(Format = "{value}", Position = -1)] public IReadOnlyList<string> Assemblies => Get<List<string>>(() => Assemblies);
 }
 #endregion
 #region ILRepackSettingsExtensions

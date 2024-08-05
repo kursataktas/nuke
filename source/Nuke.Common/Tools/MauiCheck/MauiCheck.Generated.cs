@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/MauiCheck/MauiCheck.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.MauiCheck;
+
 /// <summary><p>A dotnet tool for helping set up your .NET MAUI environment.</p><p>For more details, visit the <a href="https://github.com/Redth/dotnet-maui-check">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -50,7 +53,7 @@ public partial class MauiCheckTasks : ToolTasks
 /// <summary>Used within <see cref="MauiCheckTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<MauiCheckSettings>))]
 [Command(Type = typeof(MauiCheckTasks), Command = nameof(MauiCheckTasks.MauiCheck))]
 public partial class MauiCheckSettings : ToolOptions
 {
@@ -72,7 +75,7 @@ public partial class MauiCheckSettings : ToolOptions
 /// <summary>Used within <see cref="MauiCheckTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<MauiCheckConfigSettings>))]
 [Command(Type = typeof(MauiCheckTasks), Command = nameof(MauiCheckTasks.MauiCheckConfig), Arguments = "config")]
 public partial class MauiCheckConfigSettings : ToolOptions
 {

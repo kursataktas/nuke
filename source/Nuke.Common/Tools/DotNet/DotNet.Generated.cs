@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/DotNet/DotNet.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.DotNet;
+
 /// <summary><p>For more details, visit the <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -220,12 +223,12 @@ public partial class DotNetTasks : ToolTasks
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetTestSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetTest), Arguments = "test")]
 public partial class DotNetTestSettings : ToolOptions
 {
     /// <summary>Specifies a path to the test project. If omitted, it defaults to current directory.</summary>
-    [Argument(Format = "{value}")] public string ProjectFile => Get<string>(() => ProjectFile);
+    [Argument(Format = "{value}", Position = 1)] public string ProjectFile => Get<string>(() => ProjectFile);
     /// <summary>Use the custom test adapters from the specified path in the test run.</summary>
     [Argument(Format = "--test-adapter-path {value}")] public string TestAdapterPath => Get<string>(() => TestAdapterPath);
     /// <summary>Configuration under which to build. The default value is <c>Debug</c>, but your project's configuration could override this default SDK setting.</summary>
@@ -255,7 +258,7 @@ public partial class DotNetTestSettings : ToolOptions
     /// <summary>Sets the verbosity level of the command. Allowed values are <c>q[uiet]</c>, <c>m[inimal]</c>, <c>n[ormal]</c>, <c>d[etailed]</c>, and <c>diag[nostic]</c>.</summary>
     [Argument(Format = "--verbosity {value}")] public DotNetVerbosity Verbosity => Get<DotNetVerbosity>(() => Verbosity);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
     /// <summary>Runs the tests in blame mode. This option is helpful in isolating the problematic tests causing test host to crash. It creates an output file in the current directory as <em>Sequence.xml</em> that captures the order of tests execution before the crash.</summary>
     [Argument(Format = "--blame")] public bool? BlameMode => Get<bool?>(() => BlameMode);
     /// <summary><p>Runs the tests in blame mode and collects a crash dump when the test host exits unexpectedly. This option depends on the version of .NET used, the type of error, and the operating system.</p><p>For exceptions in managed code, a dump will be automatically collected on .NET 5.0 and later versions. It will generate a dump for testhost or any child process that also ran on .NET 5.0 and crashed. Crashes in native code will not generate a dump. This option works on Windows, macOS, and Linux.</p><p>Crash dumps in native code, or when using .NET Core 3.1 or earlier versions, can only be collected on Windows, by using Procdump. A directory that contains procdump.exe and procdump64.exe must be in the PATH or PROCDUMP_PATH environment variable. <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procdump">Download the tools</a>. Implies <em>--blame</em>.</p><p>To collect a crash dump from a native application running on .NET 5.0 or later, the usage of Procdump can be forced by setting the <em>VSTEST_DUMP_FORCEPROCDUMP</em> environment variable to <em>1</em>.</p></summary>
@@ -270,6 +273,8 @@ public partial class DotNetTestSettings : ToolOptions
     [Argument(Format = "--blame-hang-dump-type {value}")] public string BlameHangDumpType => Get<string>(() => BlameHangDumpType);
     /// <summary><p>Per-test timeout, after which a hang dump is triggered and the test host process and all of its child processes are dumped and terminated. The timeout value is specified in one of the following formats:</p><p><ul><li>1.5h, 1.5hour, 1.5hours</li><li>90m, 90min, 90minute, 90minutes</li><li>5400s, 5400sec, 5400second, 5400seconds</li><li>5400000ms, 5400000mil, 5400000millisecond, 5400000milliseconds</li></ul></p><p>When no unit is used (for example, 5400000), the value is assumed to be in milliseconds. When used together with data driven tests, the timeout behavior depends on the test adapter used. For xUnit and NUnit the timeout is renewed after every test case. For MSTest, the timeout is used for all test cases. This option is supported on Windows with netcoreapp2.1 and later, on Linux with netcoreapp3.1 and later, and on macOS with net5.0 or later. Implies <em>--blame</em> and <em>--blame-hang</em>.</p></summary>
     [Argument(Format = "--blame-hang-timeout {value}")] public string BlameHangTimeout => Get<string>(() => BlameHangTimeout);
+    /// <summary></summary>
+    [Argument(Format = "-- {key}={value}", Position = -1, Separator = " ")] public IReadOnlyDictionary<string, object> RunSettings => Get<Dictionary<string, object>>(() => RunSettings);
     /// <summary>Run test(s), without displaying Microsoft Testplatform banner. Available since .NET Core 3.0 SDK.</summary>
     [Argument(Format = "--nologo")] public bool? NoLogo => Get<bool?>(() => NoLogo);
     /// <summary>Disables restoring multiple projects in parallel.</summary>
@@ -296,15 +301,13 @@ public partial class DotNetTestSettings : ToolOptions
     [Argument(Format = "--force-evaluate")] public bool? ForceEvaluate => Get<bool?>(() => ForceEvaluate);
     /// <summary>Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the <c>&lt;RuntimeIdentifiers&gt;</c> tag in the <em>.csproj</em> file. For a list of Runtime Identifiers (RIDs), see the <a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID catalog</a>. Provide multiple RIDs by specifying this option multiple times.</summary>
     [Argument(Format = "--runtime {value}")] public string Runtime => Get<string>(() => Runtime);
-    /// <summary></summary>
-    [Argument(Format = "-- {value}", ListSeparator = " ")] public IReadOnlyDictionary<string, object> RunSettings => Get<Dictionary<string, object>>(() => RunSettings);
 }
 #endregion
 #region DotNetRunSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetRunSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetRun), Arguments = "run")]
 public partial class DotNetRunSettings : ToolOptions
 {
@@ -322,6 +325,8 @@ public partial class DotNetRunSettings : ToolOptions
     [Argument(Format = "--no-restore")] public bool? NoRestore => Get<bool?>(() => NoRestore);
     /// <summary>Specifies the path and name of the project file. (See the NOTE.) It defaults to the current directory if not specified.</summary>
     [Argument(Format = "--project {value}")] public string ProjectFile => Get<string>(() => ProjectFile);
+    /// <summary>Arguments passed to the application being run.</summary>
+    [Argument(Format = "-- {value}", Position = -1, Separator = " ")] public IReadOnlyList<string> ApplicationArguments => Get<List<string>>(() => ApplicationArguments);
     /// <summary>Disables restoring multiple projects in parallel.</summary>
     [Argument(Format = "--disable-parallel")] public bool? DisableParallel => Get<bool?>(() => DisableParallel);
     /// <summary>Forces all dependencies to be resolved even if the last restore was successful. This is equivalent to deleting the <em>project.assets.json</em> file.</summary>
@@ -347,21 +352,19 @@ public partial class DotNetRunSettings : ToolOptions
     /// <summary>Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the <c>&lt;RuntimeIdentifiers&gt;</c> tag in the <em>.csproj</em> file. For a list of Runtime Identifiers (RIDs), see the <a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID catalog</a>. Provide multiple RIDs by specifying this option multiple times.</summary>
     [Argument(Format = "--runtime {value}")] public string Runtime => Get<string>(() => Runtime);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
-    /// <summary>Arguments passed to the application being run.</summary>
-    [Argument(Format = "-- {value}")] public string ApplicationArguments => Get<string>(() => ApplicationArguments);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetRestoreSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetRestoreSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetRestore), Arguments = "restore")]
 public partial class DotNetRestoreSettings : ToolOptions
 {
     /// <summary>Optional path to the project file to restore.</summary>
-    [Argument(Format = "{value}")] public string ProjectFile => Get<string>(() => ProjectFile);
+    [Argument(Format = "{value}", Position = 1)] public string ProjectFile => Get<string>(() => ProjectFile);
     /// <summary>The NuGet configuration file (<em>NuGet.config</em>) to use for the restore operation.</summary>
     [Argument(Format = "--configfile {value}")] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary>Sets the verbosity level of the command. Allowed values are <c>q[uiet]</c>, <c>m[inimal]</c>, <c>n[ormal]</c>, <c>d[etailed]</c>, and <c>diag[nostic]</c>.</summary>
@@ -391,19 +394,19 @@ public partial class DotNetRestoreSettings : ToolOptions
     /// <summary>Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the <c>&lt;RuntimeIdentifiers&gt;</c> tag in the <em>.csproj</em> file. For a list of Runtime Identifiers (RIDs), see the <a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID catalog</a>. Provide multiple RIDs by specifying this option multiple times.</summary>
     [Argument(Format = "--runtime {value}")] public string Runtime => Get<string>(() => Runtime);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetPackSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetPackSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetPack), Arguments = "pack")]
 public partial class DotNetPackSettings : ToolOptions
 {
     /// <summary>The project to pack. It's either a path to a csproj file or to a directory. If omitted, it defaults to the current directory.</summary>
-    [Argument(Format = "{value}")] public string Project => Get<string>(() => Project);
+    [Argument(Format = "{value}", Position = 1)] public string Project => Get<string>(() => Project);
     /// <summary>Configuration to use when building the project. If not specified, configuration defaults to <c>Debug</c>.</summary>
     [Argument(Format = "--configuration {value}")] public string Configuration => Get<string>(() => Configuration);
     /// <summary>Includes the source files in the NuGet package. The sources files are included in the <c>src</c> folder within the <c>nupkg</c>.</summary>
@@ -449,19 +452,19 @@ public partial class DotNetPackSettings : ToolOptions
     /// <summary>Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the <c>&lt;RuntimeIdentifiers&gt;</c> tag in the <em>.csproj</em> file. For a list of Runtime Identifiers (RIDs), see the <a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID catalog</a>. Provide multiple RIDs by specifying this option multiple times.</summary>
     [Argument(Format = "--runtime {value}")] public string Runtime => Get<string>(() => Runtime);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetBuildSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetBuildSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetBuild), Arguments = "build")]
 public partial class DotNetBuildSettings : ToolOptions
 {
     /// <summary>The project file to build. If a project file is not specified, MSBuild searches the current working directory for a file that has a file extension that ends in proj and uses that file.</summary>
-    [Argument(Format = "{value}")] public string ProjectFile => Get<string>(() => ProjectFile);
+    [Argument(Format = "{value}", Position = 1)] public string ProjectFile => Get<string>(() => ProjectFile);
     /// <summary>Defines the build configuration. If omitted, the build configuration defaults to <c>Debug</c>. Use <c>Release</c> build a Release configuration.</summary>
     [Argument(Format = "--configuration {value}")] public string Configuration => Get<string>(() => Configuration);
     /// <summary>Compiles for a specific <a href="https://docs.microsoft.com/en-us/dotnet/standard/frameworks">framework</a>. The framework must be defined in the <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/csproj">project file</a>.</summary>
@@ -511,19 +514,19 @@ public partial class DotNetBuildSettings : ToolOptions
     /// <summary>Forces restore to reevaluate all dependencies even if a lock file already exists.</summary>
     [Argument(Format = "--force-evaluate")] public bool? ForceEvaluate => Get<bool?>(() => ForceEvaluate);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetMSBuildSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetMSBuildSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetMSBuild), Arguments = "msbuild")]
 public partial class DotNetMSBuildSettings : ToolOptions
 {
     /// <summary>The solution or project file on which MSBuild is executed.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>Show detailed information at the end of the build log about the configurations that were built and how they were scheduled to nodes.</summary>
     [Argument(Format = "/detailedsummary")] public bool? DetailedSummary => Get<bool?>(() => DetailedSummary);
     /// <summary><p>Specifies the maximum number of concurrent processes to use when building. If you don't include this switch, the default value is 1. If you include this switch without specifying a value, MSBuild will use up to the number of processors in the computer. For more information, see <a href="https://msdn.microsoft.com/en-us/library/bb651793.aspx">Building Multiple Projects in Parallel</a>.</p><p>The following example instructs MSBuild to build using three MSBuild processes, which allows three projects to build at the same time:</p><p><c>msbuild myproject.proj /maxcpucount:3</c></p></summary>
@@ -535,7 +538,7 @@ public partial class DotNetMSBuildSettings : ToolOptions
     /// <summary>Runs the <c>Restore</c> target prior to building the actual targets.</summary>
     [Argument(Format = "/restore")] public bool? Restore => Get<bool?>(() => Restore);
     /// <summary><p>Build the specified targets in the project. Specify each target separately, or use a semicolon or comma to separate multiple targets, as the following example shows:<br/><c>/target:Resources;Compile</c></p><p>If you specify any targets by using this switch, they are run instead of any targets in the DefaultTargets attribute in the project file. For more information, see <a href="https://msdn.microsoft.com/en-us/library/ee216359.aspx">Target Build Order</a> and <a href="https://msdn.microsoft.com/en-us/library/ms171463.aspx">How to: Specify Which Target to Build First</a>.</p><p>A target is a group of tasks. For more information, see <a href="https://msdn.microsoft.com/en-us/library/ms171462.aspx">Targets</a>.</p></summary>
-    [Argument(Format = "/target:{value}", ListSeparator = ";")] public IReadOnlyList<string> Targets => Get<List<string>>(() => Targets);
+    [Argument(Format = "/target:{value}", Separator = ";")] public IReadOnlyList<string> Targets => Get<List<string>>(() => Targets);
     /// <summary><p>Specifies the amount of information to display in the build log. Each logger displays events based on the verbosity level that you set for that logger.</p><p>You can specify the following verbosity levels: <c>q[uiet]</c>, <c>m[inimal]</c>, <c>n[ormal]</c>, <c>d[etailed]</c>, and <c>diag[nostic]</c>.</p><p>The following setting is an example: <c>/verbosity:quiet</c></p></summary>
     [Argument(Format = "/verbosity:{value}")] public DotNetVerbosity Verbosity => Get<DotNetVerbosity>(() => Verbosity);
     /// <summary>Specifies the loggers to use to log events from MSBuild.</summary>
@@ -549,19 +552,19 @@ public partial class DotNetMSBuildSettings : ToolOptions
     /// <summary>Generare MSBuild <a href="https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md">binary log</a>.</summary>
     [Argument(Format = "-bl:{value}")] public string BinaryLog => Get<string>(() => BinaryLog);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetCleanSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetCleanSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetClean), Arguments = "clean")]
 public partial class DotNetCleanSettings : ToolOptions
 {
     /// <summary>The MSBuild project to clean. If a project file is not specified, MSBuild searches the current working directory for a file that has a file extension that ends in <em>proj</em> and uses that file.</summary>
-    [Argument(Format = "{value}")] public string Project => Get<string>(() => Project);
+    [Argument(Format = "{value}", Position = 1)] public string Project => Get<string>(() => Project);
     /// <summary>Defines the build configuration. The default value is <c>Debug</c>. This option is only required when cleaning if you specified it during build time.</summary>
     [Argument(Format = "--configuration {value}")] public string Configuration => Get<string>(() => Configuration);
     /// <summary>The <a href="https://docs.microsoft.com/en-us/dotnet/standard/frameworks">framework</a> that was specified at build time. The framework must be defined in the <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/csproj">project file</a>. If you specified the framework at build time, you must specify the framework when cleaning.</summary>
@@ -575,19 +578,19 @@ public partial class DotNetCleanSettings : ToolOptions
     /// <summary>Doesn't display the startup banner or the copyright message. Available since .NET Core 3.0 SDK.</summary>
     [Argument(Format = "--nologo")] public bool? NoLogo => Get<bool?>(() => NoLogo);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetFormatSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetFormatSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetFormat), Arguments = "format")]
 public partial class DotNetFormatSettings : ToolOptions
 {
     /// <summary>The MSBuild project or solution to run code formatting on. If a project or solution file is not specified, MSBuild searches the current working directory for a file that has a file extension that ends in <em>proj</em> or <em>sln</em>, and uses that file.</summary>
-    [Argument(Format = "{value}")] public string Project => Get<string>(() => Project);
+    [Argument(Format = "{value}", Position = 1)] public string Project => Get<string>(() => Project);
     /// <summary>The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn.</summary>
     [Argument(Format = "--severity {value}")] public DotNetFormatSeverity Severity => Get<DotNetFormatSeverity>(() => Severity);
     /// <summary>Doesn't execute an implicit restore before formatting. Default is to do implicit restore.</summary>
@@ -607,19 +610,19 @@ public partial class DotNetFormatSettings : ToolOptions
     /// <summary>Produces a JSON report in the directory specified by <c>REPORT_PATH</c>.</summary>
     [Argument(Format = "--report {value}")] public string Report => Get<string>(() => Report);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetPublishSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetPublishSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetPublish), Arguments = "publish")]
 public partial class DotNetPublishSettings : ToolOptions
 {
     /// <summary>The project to publish, which defaults to the current directory if not specified.</summary>
-    [Argument(Format = "{value}")] public string Project => Get<string>(() => Project);
+    [Argument(Format = "{value}", Position = 1)] public string Project => Get<string>(() => Project);
     /// <summary>Specifies the target architecture. This is a shorthand syntax for setting the <a href="https://learn.microsoft.com/en-us/dotnet/core/rid-catalog">Runtime Identifier (RID)</a>, where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don't use the -r|--runtime option. Available since .NET 6 Preview 7.</summary>
     [Argument(Format = "--arch {value}")] public string Architecture => Get<string>(() => Architecture);
     /// <summary>Defines the build configuration. The default value is <c>Debug</c>.</summary>
@@ -634,7 +637,7 @@ public partial class DotNetPublishSettings : ToolOptions
     [Argument(Format = "--no-build")] public bool? NoBuild => Get<bool?>(() => NoBuild);
     /// <summary>Specifies the path for the output directory. If not specified, it defaults to <em>./bin/[configuration]/[framework]/</em> for a framework-dependent deployment or <em>./bin/[configuration]/[framework]/[runtime]</em> for a self-contained deployment.<para/>If a relative path is provided, the output directory generated is relative to the project file location, not to the current working directory.</summary>
     [Argument(Format = "--output {value}")] public string Output => Get<string>(() => Output);
-    /// <summary>Specifies the target operating system (OS). This is a shorthand syntax for setting the <a href"https://learn.microsoft.com/en-us/dotnet/core/rid-catalog">Runtime Identifier (RID)</a>, where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don't use the -r|--runtime option. Available since .NET 6.</summary>
+    /// <summary>Specifies the target operating system (OS). This is a shorthand syntax for setting the <a href="https://learn.microsoft.com/en-us/dotnet/core/rid-catalog">Runtime Identifier (RID)</a>, where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don't use the -r|--runtime option. Available since .NET 6.</summary>
     [Argument(Format = "--os {value}")] public string OperatingSystem => Get<string>(() => OperatingSystem);
     /// <summary>Publishes the .NET Core runtime with your application so the runtime doesn't need to be installed on the target machine. If a runtime identifier is specified, its default value is <c>true</c>. For more information about the different deployment types, see <a href="https://docs.microsoft.com/en-us/dotnet/core/deploying/index">.NET Core application deployment</a>.</summary>
     [Argument(Format = "--self-contained {value}")] public bool? SelfContained => Get<bool?>(() => SelfContained);
@@ -647,7 +650,7 @@ public partial class DotNetPublishSettings : ToolOptions
     /// <summary>Doesn't display the startup banner or the copyright message. Available since .NET Core 3.0 SDK.</summary>
     [Argument(Format = "--nologo")] public bool? NoLogo => Get<bool?>(() => NoLogo);
     /// <summary><p>Build the specified targets in the project. Specify each target separately, or use a semicolon or comma to separate multiple targets, as the following example shows:<br/><c>/target:Resources;Compile</c></p><p>If you specify any targets by using this switch, they are run instead of any targets in the DefaultTargets attribute in the project file. For more information, see <a href="https://msdn.microsoft.com/en-us/library/ee216359.aspx">Target Build Order</a> and <a href="https://msdn.microsoft.com/en-us/library/ms171463.aspx">How to: Specify Which Target to Build First</a>.</p><p>A target is a group of tasks. For more information, see <a href="https://msdn.microsoft.com/en-us/library/ms171462.aspx">Targets</a>.</p></summary>
-    [Argument(Format = "/t:{value}", ListSeparator = ";")] public IReadOnlyList<string> Targets => Get<List<string>>(() => Targets);
+    [Argument(Format = "/t:{value}", Separator = ";")] public IReadOnlyList<string> Targets => Get<List<string>>(() => Targets);
     /// <summary>Disables restoring multiple projects in parallel.</summary>
     [Argument(Format = "--disable-parallel")] public bool? DisableParallel => Get<bool?>(() => DisableParallel);
     /// <summary>Forces all dependencies to be resolved even if the last restore was successful. This is equivalent to deleting the <em>project.assets.json</em> file.</summary>
@@ -671,19 +674,19 @@ public partial class DotNetPublishSettings : ToolOptions
     /// <summary>Forces restore to reevaluate all dependencies even if a lock file already exists.</summary>
     [Argument(Format = "--force-evaluate")] public bool? ForceEvaluate => Get<bool?>(() => ForceEvaluate);
     /// <summary><p>Set or override the specified project-level properties, where name is the property name and value is the property value. Specify each property separately, or use a semicolon or comma to separate multiple properties, as the following example shows:</p><p><c>/property:WarningLevel=2;OutDir=bin\Debug</c></p></summary>
-    [Argument(Format = "/property:{value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "/property:{key}={value}")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region DotNetNuGetPushSettings
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetNuGetPushSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetNuGetPush), Arguments = "nuget push")]
 public partial class DotNetNuGetPushSettings : ToolOptions
 {
     /// <summary>Path of the package to push.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>Specifies the server URL. This option is required unless <c>DefaultPushSource</c> config value is set in the NuGet config file.</summary>
     [Argument(Format = "--source {value}")] public string Source => Get<string>(() => Source);
     /// <summary>Specifies the symbol server URL.</summary>
@@ -710,12 +713,12 @@ public partial class DotNetNuGetPushSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetNuGetAddSourceSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetNuGetAddSource), Arguments = "nuget add source")]
 public partial class DotNetNuGetAddSourceSettings : ToolOptions
 {
     /// <summary>URL of the source.</summary>
-    [Argument(Format = "{value}")] public string Source => Get<string>(() => Source);
+    [Argument(Format = "{value}", Position = 1)] public string Source => Get<string>(() => Source);
     /// <summary>Name of the source.</summary>
     [Argument(Format = "--name {value}")] public string Name => Get<string>(() => Name);
     /// <summary>Username to be used when connecting to an authenticated source.</summary>
@@ -725,7 +728,7 @@ public partial class DotNetNuGetAddSourceSettings : ToolOptions
     /// <summary>Enables storing portable package source credentials by disabling password encryption.</summary>
     [Argument(Format = "--store-password-in-clear-text")] public bool? StorePasswordInClearText => Get<bool?>(() => StorePasswordInClearText);
     /// <summary>List of valid authentication types for this source. Set this to <c>basic</c> if the server advertises NTLM or Negotiate and your credentials must be sent using the Basic mechanism, for instance when using a PAT with on-premises Azure DevOps Server. Other valid values include <c>negotiate</c>, <c>kerberos</c>, <c>ntlm</c>, and <c>digest</c>, but these values are unlikely to be useful.</summary>
-    [Argument(Format = "--valid-authentication-types {value}", ListSeparator = ",")] public IReadOnlyList<DotNetNuGetAuthentication> ValidAuthenticationTypes => Get<List<DotNetNuGetAuthentication>>(() => ValidAuthenticationTypes);
+    [Argument(Format = "--valid-authentication-types {value}", Separator = ",")] public IReadOnlyList<DotNetNuGetAuthentication> ValidAuthenticationTypes => Get<List<DotNetNuGetAuthentication>>(() => ValidAuthenticationTypes);
     /// <summary>The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see <a href="https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior">Common NuGet Configurations</a>.</summary>
     [Argument(Format = "--configfile {value}")] public string ConfigFile => Get<string>(() => ConfigFile);
 }
@@ -734,12 +737,12 @@ public partial class DotNetNuGetAddSourceSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetNuGetUpdateSourceSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetNuGetUpdateSource), Arguments = "nuget update source")]
 public partial class DotNetNuGetUpdateSourceSettings : ToolOptions
 {
     /// <summary>Name of the source.</summary>
-    [Argument(Format = "{value}")] public string Name => Get<string>(() => Name);
+    [Argument(Format = "{value}", Position = 1)] public string Name => Get<string>(() => Name);
     /// <summary>URL of the source.</summary>
     [Argument(Format = "--source {value}")] public string Source => Get<string>(() => Source);
     /// <summary>Username to be used when connecting to an authenticated source.</summary>
@@ -749,7 +752,7 @@ public partial class DotNetNuGetUpdateSourceSettings : ToolOptions
     /// <summary>Enables storing portable package source credentials by disabling password encryption.</summary>
     [Argument(Format = "--store-password-in-clear-text")] public bool? StorePasswordInClearText => Get<bool?>(() => StorePasswordInClearText);
     /// <summary>List of valid authentication types for this source. Set this to <c>basic</c> if the server advertises NTLM or Negotiate and your credentials must be sent using the Basic mechanism, for instance when using a PAT with on-premises Azure DevOps Server. Other valid values include <c>negotiate</c>, <c>kerberos</c>, <c>ntlm</c>, and <c>digest</c>, but these values are unlikely to be useful.</summary>
-    [Argument(Format = "--valid-authentication-types {value}", ListSeparator = ",")] public IReadOnlyList<DotNetNuGetAuthentication> ValidAuthenticationTypes => Get<List<DotNetNuGetAuthentication>>(() => ValidAuthenticationTypes);
+    [Argument(Format = "--valid-authentication-types {value}", Separator = ",")] public IReadOnlyList<DotNetNuGetAuthentication> ValidAuthenticationTypes => Get<List<DotNetNuGetAuthentication>>(() => ValidAuthenticationTypes);
     /// <summary>The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see <a href="https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior">Common NuGet Configurations</a>.</summary>
     [Argument(Format = "--configfile {value}")] public string ConfigFile => Get<string>(() => ConfigFile);
 }
@@ -758,12 +761,12 @@ public partial class DotNetNuGetUpdateSourceSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetToolInstallSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetToolInstall), Arguments = "tool install")]
 public partial class DotNetToolInstallSettings : ToolOptions
 {
     /// <summary>The Name/ID of the NuGet package that contains the .NET Core Global Tool to install.</summary>
-    [Argument(Format = "{value}")] public string PackageName => Get<string>(() => PackageName);
+    [Argument(Format = "{value}", Position = 1)] public string PackageName => Get<string>(() => PackageName);
     /// <summary>Adds an additional NuGet package source to use during installation.</summary>
     [Argument(Format = "--add-source {value}")] public IReadOnlyList<string> Sources => Get<List<string>>(() => Sources);
     /// <summary>Specifies the NuGet configuration (<em>nuget.config</em>) file to use.</summary>
@@ -784,7 +787,7 @@ public partial class DotNetToolInstallSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetToolRestoreSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetToolRestore), Arguments = "tool restore")]
 public partial class DotNetToolRestoreSettings : ToolOptions
 {
@@ -808,12 +811,12 @@ public partial class DotNetToolRestoreSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetToolUninstallSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetToolUninstall), Arguments = "tool uninstall")]
 public partial class DotNetToolUninstallSettings : ToolOptions
 {
     /// <summary>The Name/ID of the NuGet package that contains the .NET Core Global Tool to uninstall. You can find the package name using the <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-tool-list">dotnet tool list</a> command.</summary>
-    [Argument(Format = "{value}")] public string PackageName => Get<string>(() => PackageName);
+    [Argument(Format = "{value}", Position = 1)] public string PackageName => Get<string>(() => PackageName);
     /// <summary>Specifies that the tool to be removed is from a user-wide installation. Can't be combined with the <c>--tool-path</c> option. If you don't specify this option, you must specify the <c>--tool-path</c> option.</summary>
     [Argument(Format = "--global")] public bool? Global => Get<bool?>(() => Global);
     /// <summary>Specifies the location where to uninstall the Global Tool. The path can be absolute or relative. Can't be combined with the <c>--global</c> option. If you don't specify this option, you must specify the <c>--global</c> option.</summary>
@@ -826,12 +829,12 @@ public partial class DotNetToolUninstallSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetToolUpdateSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetToolUpdate), Arguments = "tool update")]
 public partial class DotNetToolUpdateSettings : ToolOptions
 {
     /// <summary>The Name/ID of the NuGet package that contains the .NET Core Global Tool to install.</summary>
-    [Argument(Format = "{value}")] public string PackageName => Get<string>(() => PackageName);
+    [Argument(Format = "{value}", Position = 1)] public string PackageName => Get<string>(() => PackageName);
     /// <summary>Adds an additional NuGet package source to use during installation.</summary>
     [Argument(Format = "--add-source {value}")] public IReadOnlyList<string> Sources => Get<List<string>>(() => Sources);
     /// <summary>Specifies the NuGet configuration (<em>nuget.config</em>) file to use.</summary>
@@ -852,12 +855,12 @@ public partial class DotNetToolUpdateSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetWorkloadInstallSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetWorkloadInstall), Arguments = "workload install")]
 public partial class DotNetWorkloadInstallSettings : ToolOptions
 {
     /// <summary>The workload ID or multiple IDs to install.</summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> WorkloadId => Get<List<string>>(() => WorkloadId);
+    [Argument(Format = "{value}", Position = 1)] public IReadOnlyList<string> WorkloadId => Get<List<string>>(() => WorkloadId);
     /// <summary>The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</summary>
     [Argument(Format = "--configFile {value}")] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary>Prevents restoring multiple projects in parallel.</summary>
@@ -886,7 +889,7 @@ public partial class DotNetWorkloadInstallSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetWorkloadUninstallSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetWorkloadUninstall), Arguments = "workload uninstall")]
 public partial class DotNetWorkloadUninstallSettings : ToolOptions
 {
@@ -898,12 +901,12 @@ public partial class DotNetWorkloadUninstallSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetWorkloadRestoreSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetWorkloadRestore), Arguments = "workload restore")]
 public partial class DotNetWorkloadRestoreSettings : ToolOptions
 {
     /// <summary>The project or solution file to install workloads for. If a file is not specified, the command searches the current directory for one.</summary>
-    [Argument(Format = "{value}")] public string Project => Get<string>(() => Project);
+    [Argument(Format = "{value}", Position = 1)] public string Project => Get<string>(() => Project);
     /// <summary>The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</summary>
     [Argument(Format = "--configFile {value}")] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary>Prevents restoring multiple projects in parallel.</summary>
@@ -932,7 +935,7 @@ public partial class DotNetWorkloadRestoreSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetWorkloadUpdateSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetWorkloadUpdate), Arguments = "workload update")]
 public partial class DotNetWorkloadUpdateSettings : ToolOptions
 {
@@ -966,7 +969,7 @@ public partial class DotNetWorkloadUpdateSettings : ToolOptions
 /// <summary>Used within <see cref="DotNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<DotNetWorkloadRepairSettings>))]
 [Command(Type = typeof(DotNetTasks), Command = nameof(DotNetTasks.DotNetWorkloadRepair), Arguments = "workload repair")]
 public partial class DotNetWorkloadRepairSettings : ToolOptions
 {
@@ -1269,6 +1272,23 @@ public static partial class DotNetTestSettingsExtensions
     [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.BlameHangTimeout))]
     public static T ResetBlameHangTimeout<T>(this T o) where T : DotNetTestSettings => o.Modify(b => b.Remove(() => o.BlameHangTimeout));
     #endregion
+    #region RunSettings
+    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
+    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
+    public static T SetRunSettings<T>(this T o, IDictionary<string, object> v) where T : DotNetTestSettings => o.Modify(b => b.Set(() => o.RunSettings, v.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase)));
+    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
+    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
+    public static T SetRunSetting<T>(this T o, string k, object v) where T : DotNetTestSettings => o.Modify(b => b.SetDictionary(() => o.RunSettings, k, v));
+    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
+    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
+    public static T AddRunSetting<T>(this T o, string k, object v) where T : DotNetTestSettings => o.Modify(b => b.AddDictionary(() => o.RunSettings, k, v));
+    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
+    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
+    public static T RemoveRunSetting<T>(this T o, string k) where T : DotNetTestSettings => o.Modify(b => b.RemoveDictionary(() => o.RunSettings, k));
+    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
+    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
+    public static T ClearRunSettings<T>(this T o) where T : DotNetTestSettings => o.Modify(b => b.ClearDictionary(() => o.RunSettings));
+    #endregion
     #region NoLogo
     /// <inheritdoc cref="DotNetTestSettings.NoLogo"/>
     [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.NoLogo))]
@@ -1469,23 +1489,6 @@ public static partial class DotNetTestSettingsExtensions
     [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.Runtime))]
     public static T ResetRuntime<T>(this T o) where T : DotNetTestSettings => o.Modify(b => b.Remove(() => o.Runtime));
     #endregion
-    #region RunSettings
-    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
-    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
-    public static T SetRunSettings<T>(this T o, IDictionary<string, object> v) where T : DotNetTestSettings => o.Modify(b => b.Set(() => o.RunSettings, v.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase)));
-    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
-    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
-    public static T SetRunSetting<T>(this T o, string k, object v) where T : DotNetTestSettings => o.Modify(b => b.SetDictionary(() => o.RunSettings, k, v));
-    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
-    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
-    public static T AddRunSetting<T>(this T o, string k, object v) where T : DotNetTestSettings => o.Modify(b => b.AddDictionary(() => o.RunSettings, k, v));
-    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
-    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
-    public static T RemoveRunSetting<T>(this T o, string k) where T : DotNetTestSettings => o.Modify(b => b.RemoveDictionary(() => o.RunSettings, k));
-    /// <inheritdoc cref="DotNetTestSettings.RunSettings"/>
-    [Pure] [Builder(Type = typeof(DotNetTestSettings), Property = nameof(DotNetTestSettings.RunSettings))]
-    public static T ClearRunSettings<T>(this T o) where T : DotNetTestSettings => o.Modify(b => b.ClearDictionary(() => o.RunSettings));
-    #endregion
 }
 #endregion
 #region DotNetRunSettingsExtensions
@@ -1576,6 +1579,29 @@ public static partial class DotNetRunSettingsExtensions
     /// <inheritdoc cref="DotNetRunSettings.ProjectFile"/>
     [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ProjectFile))]
     public static T ResetProjectFile<T>(this T o) where T : DotNetRunSettings => o.Modify(b => b.Remove(() => o.ProjectFile));
+    #endregion
+    #region ApplicationArguments
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T SetApplicationArguments<T>(this T o, params string[] v) where T : DotNetRunSettings => o.Modify(b => b.Set(() => o.ApplicationArguments, v));
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T SetApplicationArguments<T>(this T o, IEnumerable<string> v) where T : DotNetRunSettings => o.Modify(b => b.Set(() => o.ApplicationArguments, v));
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T AddApplicationArguments<T>(this T o, params string[] v) where T : DotNetRunSettings => o.Modify(b => b.AddCollection(() => o.ApplicationArguments, v));
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T AddApplicationArguments<T>(this T o, IEnumerable<string> v) where T : DotNetRunSettings => o.Modify(b => b.AddCollection(() => o.ApplicationArguments, v));
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T RemoveApplicationArguments<T>(this T o, params string[] v) where T : DotNetRunSettings => o.Modify(b => b.RemoveCollection(() => o.ApplicationArguments, v));
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T RemoveApplicationArguments<T>(this T o, IEnumerable<string> v) where T : DotNetRunSettings => o.Modify(b => b.RemoveCollection(() => o.ApplicationArguments, v));
+    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
+    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
+    public static T ClearApplicationArguments<T>(this T o) where T : DotNetRunSettings => o.Modify(b => b.ClearCollection(() => o.ApplicationArguments));
     #endregion
     #region DisableParallel
     /// <inheritdoc cref="DotNetRunSettings.DisableParallel"/>
@@ -2173,14 +2199,6 @@ public static partial class DotNetRunSettingsExtensions
     [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.Properties))]
     public static T ToggleDeterministic<T>(this T o) where T : DotNetRunSettings => o.Modify(b => b.Set(() => o.Properties, DelegateHelper.Toggle(o.Properties, "Deterministic")));
     #endregion
-    #endregion
-    #region ApplicationArguments
-    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
-    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
-    public static T SetApplicationArguments<T>(this T o, string v) where T : DotNetRunSettings => o.Modify(b => b.Set(() => o.ApplicationArguments, v));
-    /// <inheritdoc cref="DotNetRunSettings.ApplicationArguments"/>
-    [Pure] [Builder(Type = typeof(DotNetRunSettings), Property = nameof(DotNetRunSettings.ApplicationArguments))]
-    public static T ResetApplicationArguments<T>(this T o) where T : DotNetRunSettings => o.Modify(b => b.Remove(() => o.ApplicationArguments));
     #endregion
 }
 #endregion

@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Codecov/Codecov.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Codecov;
+
 /// <summary><p>Code coverage is a measurement used to express which lines of code were executed by a test suite. We use three primary terms to describe each line executed.<para/><ul><li>hit - indicates that the source code was executed by the test suite.</li><li>partial - indicates that the source code was not fully executed by the test suite; there are remaining branches that were not executed.</li><li>miss - indicates that the source code was not executed by the test suite.</li></ul><para/>Coverage is the ratio of <c>hits / (sum of hit + partial + miss)</c>. A code base that has 5 lines executed by tests out of 12 total lines will receive a coverage ratio of 41% (rounding down).<para/>Phrased simply, code coverage provides a visual measurement of what source code is being executed by a test suite. This information indicates to the software developer where they should write new tests in an effort to achieve higher coverage.<para/>Testing source code helps to prevent bugs and syntax errors by executing each line with a known variable and cross-checking it with an expected output.</p><p>For more details, visit the <a href="https://about.codecov.io/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -40,7 +43,7 @@ public partial class CodecovTasks : ToolTasks
 /// <summary>Used within <see cref="CodecovTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<CodecovSettings>))]
 [Command(Type = typeof(CodecovTasks), Command = nameof(CodecovTasks.Codecov))]
 public partial class CodecovSettings : ToolOptions
 {
@@ -55,13 +58,13 @@ public partial class CodecovSettings : ToolOptions
     /// <summary>Don't upload and dump to stdin.</summary>
     [Argument(Format = "--dump")] public bool? Dump => Get<bool?>(() => Dump);
     /// <summary>Specify environment variables to be included with this build.</summary>
-    [Argument(Format = "--env {value}", ListSeparator = " ")] public IReadOnlyList<string> EnvironmentVariables => Get<List<string>>(() => EnvironmentVariables);
+    [Argument(Format = "--env {value}", Separator = " ")] public IReadOnlyList<string> EnvironmentVariables => Get<List<string>>(() => EnvironmentVariables);
     /// <summary>Specify features to disable.</summary>
     [Argument(Format = "--feature {value}")] public IReadOnlyList<string> Features => Get<List<string>>(() => Features);
     /// <summary>Target file(s) to upload.</summary>
-    [Argument(Format = "--file {value}", ListSeparator = " ")] public IReadOnlyList<string> Files => Get<List<string>>(() => Files);
+    [Argument(Format = "--file {value}", Separator = " ")] public IReadOnlyList<string> Files => Get<List<string>>(() => Files);
     /// <summary>Flag the upload to group coverage metrics.</summary>
-    [Argument(Format = "--flag {value}", ListSeparator = ",")] public string Flags => Get<string>(() => Flags);
+    [Argument(Format = "--flag {value}", Separator = ",")] public string Flags => Get<string>(() => Flags);
     /// <summary>Custom defined name of the upload. Visible in Codecov UI.</summary>
     [Argument(Format = "--name {value}")] public string Name => Get<string>(() => Name);
     /// <summary>Remove color from the output.</summary>

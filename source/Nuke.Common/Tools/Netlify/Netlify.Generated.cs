@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Netlify/Netlify.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Netlify;
+
 /// <summary><p>Netlify’s command line interface (CLI) lets you configure <a href="https://docs.netlify.com/cli/get-started/#continuous-deployment">continuous deployment</a> straight from the command line. You can use Netlify CLI to <a href="https://docs.netlify.com/cli/get-started/#run-a-local-development-environment">run a local development server</a> that you can share with others, <a href="https://docs.netlify.com/cli/get-started/#run-builds-locally">run a local build and plugins</a>, and <a href="https://docs.netlify.com/cli/get-started/#manual-deploys">deploy your site</a>.</p><p>For more details, visit the <a href="https://docs.netlify.com/cli/get-started/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -58,7 +61,7 @@ public partial class NetlifyTasks : ToolTasks
 /// <summary>Used within <see cref="NetlifyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NetlifyDeploySettings>))]
 [Command(Type = typeof(NetlifyTasks), Command = nameof(NetlifyTasks.NetlifyDeploy), Arguments = "netlify deploy")]
 public partial class NetlifyDeploySettings : ToolOptions
 {
@@ -102,7 +105,7 @@ public partial class NetlifyDeploySettings : ToolOptions
 /// <summary>Used within <see cref="NetlifyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NetlifySitesCreateSettings>))]
 [Command(Type = typeof(NetlifyTasks), Command = nameof(NetlifyTasks.NetlifySitesCreate), Arguments = "netlify sites:create")]
 public partial class NetlifySitesCreateSettings : ToolOptions
 {
@@ -126,12 +129,12 @@ public partial class NetlifySitesCreateSettings : ToolOptions
 /// <summary>Used within <see cref="NetlifyTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NetlifySitesDeleteSettings>))]
 [Command(Type = typeof(NetlifyTasks), Command = nameof(NetlifyTasks.NetlifySitesDelete), Arguments = "netlify sites:delete")]
 public partial class NetlifySitesDeleteSettings : ToolOptions
 {
     /// <summary>Site ID to delete.</summary>
-    [Argument(Format = "{value}")] public string SiteId => Get<string>(() => SiteId);
+    [Argument(Format = "{value}", Position = 1)] public string SiteId => Get<string>(() => SiteId);
     /// <summary>Delete without prompting (useful for CI).</summary>
     [Argument(Format = "--force")] public bool? Force => Get<bool?>(() => Force);
     /// <summary>Print debugging information.</summary>

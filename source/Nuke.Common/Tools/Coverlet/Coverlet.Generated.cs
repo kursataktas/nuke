@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Coverlet/Coverlet.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -15,7 +16,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Coverlet;
+
 /// <summary><p><c>Coverlet</c> is a cross platform code coverage library for .NET Core, with support for line, branch and method coverage.The <c>dotnet test</c> command is used to execute unit tests in a given project. Unit tests are console application projects that have dependencies on the unit test framework (for example, MSTest, NUnit, or xUnit) and the dotnet test runner for the unit testing framework. These are packaged as NuGet packages and are restored as ordinary dependencies for the project.</p><p>For more details, visit the <a href="https://github.com/tonerdo/coverlet/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -42,16 +45,16 @@ public partial class CoverletTasks : ToolTasks
 /// <summary>Used within <see cref="CoverletTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<CoverletSettings>))]
 [Command(Type = typeof(CoverletTasks), Command = nameof(CoverletTasks.Coverlet))]
 public partial class CoverletSettings : ToolOptions
 {
     /// <summary>Path to the test assembly.</summary>
-    [Argument(Format = "{value}")] public string Assembly => Get<string>(() => Assembly);
+    [Argument(Format = "{value}", Position = 1)] public string Assembly => Get<string>(() => Assembly);
     /// <summary>Path to the test runner application.</summary>
     [Argument(Format = "--target {value}")] public string Target => Get<string>(() => Target);
     /// <summary>Arguments to be passed to the test runner.</summary>
-    [Argument(Format = "--targetargs {value}", ListSeparator = " ")] public IReadOnlyList<string> TargetArgs => Get<List<string>>(() => TargetArgs);
+    [Argument(Format = "--targetargs {value}", Separator = " ")] public IReadOnlyList<string> TargetArgs => Get<List<string>>(() => TargetArgs);
     /// <summary>Output of the generated coverage report</summary>
     [Argument(Format = "--output {value}")] public string Output => Get<string>(() => Output);
     /// <summary>Format of the generated coverage report.Can be specified multiple times to output multiple formats in a single run.</summary>

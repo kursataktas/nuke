@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/Octopus/Octopus.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.Octopus;
+
 /// <summary><p>Octopus Deploy is an automated deployment server, which you install yourself, much like you would install SQL Server, Team Foundation Server or JetBrains TeamCity. Octopus makes it easy to automate deployment of ASP.NET web applications and Windows Services into development, test and production environments.<para/>Along with the Octopus Deploy server, you'll also install a lightweight agent service on each of the machines that you plan to deploy to, for example your web and application servers. We call this the Tentacle agent; the idea being that one Octopus server controls many Tentacles, potentially a lot more than 8! With Octopus and Tentacle, you can easily deploy to your own servers, or cloud services from providers like Amazon Web Services or Microsoft Azure.</p><p>For more details, visit the <a href="https://octopus.com/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -76,7 +79,7 @@ public partial class OctopusTasks : ToolTasks
 /// <summary>Used within <see cref="OctopusTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctopusPackSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusPack), Arguments = "pack")]
 public partial class OctopusPackSettings : ToolOptions
 {
@@ -114,7 +117,7 @@ public partial class OctopusPackSettings : ToolOptions
 /// <summary>Used within <see cref="OctopusTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctopusPushSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusPush), Arguments = "push")]
 public partial class OctopusPushSettings : ToolOptions
 {
@@ -158,7 +161,7 @@ public partial class OctopusPushSettings : ToolOptions
 /// <summary>Used within <see cref="OctopusTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctopusCreateReleaseSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusCreateRelease), Arguments = "create-release")]
 public partial class OctopusCreateReleaseSettings : ToolOptions
 {
@@ -175,7 +178,7 @@ public partial class OctopusCreateReleaseSettings : ToolOptions
     /// <summary>Channel to use for the new release. Omit this argument to automatically select the best channel.</summary>
     [Argument(Format = "--channel={value}")] public string Channel => Get<string>(() => Channel);
     /// <summary>Version number to use for a step or package in the release. Format: <c>--package=StepNameOrPackageId:Version</c>.</summary>
-    [Argument(Format = "--package={value}")] public IReadOnlyDictionary<string, string> PackageVersions => Get<Dictionary<string, string>>(() => PackageVersions);
+    [Argument(Format = "--package={key}:{value}")] public IReadOnlyDictionary<string, string> PackageVersions => Get<Dictionary<string, string>>(() => PackageVersions);
     /// <summary>A folder containing NuGet packages from which we should get versions.</summary>
     [Argument(Format = "--packagesFolder={value}")] public string PackagesFolder => Get<string>(() => PackagesFolder);
     /// <summary>Release Notes for the new release. Styling with Markdown is supported.</summary>
@@ -215,7 +218,7 @@ public partial class OctopusCreateReleaseSettings : ToolOptions
     /// <summary>Redirect the raw log of failed tasks to a file.</summary>
     [Argument(Format = "--rawlogfile={value}")] public string RawLogFile => Get<string>(() => RawLogFile);
     /// <summary>Values for any prompted variables in the format Label:Value. For JSON values, embedded quotation marks should be escaped with a backslash.</summary>
-    [Argument(Format = "--variable={value}")] public IReadOnlyDictionary<string, string> Variables => Get<Dictionary<string, string>>(() => Variables);
+    [Argument(Format = "--variable={key}:{value}")] public IReadOnlyDictionary<string, string> Variables => Get<Dictionary<string, string>>(() => Variables);
     /// <summary>Time at which deployment should start (scheduled deployment), specified as any valid DateTimeOffset format, and assuming the time zone is the current local time zone.</summary>
     [Argument(Format = "--deployat={value}")] public string DeployAt => Get<string>(() => DeployAt);
     /// <summary>Environment to automatically deploy to, e.g., <c>Production</c>.</summary>
@@ -260,7 +263,7 @@ public partial class OctopusCreateReleaseSettings : ToolOptions
 /// <summary>Used within <see cref="OctopusTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctopusDeployReleaseSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusDeployRelease), Arguments = "deploy-release")]
 public partial class OctopusDeployReleaseSettings : ToolOptions
 {
@@ -289,7 +292,7 @@ public partial class OctopusDeployReleaseSettings : ToolOptions
     /// <summary>Redirect the raw log of failed tasks to a file.</summary>
     [Argument(Format = "--rawlogfile={value}")] public string RawLogFile => Get<string>(() => RawLogFile);
     /// <summary>Values for any prompted variables. For JSON values, embedded quotation marks should be escaped with a backslash. </summary>
-    [Argument(Format = "--variable={value}")] public IReadOnlyDictionary<string, string> Variables => Get<Dictionary<string, string>>(() => Variables);
+    [Argument(Format = "--variable={key}:{value}")] public IReadOnlyDictionary<string, string> Variables => Get<Dictionary<string, string>>(() => Variables);
     /// <summary>Time at which deployment should start (scheduled deployment), specified as any valid DateTimeOffset format, and assuming the time zone is the current local time zone.</summary>
     [Argument(Format = "--deployat={value}")] public string DeployAt => Get<string>(() => DeployAt);
     /// <summary>Create a deployment for this tenant; specify this argument multiple times to add multiple tenants or use <c>*</c> wildcard to deploy to all tenants who are ready for this release (according to lifecycle).</summary>
@@ -342,7 +345,7 @@ public partial class OctopusDeployReleaseSettings : ToolOptions
 /// <summary>Used within <see cref="OctopusTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<OctopusBuildInformationSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusBuildInformation), Arguments = "build-information")]
 public partial class OctopusBuildInformationSettings : ToolOptions
 {

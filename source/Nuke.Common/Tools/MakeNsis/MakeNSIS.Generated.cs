@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/MakeNsis/MakeNSIS.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.MakeNSIS;
+
 /// <summary><p>NSIS creates installers that are capable of installing, uninstalling, setting system settings, extracting files, etc. Because it's based on script files you can fully control every part of your installer.</p><p>For more details, visit the <a href="https://nsis.sourceforge.io/Docs/Contents.html">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -40,7 +43,7 @@ public partial class MakeNSISTasks : ToolTasks
 /// <summary>Used within <see cref="MakeNSISTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<MakeNSISSettings>))]
 [Command(Type = typeof(MakeNSISTasks), Command = nameof(MakeNSISTasks.MakeNSIS))]
 public partial class MakeNSISSettings : ToolOptions
 {

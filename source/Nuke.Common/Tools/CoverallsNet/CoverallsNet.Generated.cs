@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/CoverallsNet/CoverallsNet.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.CoverallsNet;
+
 /// <summary><p>Coveralls uploader for .Net Code coverage of your C# source code. Should work with any code files that get reported with the supported coverage tools, but the primary focus is CSharp.</p><p>For more details, visit the <a href="https://coverallsnet.readthedocs.io">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,7 +44,7 @@ public partial class CoverallsNetTasks : ToolTasks
 /// <summary>Used within <see cref="CoverallsNetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<CoverallsNetSettings>))]
 [Command(Type = typeof(CoverallsNetTasks), Command = nameof(CoverallsNetTasks.CoverallsNet))]
 public partial class CoverallsNetSettings : ToolOptions
 {

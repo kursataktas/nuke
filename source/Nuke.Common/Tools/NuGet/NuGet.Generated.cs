@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/NuGet/NuGet.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.NuGet;
+
 /// <summary><p>The NuGet Command Line Interface (CLI) provides the full extent of NuGet functionality to install, create, publish, and manage packages.</p><p>For more details, visit the <a href="https://docs.microsoft.com/en-us/nuget/tools/nuget-exe-cli-reference">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -122,12 +125,12 @@ public partial class NuGetTasks : ToolTasks
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetPushSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetPush), Arguments = "push")]
 public partial class NuGetPushSettings : ToolOptions
 {
     /// <summary>Path of the package to push.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>The API key for the target repository. If not present, the one specified in <em>%AppData%\NuGet\NuGet.Config</em> is used.</summary>
     [Argument(Format = "-ApiKey {value}", Secret = true)] public string ApiKey => Get<string>(() => ApiKey);
     /// <summary>Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.  Also, starting with NuGet 3.4.2, this is a mandatory parameter unless the <em>NuGet.Config</em> file specifies a <em>DefaultPushSource</em> value (see <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior">Configuring NuGet behavior</a>).</summary>
@@ -156,12 +159,12 @@ public partial class NuGetPushSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetPackSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetPack), Arguments = "pack")]
 public partial class NuGetPackSettings : ToolOptions
 {
     /// <summary>The <c>.nuspec</c> or <c>.csproj</c> file.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>Sets the base path of the files defined in the <c>.nuspec</c> file.</summary>
     [Argument(Format = "-BasePath {value}")] public string BasePath => Get<string>(() => BasePath);
     /// <summary>Specifies that the project should be built before building the package.</summary>
@@ -187,7 +190,7 @@ public partial class NuGetPackSettings : ToolOptions
     /// <summary>Specifies the folder in which the created package is stored. If no folder is specified, the current folder is used.</summary>
     [Argument(Format = "-OutputDirectory {value}")] public string OutputDirectory => Get<string>(() => OutputDirectory);
     /// <summary>Specifies a list of properties that override values in the project file; see <a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties">Common MSBuild Project Properties</a> for property names. The Properties argument here is a list of token=value pairs, separated by semicolons, where each occurrence of <c>$token$</c> in the <c>.nuspec</c> file will be replaced with the given value. Values can be strings in quotation marks. Note that for the &quot;Configuration&quot; property, the default is &quot;Debug&quot;. To change to a Release configuration, use <c>-Properties Configuration=Release</c>.</summary>
-    [Argument(Format = "-Properties {value}", ListSeparator = ";")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    [Argument(Format = "-Properties {key}={value}", Separator = ";")] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
     /// <summary><em>(3.4.4+)</em> Appends a suffix to the internally generated version number, typically used for appending build or other pre-release identifiers. For example, using <c>-suffix nightly</c> will create a package with a version number like <c>1.2.3-nightly</c>. Suffixes must start with a letter to avoid warnings, errors, and potential incompatibilities with different versions of NuGet and the NuGet Package Manager.</summary>
     [Argument(Format = "-Suffix {value}")] public string Suffix => Get<string>(() => Suffix);
     /// <summary>Specifies that the package contains sources and symbols. When used with a <c>.nuspec</c> file, this creates a regular NuGet package file and the corresponding symbols package.</summary>
@@ -206,12 +209,12 @@ public partial class NuGetPackSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetRestoreSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetRestore), Arguments = "restore")]
 public partial class NuGetRestoreSettings : ToolOptions
 {
     /// <summary>Defines the project to restore. I.e., the location of a solution file, a <c>packages.config</c>, or a <c>project.json</c> file.</summary>
-    [Argument(Format = "{value}")] public string TargetPath => Get<string>(() => TargetPath);
+    [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
     /// <summary>The NuGet configuration file to apply. If not specified, <em>%AppData%\NuGet\NuGet.Config</em> is used.</summary>
     [Argument(Format = "-ConfigFile {value}")] public string ConfigFile => Get<string>(() => ConfigFile);
     /// <summary><em>(4.0+)</em> Downloads packages directly without populating caches with any binaries or metadata.</summary>
@@ -219,7 +222,7 @@ public partial class NuGetRestoreSettings : ToolOptions
     /// <summary>Disables restoring multiple packages in parallel.</summary>
     [Argument(Format = "-DisableParallelProcessing")] public bool? DisableParallelProcessing => Get<bool?>(() => DisableParallelProcessing);
     /// <summary><em>(3.2+)</em> A list of package sources to use as fallbacks in case the package isn't found in the primary or default source.</summary>
-    [Argument(Format = "-FallbackSource {value}", ListSeparator = ";")] public IReadOnlyList<string> FallbackSource => Get<List<string>>(() => FallbackSource);
+    [Argument(Format = "-FallbackSource {value}", Separator = ";")] public IReadOnlyList<string> FallbackSource => Get<List<string>>(() => FallbackSource);
     /// <summary><em>(3.5+)</em> Forces nuget.exe to run using an invariant, English-based culture.</summary>
     [Argument(Format = "-ForceEnglishOutput")] public bool? ForceEnglishOutput => Get<bool?>(() => ForceEnglishOutput);
     /// <summary><em>(4.0+)</em> Specifies the path of MSBuild to use with the command, taking precedence over <c>-MSBuildVersion</c>.</summary>
@@ -233,7 +236,7 @@ public partial class NuGetRestoreSettings : ToolOptions
     /// <summary>Specifies the folder in which packages are installed. If no folder is specified, the current folder is used.</summary>
     [Argument(Format = "-OutputDirectory {value}")] public string OutputDirectory => Get<string>(() => OutputDirectory);
     /// <summary>Specifies the types of files to save after package installation: one of <c>nuspec</c>, <c>nupkg</c>, or <c>nuspec;nupkg</c>.</summary>
-    [Argument(Format = "-PackageSaveMode {value}", ListSeparator = ";")] public IReadOnlyList<PackageSaveMode> PackageSaveMode => Get<List<PackageSaveMode>>(() => PackageSaveMode);
+    [Argument(Format = "-PackageSaveMode {value}", Separator = ";")] public IReadOnlyList<PackageSaveMode> PackageSaveMode => Get<List<PackageSaveMode>>(() => PackageSaveMode);
     /// <summary>Same as <c>OutputDirectory</c>.</summary>
     [Argument(Format = "-PackagesDirectory {value}")] public string PackagesDirectory => Get<string>(() => PackagesDirectory);
     /// <summary>Timeout in seconds for resolving project-to-project references.</summary>
@@ -245,7 +248,7 @@ public partial class NuGetRestoreSettings : ToolOptions
     /// <summary>Specifies the solution folder. Not valid when restoring packages for a solution.</summary>
     [Argument(Format = "-SolutionDirectory {value}")] public string SolutionDirectory => Get<string>(() => SolutionDirectory);
     /// <summary>Specifies the list of package sources (as URLs) to use for the restore. If omitted, the command uses the sources provided in configuration files, see <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior">Configuring NuGet behavior</a>.</summary>
-    [Argument(Format = "-Source {value}", ListSeparator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
+    [Argument(Format = "-Source {value}", Separator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
     /// <summary>Specifies the amount of detail displayed in the output: <em>normal</em>, <em>quiet</em>, <em>detailed</em>.</summary>
     [Argument(Format = "-Verbosity {value}")] public NuGetVerbosity Verbosity => Get<NuGetVerbosity>(() => Verbosity);
 }
@@ -254,12 +257,12 @@ public partial class NuGetRestoreSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetInstallSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetInstall), Arguments = "install")]
 public partial class NuGetInstallSettings : ToolOptions
 {
     /// <summary>Name of the package to install.</summary>
-    [Argument(Format = "{value}")] public string PackageID => Get<string>(() => PackageID);
+    [Argument(Format = "{value}", Position = 1)] public string PackageID => Get<string>(() => PackageID);
     /// <summary><em>(4.4+)</em> The version of the dependency packages to use, which can be one of the following: <ul><li><c>Lowest</c>: (default) the lowest version.</li> <li><c>HighestPatch</c>: the version with the lowest major, lowest minor, highest patch.</li> <li><c>HighestMinor</c>: the version with the lowest major, highest minor, highest patch.</li> <li><c>Highest</c>: the highest version.</li> <li><c>Ignore</c>: No dependency packages will be used.</li></ul></summary>
     [Argument(Format = "-DependencyVersion {value}")] public DependencyVersion DependencyVersion => Get<DependencyVersion>(() => DependencyVersion);
     /// <summary>Disables installing multiple packages in parallel.</summary>
@@ -267,7 +270,7 @@ public partial class NuGetInstallSettings : ToolOptions
     /// <summary>Installs the package to a folder named with only the package name and not the version number.</summary>
     [Argument(Format = "-ExcludeVersion")] public bool? ExcludeVersion => Get<bool?>(() => ExcludeVersion);
     /// <summary><em>(3.2+)</em> A list of package sources to use as fallbacks in case the package isn't found in the primary or default source.</summary>
-    [Argument(Format = "-FallbackSource {value}", ListSeparator = ";")] public IReadOnlyList<string> FallbackSource => Get<List<string>>(() => FallbackSource);
+    [Argument(Format = "-FallbackSource {value}", Separator = ";")] public IReadOnlyList<string> FallbackSource => Get<List<string>>(() => FallbackSource);
     /// <summary><em>(4.4+)</em> Target framework used for selecting dependencies. Defaults to 'Any' if not specified.</summary>
     [Argument(Format = "-Framework {value}")] public string Framework => Get<string>(() => Framework);
     /// <summary>Prevents NuGet from using cached packages. See <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/managing-the-global-packages-and-cache-folders">Managing the global packages and cache folders</a>.</summary>
@@ -275,7 +278,7 @@ public partial class NuGetInstallSettings : ToolOptions
     /// <summary>Specifies the folder in which packages are installed. If no folder is specified, the current folder is used.</summary>
     [Argument(Format = "-OutputDirectory {value}")] public string OutputDirectory => Get<string>(() => OutputDirectory);
     /// <summary>Specifies the types of files to save after package installation: one of <c>nuspec</c>, <c>nupkg</c>, or <c>nuspec;nupkg</c>.</summary>
-    [Argument(Format = "-PackageSaveMode {value}", ListSeparator = ";")] public IReadOnlyList<PackageSaveMode> PackageSaveMode => Get<List<PackageSaveMode>>(() => PackageSaveMode);
+    [Argument(Format = "-PackageSaveMode {value}", Separator = ";")] public IReadOnlyList<PackageSaveMode> PackageSaveMode => Get<List<PackageSaveMode>>(() => PackageSaveMode);
     /// <summary>Allows prerelease packages to be installed. This flag is not required when restoring packages with <c>packages.config</c>.</summary>
     [Argument(Format = "-PreRelease")] public bool? PreRelease => Get<bool?>(() => PreRelease);
     /// <summary>Verifies that restoring packages is enabled before downloading and installing the packages. For details, see <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore">Package Restore</a>.</summary>
@@ -283,7 +286,7 @@ public partial class NuGetInstallSettings : ToolOptions
     /// <summary>Specifies root folder of the solution for which to restore packages.</summary>
     [Argument(Format = "-SolutionDirectory {value}")] public string SolutionDirectory => Get<string>(() => SolutionDirectory);
     /// <summary>Specifies the list of package sources (as URLs) to use for the restore. If omitted, the command uses the sources provided in configuration files, see <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior">Common NuGet configurations</a>.</summary>
-    [Argument(Format = "-Source {value}", ListSeparator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
+    [Argument(Format = "-Source {value}", Separator = ";")] public IReadOnlyList<string> Source => Get<List<string>>(() => Source);
     /// <summary>Specifies the version of the package to install.</summary>
     [Argument(Format = "-Version {value}")] public string Version => Get<string>(() => Version);
     /// <summary>The NuGet configuration file to apply. If not specified, <c>%AppData%\NuGet\NuGet.Config</c> (Windows) or <c>~/.nuget/NuGet/NuGet.Config</c> (Mac/Linux) is used.</summary>
@@ -300,7 +303,7 @@ public partial class NuGetInstallSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetSourcesAddSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetSourcesAdd), Arguments = "sources add")]
 public partial class NuGetSourcesAddSettings : ToolOptions
 {
@@ -328,7 +331,7 @@ public partial class NuGetSourcesAddSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetSourcesUpdateSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetSourcesUpdate), Arguments = "sources update")]
 public partial class NuGetSourcesUpdateSettings : ToolOptions
 {
@@ -356,7 +359,7 @@ public partial class NuGetSourcesUpdateSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetSourcesRemoveSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetSourcesRemove), Arguments = "sources remove")]
 public partial class NuGetSourcesRemoveSettings : ToolOptions
 {
@@ -376,7 +379,7 @@ public partial class NuGetSourcesRemoveSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetSourcesEnableSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetSourcesEnable), Arguments = "sources enable")]
 public partial class NuGetSourcesEnableSettings : ToolOptions
 {
@@ -396,7 +399,7 @@ public partial class NuGetSourcesEnableSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetSourcesDisableSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetSourcesDisable), Arguments = "sources disable")]
 public partial class NuGetSourcesDisableSettings : ToolOptions
 {
@@ -416,7 +419,7 @@ public partial class NuGetSourcesDisableSettings : ToolOptions
 /// <summary>Used within <see cref="NuGetTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NuGetSourcesListSettings>))]
 [Command(Type = typeof(NuGetTasks), Command = nameof(NuGetTasks.NuGetSourcesList), Arguments = "sources list")]
 public partial class NuGetSourcesListSettings : ToolOptions
 {

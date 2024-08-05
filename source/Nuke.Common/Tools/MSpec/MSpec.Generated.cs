@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/MSpec/MSpec.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.MSpec;
+
 /// <summary><p>MSpec is called a 'context/specification' test framework because of the 'grammar' that is used in describing and coding the tests or 'specs'.</p><p>For more details, visit the <a href="https://github.com/machine/machine.specifications">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -40,18 +43,18 @@ public partial class MSpecTasks : ToolTasks
 /// <summary>Used within <see cref="MSpecTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<MSpecSettings>))]
 [Command(Type = typeof(MSpecTasks), Command = nameof(MSpecTasks.MSpec))]
 public partial class MSpecSettings : ToolOptions
 {
     /// <summary>Assemblies with tests to be executed.</summary>
-    [Argument(Format = "{value}", ListSeparator = " ")] public IReadOnlyList<string> Assemblies => Get<List<string>>(() => Assemblies);
+    [Argument(Format = "{value}", Position = 1, Separator = " ")] public IReadOnlyList<string> Assemblies => Get<List<string>>(() => Assemblies);
     /// <summary>Filter file specifying contexts to execute (full type name, one per line). Takes precedence over tags.</summary>
-    [Argument(Format = "-filters {value}", ListSeparator = ",")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
+    [Argument(Format = "-filters {value}", Separator = ",")] public IReadOnlyList<string> Filters => Get<List<string>>(() => Filters);
     /// <summary>Executes all specifications in contexts with these comma delimited tags. Ex. <c>-i 'foo, bar, foo_bar'</c>.</summary>
-    [Argument(Format = "-include {value}", ListSeparator = ",")] public IReadOnlyList<string> Includes => Get<List<string>>(() => Includes);
+    [Argument(Format = "-include {value}", Separator = ",")] public IReadOnlyList<string> Includes => Get<List<string>>(() => Includes);
     /// <summary>Exclude specifications in contexts with these comma delimited tags. Ex. <c>-x 'foo, bar, foo_bar'</c>.</summary>
-    [Argument(Format = "-exclude {value}", ListSeparator = ",")] public IReadOnlyList<string> Excludes => Get<List<string>>(() => Excludes);
+    [Argument(Format = "-exclude {value}", Separator = ",")] public IReadOnlyList<string> Excludes => Get<List<string>>(() => Excludes);
     /// <summary>Outputs the HTML report to path, one-per-assembly w/ index.html (if directory, otherwise all are in one file). Ex. <c>--html=output/reports/</c></summary>
     [Argument(Format = "--html {value}")] public string HtmlOutput => Get<string>(() => HtmlOutput);
     /// <summary>Outputs the XML report to the file referenced by the path. Ex. <c>--xml=output/reports/MSpecResults.xml</c></summary>

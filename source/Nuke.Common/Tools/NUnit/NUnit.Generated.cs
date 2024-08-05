@@ -1,4 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/source/Nuke.Common/Tools/NUnit/NUnit.json
+
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;
@@ -14,7 +15,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 namespace Nuke.Common.Tools.NUnit;
+
 /// <summary><p>NUnit is a unit-testing framework for all .Net languages. Initially ported from <a href="http://www.junit.org/">JUnit</a>, the current production release, version 3.0, has been completely rewritten with many new features and support for a wide range of .NET platforms.</p><p>For more details, visit the <a href="https://www.nunit.org/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -41,20 +44,20 @@ public partial class NUnitTasks : ToolTasks
 /// <summary>Used within <see cref="NUnitTasks"/>.</summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
+[TypeConverter(typeof(TypeConverter<NUnit3Settings>))]
 [Command(Type = typeof(NUnitTasks), Command = nameof(NUnitTasks.NUnit3))]
 public partial class NUnit3Settings : ToolOptions
 {
     /// <summary><p>The console program must always have an assembly or project specified. Assemblies are specified by file name or path, which may be absolute or relative. Relative paths are interpreted based on the current directory.</p><p>In addition to assemblies, you may specify any project type that is understood by NUnit. Out of the box, this includes various Visual Studio project types as well as NUnit (<c>.nunit</c>) test projects (see <a href="https://github.com/nunit/docs/wiki/NUnit-Test-Projects">NUnit Test Projects</a> for a description of NUnit test projects).</p><p>If the NUnit V2 framework driver is installed, test assemblies may be run based on any version of the NUnit framework beginning with 2.0. Without the V2 driver, only version 3.0 and higher tests may be run.</p></summary>
-    [Argument(Format = "{value}")] public IReadOnlyList<string> InputFiles => Get<List<string>>(() => InputFiles);
+    [Argument(Format = "{value}", Position = 1)] public IReadOnlyList<string> InputFiles => Get<List<string>>(() => InputFiles);
     /// <summary>Comma-separated list of names of tests to run or explore. This option may be repeated. Note that this option is retained for backward compatibility. The --where option can now be used instead.</summary>
-    [Argument(Format = "--test={value}", ListSeparator = ",")] public IReadOnlyList<string> Tests => Get<List<string>>(() => Tests);
+    [Argument(Format = "--test={value}", Separator = ",")] public IReadOnlyList<string> Tests => Get<List<string>>(() => Tests);
     /// <summary>The name (or path) of a file containing a list of tests to run or explore, one per line.</summary>
     [Argument(Format = "--testlist={value}")] public string TestListFile => Get<string>(() => TestListFile);
     /// <summary>An expression indicating which tests to run. It may specify test names, classes, methods, catgories or properties comparing them to actual values with the operators <c>==</c>, <c>!=</c>, <c>=~</c> and <c>!~</c>. See Test Selection Language for a full description of the syntax.</summary>
     [Argument(Format = "--where={value}")] public string WhereExpression => Get<string>(() => WhereExpression);
     /// <summary>A test parameter specified in the form NAME=VALUE for consumption by tests. Multiple parameters must be specified separated using a <c>--testparam</c> option for each.</summary>
-    [Argument(Format = "--testparam={value}")] public IReadOnlyDictionary<string, string> Parameters => Get<Dictionary<string, string>>(() => Parameters);
+    [Argument(Format = "--testparam={key}={value}")] public IReadOnlyDictionary<string, string> Parameters => Get<Dictionary<string, string>>(() => Parameters);
     /// <summary>Name of a project configuration to load (e.g.: <c>Debug</c>).</summary>
     [Argument(Format = "--config={value}")] public string Configuration => Get<string>(() => Configuration);
     /// <summary>Process isolation for test assemblies. Values: <c>Single</c>, <c>Separate</c>, <c>Multiple</c>. If not specified, defaults to Separate for a single assembly or Multiple for more than one. By default, processes are run in parallel.</summary>
