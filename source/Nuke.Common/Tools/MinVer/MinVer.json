@@ -52,53 +52,6 @@
       }
     }
   ],
-  "dataClasses": [
-    {
-      "name": "MinVer",
-      "properties": [
-        {
-          "name": "MinVerVersion",
-          "type": "string"
-        },
-        {
-          "name": "MinVerMajor",
-          "type": "string"
-        },
-        {
-          "name": "MinVerMinor",
-          "type": "string"
-        },
-        {
-          "name": "MinVerPatch",
-          "type": "string"
-        },
-        {
-          "name": "MinVerPreRelease",
-          "type": "string"
-        },
-        {
-          "name": "MinVerBuildMetadata",
-          "type": "string"
-        },
-        {
-          "name": "AssemblyVersion",
-          "type": "string"
-        },
-        {
-          "name": "FileVersion",
-          "type": "string"
-        },
-        {
-          "name": "PackageVersion",
-          "type": "string"
-        },
-        {
-          "name": "Version",
-          "type": "string"
-        }
-      ]
-    }
-  ],
   "enumerations": [
     {
       "name": "MinVerVerbosity",

@@ -87,7 +87,7 @@ partial class Build
         .Executes(async () =>
         {
             await SendSlackMessageAsync(_ => _
-                    .AddAttachment(_ => _
+                    .AddAttachments(_ => _
                         .SetFallback(AnnouncementTitle)
                         .SetAuthorName(AnnouncementTitle)
                         .SetAuthorLink(AnnouncementLink)
@@ -117,10 +117,10 @@ partial class Build
         {
             await SendDiscordMessageAsync(_ => _
                     .SetContent("@everyone")
-                    .AddEmbed(_ => _
+                    .AddEmbeds(_ => _
                         .SetTitle(AnnouncementTitle)
                         .SetColor(AnnouncementColor)
-                        .SetThumbnail(new DiscordEmbedThumbnail()
+                        .SetThumbnail(_ => _
                             .SetUrl(AnnouncementThumbnailUrl))
                         .SetDescription(new StringBuilder()
                             .Append($"This [release]({AnnouncementLink}) includes *[{AnnouncementGitInfo.CommitsText}]({AnnouncementComparisonUrl})*")
@@ -132,7 +132,7 @@ partial class Build
                             .AppendLine()
                             .AppendLine(AnnouncementReleaseNotes).ToString()
                             .Replace("*", "**"))
-                        .SetFooter(new DiscordEmbedFooter()
+                        .SetFooter(_ => _
                             .SetText($"Powered by {AnnouncementSponsors.Select(x => x.Text).JoinCommaAnd()}.")
                             .SetIconUrl("https://cdn.discordapp.com/emojis/674275938757771306.webp?size=240&quality=lossless"))),
                 DiscordWebhook);

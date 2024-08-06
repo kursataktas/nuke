@@ -145,7 +145,7 @@ public partial class SonarScannerBeginSettings : ToolOptions
     /// <summary>Specifies the password for the client certificate used to access SonarQube. Required if a client certificate is used.</summary>
     [Argument(Format = "/d:sonar.clientcert.password={value}")] public string ClientCertificatePassword => Get<string>(() => ClientCertificatePassword);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region SonarScannerEndSettings
@@ -165,7 +165,7 @@ public partial class SonarScannerEndSettings : ToolOptions
     /// <summary>Specifies the password for the client certificate used to access SonarQube. Required if a client certificate is used.</summary>
     [Argument(Format = "/d:sonar.clientcert.password={value}")] public string ClientCertificatePassword => Get<string>(() => ClientCertificatePassword);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region SonarScannerBeginSettingsExtensions

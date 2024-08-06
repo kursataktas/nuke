@@ -86,7 +86,7 @@ public partial class CodecovSettings : ToolOptions
     /// <summary>Verbose mode.</summary>
     [Argument(Format = "--verbose")] public bool? Verbose => Get<bool?>(() => Verbose);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region CodecovSettingsExtensions

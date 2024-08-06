@@ -82,39 +82,39 @@ public partial class VSWhereSettings : ToolOptions
 public partial class VSWhereCatalog : Options
 {
     /// <summary></summary>
-    [Argument()] public string BuildBranch => Get<string>(() => BuildBranch);
+    public string BuildBranch => Get<string>(() => BuildBranch);
     /// <summary></summary>
-    [Argument()] public string BuildVersion => Get<string>(() => BuildVersion);
+    public string BuildVersion => Get<string>(() => BuildVersion);
     /// <summary></summary>
-    [Argument()] public string Id => Get<string>(() => Id);
+    public string Id => Get<string>(() => Id);
     /// <summary></summary>
-    [Argument()] public string LocalBuild => Get<string>(() => LocalBuild);
+    public string LocalBuild => Get<string>(() => LocalBuild);
     /// <summary></summary>
-    [Argument()] public string ManifestName => Get<string>(() => ManifestName);
+    public string ManifestName => Get<string>(() => ManifestName);
     /// <summary></summary>
-    [Argument()] public string ManifestType => Get<string>(() => ManifestType);
+    public string ManifestType => Get<string>(() => ManifestType);
     /// <summary></summary>
-    [Argument()] public string ProductDisplayVersion => Get<string>(() => ProductDisplayVersion);
+    public string ProductDisplayVersion => Get<string>(() => ProductDisplayVersion);
     /// <summary></summary>
-    [Argument()] public string ProductLine => Get<string>(() => ProductLine);
+    public string ProductLine => Get<string>(() => ProductLine);
     /// <summary></summary>
-    [Argument()] public string ProductLineVersion => Get<string>(() => ProductLineVersion);
+    public string ProductLineVersion => Get<string>(() => ProductLineVersion);
     /// <summary></summary>
-    [Argument()] public string ProductMilestone => Get<string>(() => ProductMilestone);
+    public string ProductMilestone => Get<string>(() => ProductMilestone);
     /// <summary></summary>
-    [Argument()] public string ProductMilestoneIsPreRelease => Get<string>(() => ProductMilestoneIsPreRelease);
+    public string ProductMilestoneIsPreRelease => Get<string>(() => ProductMilestoneIsPreRelease);
     /// <summary></summary>
-    [Argument()] public string ProductName => Get<string>(() => ProductName);
+    public string ProductName => Get<string>(() => ProductName);
     /// <summary></summary>
-    [Argument()] public string ProductPatchVersion => Get<string>(() => ProductPatchVersion);
+    public string ProductPatchVersion => Get<string>(() => ProductPatchVersion);
     /// <summary></summary>
-    [Argument()] public string ProductPreReleaseMilestoneSuffix => Get<string>(() => ProductPreReleaseMilestoneSuffix);
+    public string ProductPreReleaseMilestoneSuffix => Get<string>(() => ProductPreReleaseMilestoneSuffix);
     /// <summary></summary>
-    [Argument()] public string ProductRelease => Get<string>(() => ProductRelease);
+    public string ProductRelease => Get<string>(() => ProductRelease);
     /// <summary></summary>
-    [Argument()] public string ProductSemanticVersion => Get<string>(() => ProductSemanticVersion);
+    public string ProductSemanticVersion => Get<string>(() => ProductSemanticVersion);
     /// <summary></summary>
-    [Argument()] public string RequiredEngineVersion => Get<string>(() => RequiredEngineVersion);
+    public string RequiredEngineVersion => Get<string>(() => RequiredEngineVersion);
 }
 #endregion
 #region VSWhereResult
@@ -125,41 +125,41 @@ public partial class VSWhereCatalog : Options
 public partial class VSWhereResult : Options
 {
     /// <summary></summary>
-    [Argument()] public string InstanceId => Get<string>(() => InstanceId);
+    public string InstanceId => Get<string>(() => InstanceId);
     /// <summary></summary>
-    [Argument()] public DateTime InstallDate => Get<DateTime>(() => InstallDate);
+    public DateTime InstallDate => Get<DateTime>(() => InstallDate);
     /// <summary></summary>
-    [Argument()] public string InstallationName => Get<string>(() => InstallationName);
+    public string InstallationName => Get<string>(() => InstallationName);
     /// <summary></summary>
-    [Argument()] public string InstallationPath => Get<string>(() => InstallationPath);
+    public string InstallationPath => Get<string>(() => InstallationPath);
     /// <summary></summary>
-    [Argument()] public string InstallationVersion => Get<string>(() => InstallationVersion);
+    public string InstallationVersion => Get<string>(() => InstallationVersion);
     /// <summary></summary>
-    [Argument()] public string ProductId => Get<string>(() => ProductId);
+    public string ProductId => Get<string>(() => ProductId);
     /// <summary></summary>
-    [Argument()] public string ProductPath => Get<string>(() => ProductPath);
+    public string ProductPath => Get<string>(() => ProductPath);
     /// <summary></summary>
-    [Argument()] public bool? IsPreRelease => Get<bool?>(() => IsPreRelease);
+    public bool? IsPreRelease => Get<bool?>(() => IsPreRelease);
     /// <summary></summary>
-    [Argument()] public string DisplayName => Get<string>(() => DisplayName);
+    public string DisplayName => Get<string>(() => DisplayName);
     /// <summary></summary>
-    [Argument()] public string Description => Get<string>(() => Description);
+    public string Description => Get<string>(() => Description);
     /// <summary></summary>
-    [Argument()] public string ChannelId => Get<string>(() => ChannelId);
+    public string ChannelId => Get<string>(() => ChannelId);
     /// <summary></summary>
-    [Argument()] public string ChannelUri => Get<string>(() => ChannelUri);
+    public string ChannelUri => Get<string>(() => ChannelUri);
     /// <summary></summary>
-    [Argument()] public string EnginePath => Get<string>(() => EnginePath);
+    public string EnginePath => Get<string>(() => EnginePath);
     /// <summary></summary>
-    [Argument()] public string ReleaseNotes => Get<string>(() => ReleaseNotes);
+    public string ReleaseNotes => Get<string>(() => ReleaseNotes);
     /// <summary></summary>
-    [Argument()] public string ThirdPartyNotices => Get<string>(() => ThirdPartyNotices);
+    public string ThirdPartyNotices => Get<string>(() => ThirdPartyNotices);
     /// <summary></summary>
-    [Argument()] public DateTime UpdateDate => Get<DateTime>(() => UpdateDate);
+    public DateTime UpdateDate => Get<DateTime>(() => UpdateDate);
     /// <summary></summary>
-    [Argument()] public VSWhereCatalog Catalog => Get<VSWhereCatalog>(() => Catalog);
+    public VSWhereCatalog Catalog => Get<VSWhereCatalog>(() => Catalog);
     /// <summary></summary>
-    [Argument()] public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
+    public IReadOnlyDictionary<string, object> Properties => Get<Dictionary<string, object>>(() => Properties);
 }
 #endregion
 #region VSWhereSettingsExtensions

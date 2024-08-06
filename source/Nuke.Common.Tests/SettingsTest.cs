@@ -150,10 +150,12 @@ public class SettingsTest
         var result = new DiscordMessage()
             .SetNonce("nonce")
             .SetChannelId("channel-id")
-            .SetEmbeds(new DiscordEmbed()
-                .SetAuthor(new DiscordEmbedAuthor()
-                    .SetName("author-name")));
+            .AddEmbeds(_ => _
+                .SetType(DiscordEmbedType.article)
+                .SetAuthor(_ => _
+                    .SetName("author-name")))
+            .ToJson(Options.JsonSerializerSettings);
 
-        return Verifier.Verify(result.ToJson());
+        return Verifier.Verify(result);
     }
 }

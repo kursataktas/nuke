@@ -68,7 +68,7 @@ public partial class ReportGeneratorSettings : ToolOptions
     /// <summary>The verbosity level of the log messages. Default is Verbose.</summary>
     [Argument(Format = "-verbosity:{value}")] public ReportGeneratorVerbosity Verbosity => Get<ReportGeneratorVerbosity>(() => Verbosity);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region ReportGeneratorSettingsExtensions

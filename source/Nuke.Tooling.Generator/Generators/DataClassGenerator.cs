@@ -108,6 +108,9 @@ public static class DataClassGenerator
 
         string GetArgumentAttribute()
         {
+            if (property.Format.IsNullOrWhiteSpace())
+                return null;
+
             var arguments = new (string Name, string Value)[]
                 {
                     (nameof(ArgumentAttribute.Format), property.Format?.DoubleQuote()),

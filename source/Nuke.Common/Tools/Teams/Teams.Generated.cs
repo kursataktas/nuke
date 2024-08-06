@@ -26,11 +26,11 @@ namespace Nuke.Common.Tools.Teams;
 public partial class TeamsMessage : Options
 {
     /// <summary></summary>
-    [Argument()] public string Title => Get<string>(() => Title);
+    [JsonProperty("title")] public string Title => Get<string>(() => Title);
     /// <summary></summary>
-    [Argument()] public string Text => Get<string>(() => Text);
+    [JsonProperty("text")] public string Text => Get<string>(() => Text);
     /// <summary></summary>
-    [Argument()] public string ThemeColor => Get<string>(() => ThemeColor);
+    [JsonProperty("themeColor")] public string ThemeColor => Get<string>(() => ThemeColor);
 }
 #endregion
 #region TeamsMessageExtensions

@@ -110,7 +110,7 @@ public partial class OctopusPackSettings : ToolOptions
     /// <summary>Allow an existing package file of the same ID/version to be overwritten.</summary>
     [Argument(Format = "--overwrite")] public bool? Overwrite => Get<bool?>(() => Overwrite);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusPushSettings
@@ -154,7 +154,7 @@ public partial class OctopusPushSettings : ToolOptions
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusCreateReleaseSettings
@@ -256,7 +256,7 @@ public partial class OctopusCreateReleaseSettings : ToolOptions
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusDeployReleaseSettings
@@ -338,7 +338,7 @@ public partial class OctopusDeployReleaseSettings : ToolOptions
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusBuildInformationSettings
@@ -386,7 +386,7 @@ public partial class OctopusBuildInformationSettings : ToolOptions
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusPackSettingsExtensions

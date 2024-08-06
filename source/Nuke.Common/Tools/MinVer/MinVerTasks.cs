@@ -24,12 +24,12 @@ partial class MinVerTasks
     protected override object GetResult<T>(ToolOptions options, IReadOnlyCollection<Output> output)
     {
         var versionString = output.Select(x => x.Text).Single(x => !x.StartsWith("MinVer:"));
-        return new MinVer2(versionString);
+        return new MinVer(versionString);
     }
 }
 
 [PublicAPI]
-public record MinVer2(string MinVerVersion)
+public record MinVer(string MinVerVersion)
 {
     public string MinVerMajor => MinVerVersion.Split('.')[0];
     public string MinVerMinor => MinVerVersion.Split('.')[1];

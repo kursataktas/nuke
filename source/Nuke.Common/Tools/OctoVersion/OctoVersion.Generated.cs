@@ -82,7 +82,7 @@ public partial class OctoVersionGetVersionSettings : ToolOptions
     /// <summary>Emit json to the specified file. Ensure that either the `JsonFile` output formatter is added, or that `DetectEnvironment` is `true`.</summary>
     [Argument(Format = "--OutputJsonFile {value}")] public string OutputJsonFile => Get<string>(() => OutputJsonFile);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctoVersionExecuteSettings
@@ -118,7 +118,7 @@ public partial class OctoVersionExecuteSettings : ToolOptions
     /// <summary>Emit json to the specified file. Ensure that either the `JsonFile` output formatter is added, or that `DetectEnvironment` is `true`.</summary>
     [Argument(Format = "--OutputJsonFile {value}")] public string OutputJsonFile => Get<string>(() => OutputJsonFile);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctoVersionGetVersionSettingsExtensions

@@ -46,6 +46,12 @@ public static class DataClassExtensionGenerator
                     name: $"Set{property.Name}",
                     additionalParameters: [$"{attributes}{property.GetNullableType()} v"],
                     modification: $"Set(() => {access}, v)")
+                .When(property.IsCustomType(), _ => _
+                    .WriteMethod(
+                        property,
+                        name: $"Set{property.Name}",
+                        additionalParameters: [$"Configure<{property.GetNullableType()}> v"],
+                        modification: $"Set(() => {access},  v.InvokeSafe(new()))"))
                 .WriteMethod(
                     property,
                     name: $"Reset{property.Name}",

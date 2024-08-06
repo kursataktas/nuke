@@ -226,7 +226,7 @@ public partial class ReSharperDupFinderSettings : ToolOptions
 public partial class ReSharperSettingsBase : ToolOptions
 {
     /// <summary>Allows adding ReSharper plugins that will get included during execution. To add a plugin, specify its ID and version. Available plugins are listed in the <a href="https://resharper-plugins.jetbrains.com/">Plugin Repository</a>. The ID can be grabbed from the download URL. Using <c>ReSharperPluginLatest</c> or <c>null</c> will download the latest version.</summary>
-    [Argument()] public IReadOnlyDictionary<string, string> Plugins => Get<Dictionary<string, string>>(() => Plugins);
+    public IReadOnlyDictionary<string, string> Plugins => Get<Dictionary<string, string>>(() => Plugins);
 }
 #endregion
 #region ReSharperInspectCodeSettingsExtensions

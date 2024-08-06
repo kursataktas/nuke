@@ -60,36 +60,7 @@ public partial class MinVerSettings : ToolOptions
     /// <summary></summary>
     [Argument(Format = "--verbosity {value}")] public MinVerVerbosity Verbosity => Get<MinVerVerbosity>(() => Verbosity);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
-}
-#endregion
-#region MinVer
-/// <summary>Used within <see cref="MinVerTasks"/>.</summary>
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-[TypeConverter(typeof(TypeConverter<MinVer>))]
-public partial class MinVer : Options
-{
-    /// <summary></summary>
-    [Argument()] public string MinVerVersion => Get<string>(() => MinVerVersion);
-    /// <summary></summary>
-    [Argument()] public string MinVerMajor => Get<string>(() => MinVerMajor);
-    /// <summary></summary>
-    [Argument()] public string MinVerMinor => Get<string>(() => MinVerMinor);
-    /// <summary></summary>
-    [Argument()] public string MinVerPatch => Get<string>(() => MinVerPatch);
-    /// <summary></summary>
-    [Argument()] public string MinVerPreRelease => Get<string>(() => MinVerPreRelease);
-    /// <summary></summary>
-    [Argument()] public string MinVerBuildMetadata => Get<string>(() => MinVerBuildMetadata);
-    /// <summary></summary>
-    [Argument()] public string AssemblyVersion => Get<string>(() => AssemblyVersion);
-    /// <summary></summary>
-    [Argument()] public string FileVersion => Get<string>(() => FileVersion);
-    /// <summary></summary>
-    [Argument()] public string PackageVersion => Get<string>(() => PackageVersion);
-    /// <summary></summary>
-    [Argument()] public string Version => Get<string>(() => Version);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region MinVerSettingsExtensions

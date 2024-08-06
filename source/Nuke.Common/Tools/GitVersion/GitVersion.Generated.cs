@@ -96,7 +96,7 @@ public partial class GitVersionSettings : ToolOptions
     /// <summary>Set Verbosity level (<c>debug</c>, <c>info</c>, <c>warn</c>, <c>error</c>, <c>none</c>). Default is <c>info</c>.</summary>
     [Argument(Format = "/verbosity {value}")] public GitVersionVerbosity Verbosity => Get<GitVersionVerbosity>(() => Verbosity);
     /// <summary></summary>
-    [Argument()] public string Framework => Get<string>(() => Framework);
+    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region GitVersionSettingsExtensions

@@ -6255,19 +6255,19 @@ public partial class DockerOptionsBase : ToolOptions
 public partial class DockerRunTargetSettings : DockerRunSettings
 {
     /// <summary>Whether to execute a <c>docker pull</c> before running the container.</summary>
-    [Argument()] public bool? PullImage => Get<bool?>(() => PullImage);
+    public bool? PullImage => Get<bool?>(() => PullImage);
     /// <summary>The .NET Runtime Identifier (<a href="https://docs.microsoft.com/en-us/dotnet/core/rid-catalog">RID</a>) to use to publish the build project. For example, <c>linux-x64</c>, <c>linux-arm64</c>, <c>win-x64</c>.</summary>
-    [Argument()] public string DotNetRuntime => Get<string>(() => DotNetRuntime);
+    public string DotNetRuntime => Get<string>(() => DotNetRuntime);
     /// <summary>Enables caching of the build executable.</summary>
-    [Argument()] public bool? BuildCaching => Get<bool?>(() => BuildCaching);
+    public bool? BuildCaching => Get<bool?>(() => BuildCaching);
     /// <summary>Whether to keep the <c>.env.&lt;target&gt;</c> file located under <c>build/bin/&lt;rid&gt;</c> after the target is complete.</summary>
-    [Argument()] public bool? KeepEnvFile => Get<bool?>(() => KeepEnvFile);
+    public bool? KeepEnvFile => Get<bool?>(() => KeepEnvFile);
     /// <summary>The username for <c>docker login</c>.</summary>
-    [Argument()] public string Username => Get<string>(() => Username);
+    public string Username => Get<string>(() => Username);
     /// <summary>The password for <c>docker login</c>.</summary>
-    [Argument()] public string Password => Get<string>(() => Password);
+    public string Password => Get<string>(() => Password);
     /// <summary>The server for <c>docker login</c>.</summary>
-    [Argument()] public string Server => Get<string>(() => Server);
+    public string Server => Get<string>(() => Server);
 }
 #endregion
 #region DockerConfigRmSettingsExtensions
