@@ -31,8 +31,11 @@ public class DefaultLogLevel(LogEventLevel level) : Attribute
 
 public abstract partial class ToolTasks
 {
-    protected internal virtual partial Action<OutputType, string> GetLogger()
+    protected internal virtual partial Action<OutputType, string> GetLogger(ToolOptions options)
     {
+        if (options.ProcessLogger != null)
+            return options.ProcessLogger;
+
         var toolType = GetType();
         var levelProvider = toolType.GetCustomAttributes<LogLevelPattern>()
             .Select(x =>

@@ -75,7 +75,7 @@ public static class ProcessTasks
             toolOptions.ProcessToolPath,
             toolOptions.GetArguments().JoinSpace(),
             toolOptions.ProcessWorkingDirectory,
-            toolOptions.ProcessEnvironmentVariables.ToDictionary(x => x.Key, x => (string)x.Value),
+            toolOptions.ProcessEnvironmentVariables,
             toolOptions.ProcessExecutionTimeout,
             logOutput: true,
             logInvocation: true,

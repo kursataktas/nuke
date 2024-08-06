@@ -20,7 +20,7 @@ partial class ToolOptions
     public string ProcessWorkingDirectory => Get<string>(() => ProcessWorkingDirectory);
 
     /// <summary>Collection of environment variables to be passed to the process. By default, the environment variables of the current process are used.</summary>
-    public IReadOnlyDictionary<string, object> ProcessEnvironmentVariables => Get<Dictionary<string, object>>(() => ProcessEnvironmentVariables);
+    public IReadOnlyDictionary<string, string> ProcessEnvironmentVariables => Get<Dictionary<string, string>>(() => ProcessEnvironmentVariables);
 
     /// <summary>Defines the execution timeout of the invoked process.</summary>
     public int? ProcessExecutionTimeout => Get<int?>(() => ProcessExecutionTimeout);
@@ -72,27 +72,31 @@ public static partial class ToolOptionsExtensions
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T SetProcessEnvironmentVariables<T>(this T o, ReadOnlyDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
+    public static T SetProcessEnvironmentVariables<T>(this T o, ReadOnlyDictionary<string, string> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T SetProcessEnvironmentVariables<T>(this T o, Dictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
+    public static T SetProcessEnvironmentVariables<T>(this T o, Dictionary<string, string> values) where T : ToolOptions => o.Modify(b => b.Set(() => o.ProcessEnvironmentVariables, values));
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T AddProcessEnvironmentVariables<T>(this T o, ReadOnlyDictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
+    public static T AddProcessEnvironmentVariables<T>(this T o, ReadOnlyDictionary<string, string> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T AddProcessEnvironmentVariables<T>(this T o, Dictionary<string, object> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
+    public static T AddProcessEnvironmentVariables<T>(this T o, Dictionary<string, string> values) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, values));
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T AddProcessEnvironmentVariable<T>(this T o, string key, object value) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, key, value));
+    public static T AddProcessEnvironmentVariable<T>(this T o, string key, string value) where T : ToolOptions => o.Modify(b => b.AddDictionary(() => o.ProcessEnvironmentVariables, key, value));
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
-    public static T SetProcessEnvironmentVariable<T>(this T o, string key, object value) where T : ToolOptions => o.Modify(b => b.SetDictionary(() => o.ProcessEnvironmentVariables, key, value));
+    public static T SetProcessEnvironmentVariable<T>(this T o, string key, string value) where T : ToolOptions => o.Modify(b => b.SetDictionary(() => o.ProcessEnvironmentVariables, key, value));
+
+    /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]
+    public static T SetProcessEnvironmentVariable<T>(this T o, string key, object value) where T : ToolOptions => o.Modify(b => b.SetDictionary(() => o.ProcessEnvironmentVariables, key, value.ToString()));
 
     /// <inheritdoc cref="ToolOptions.ProcessEnvironmentVariables"/>
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessEnvironmentVariables))]

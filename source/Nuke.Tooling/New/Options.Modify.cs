@@ -16,6 +16,13 @@ public static class OptionsExtensions
         var serializedObject = JsonConvert.SerializeObject(builder);
         var copiedObject = JsonConvert.DeserializeObject<T>(serializedObject);
         modification?.Invoke(copiedObject);
+
+        // HACK
+        if (builder is ToolOptions originalToolOptions && copiedObject is ToolOptions copiedToolOptions)
+        {
+            copiedToolOptions.ProcessLogger = originalToolOptions.ProcessLogger;
+        }
+
         return copiedObject;
     }
 }

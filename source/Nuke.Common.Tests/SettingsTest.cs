@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.OpenCover;
@@ -12,9 +13,12 @@ using Nuke.Common.Tools.Xunit;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.CorFlags;
+using Nuke.Common.Tools.Discord;
+using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities;
 using Nuke.Tooling;
+using VerifyXunit;
 using Xunit;
 
 namespace Nuke.Common.Tests;
@@ -45,7 +49,7 @@ public class SettingsTest
             .SetProcessExecutionTimeout(TimeSpan.FromMilliseconds(1_000));
 
         settings.ProcessToolPath.Should().Be("/path/to/dotnet");
-        settings.ProcessEnvironmentVariables.Should().ContainSingle(x => x.Key == "key" && x.Value.Equals("value"));
+        settings.ProcessEnvironmentVariables.Should().ContainSingle(x => x.Key == "key" && x.Value == "value");
         settings.ProcessExecutionTimeout.Should().Be(1_000);
     }
 
@@ -128,5 +132,28 @@ public class SettingsTest
                 .AddApplicationArguments("arg2")
                 .SetProperty("foo", "bar"),
             "run /property:foo=bar -- arg1 arg2");
+    }
+
+    [Fact]
+    public void TestDocker()
+    {
+        Assert(new DockerAttachSettings()
+                .SetDetachKeys("detach-keys")
+                .SetContainer("container")
+                .SetLogLevel(DockerLogLevel.debug),
+            "attach --detach-keys detach-keys container --log-level debug");
+    }
+
+    [Fact]
+    public Task TestDiscord()
+    {
+        var result = new DiscordMessage()
+            .SetNonce("nonce")
+            .SetChannelId("channel-id")
+            .SetEmbeds(new DiscordEmbed()
+                .SetAuthor(new DiscordEmbedAuthor()
+                    .SetName("author-name")));
+
+        return Verifier.Verify(result.ToJson());
     }
 }

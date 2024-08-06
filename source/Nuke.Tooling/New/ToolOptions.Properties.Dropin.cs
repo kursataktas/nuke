@@ -3,12 +3,23 @@
 // https://github.com/nuke-build/nuke/blob/master/LICENSE
 
 using System;
+using Nuke.Common.Tooling;
+
 // ReSharper disable ArrangeMethodOrOperatorBody
 
 namespace Nuke.Tooling;
 
 partial class ToolOptionsExtensions
 {
+    /// <inheritdoc cref="ToolOptions.ProcessLogger"/>
+    [Obsolete($"Marked for removal")]
+    [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessLogger))]
+    public static T SetProcessLogger<T>(this T o, Action<OutputType, string> v) where T : ToolOptions
+    {
+        o.ProcessLogger = v;
+        return o;
+    }
+
     /// <inheritdoc cref="ToolOptions.ProcessOutputLogging"/>
     [Obsolete($"Use {nameof(DisableProcessOutputLogging)} instead")]
     [Builder(Type = typeof(ToolOptions), Property = nameof(ToolOptions.ProcessOutputLogging))]

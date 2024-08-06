@@ -24,11 +24,11 @@ partial class ToolTasks
             tool.GetToolPathInternal(),
             options.GetArguments().JoinSpace(),
             options.ProcessWorkingDirectory,
-            options.ProcessEnvironmentVariables.ToDictionary(x => x.Key, x => x.Value.ToString()),
+            options.ProcessEnvironmentVariables,
             options.ProcessExecutionTimeout,
             options.ProcessOutputLogging,
             options.ProcessInvocationLogging,
-            tool.GetLogger(),
+            tool.GetLogger(options),
             text => secrets.Aggregate(text, (str, s) => str.Replace(s, "[REDACTED]")));
 
         tool.GetExitHandlerInternal().Invoke(process);

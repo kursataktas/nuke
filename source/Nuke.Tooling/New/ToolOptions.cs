@@ -1,13 +1,13 @@
-﻿using System;
+﻿// Copyright 2024 Maintainers of NUKE.
+// Distributed under the MIT License.
+// https://github.com/nuke-build/nuke/blob/master/LICENSE
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
-using Newtonsoft.Json.Linq;
 using Nuke.Common;
 using Nuke.Common.Tooling;
-using Nuke.Common.Utilities;
-using Nuke.Common.Utilities.Collections;
 
 namespace Nuke.Tooling;
 
@@ -19,21 +19,11 @@ public abstract partial class ToolOptions : Options, ISettingsEntity
 
     protected ToolOptions()
     {
-        Set(() => ProcessEnvironmentVariables, EnvironmentInfo.Variables.ToDictionary(x => x.Key, object (x) => x.Value));
+        Set(() => ProcessEnvironmentVariables, EnvironmentInfo.Variables);
         Created?.Invoke(this, EventArgs.Empty);
     }
 
     internal partial IEnumerable<string> GetArguments();
     internal partial IEnumerable<string> GetSecrets();
     internal partial Action<OutputType, string> GetLogger();
-}
-
-partial class ToolOptions
-{
-    internal partial Action<OutputType, string> GetLogger()
-    {
-        var commandAttribute = GetType().GetCustomAttribute<CommandAttribute>();
-        var toolInstance = commandAttribute.Type.CreateInstance<ToolTasks>();
-        return toolInstance.GetLogger();
-    }
 }

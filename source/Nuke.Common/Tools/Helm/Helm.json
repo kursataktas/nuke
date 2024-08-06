@@ -57,7 +57,7 @@
       "postfix": "Completion",
       "definiteArgument": "completion",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -79,7 +79,7 @@
       "postfix": "Create",
       "definiteArgument": "create",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -109,7 +109,7 @@
       "postfix": "Delete",
       "definiteArgument": "delete",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Description",
@@ -210,7 +210,7 @@
       "postfix": "DependencyBuild",
       "definiteArgument": "dependency build",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -247,7 +247,7 @@
       "postfix": "DependencyList",
       "definiteArgument": "dependency list",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -270,7 +270,7 @@
       "postfix": "DependencyUpdate",
       "definiteArgument": "dependency update",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -314,7 +314,7 @@
       "postfix": "Fetch",
       "definiteArgument": "fetch",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "CaFile",
@@ -436,7 +436,7 @@
       "postfix": "Get",
       "definiteArgument": "get",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -508,7 +508,7 @@
       "postfix": "GetHooks",
       "definiteArgument": "get hooks",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -580,7 +580,7 @@
       "postfix": "GetManifest",
       "definiteArgument": "get manifest",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -652,7 +652,7 @@
       "postfix": "GetNotes",
       "definiteArgument": "get notes",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -723,7 +723,7 @@
       "postfix": "GetValues",
       "definiteArgument": "get values",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "All",
@@ -809,7 +809,7 @@
       "postfix": "History",
       "definiteArgument": "history",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "ColWidth",
@@ -895,7 +895,7 @@
       "postfix": "Home",
       "definiteArgument": "home",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -912,7 +912,7 @@
       "postfix": "Init",
       "definiteArgument": "init",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "AutomountServiceAccountToken",
@@ -1099,7 +1099,7 @@
       "postfix": "Inspect",
       "definiteArgument": "inspect",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "CaFile",
@@ -1192,7 +1192,7 @@
       "postfix": "InspectChart",
       "definiteArgument": "inspect chart",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "CaFile",
@@ -1285,7 +1285,7 @@
       "postfix": "InspectReadme",
       "definiteArgument": "inspect readme",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "CaFile",
@@ -1364,7 +1364,7 @@
       "postfix": "InspectValues",
       "definiteArgument": "inspect values",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "CaFile",
@@ -1457,7 +1457,7 @@
       "postfix": "Install",
       "definiteArgument": "install",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Atomic",
@@ -1717,7 +1717,7 @@
       "postfix": "Lint",
       "definiteArgument": "lint",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -1788,7 +1788,7 @@
       "postfix": "List",
       "definiteArgument": "list",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "All",
@@ -1958,7 +1958,7 @@
       "postfix": "Package",
       "definiteArgument": "package",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "AppVersion",
@@ -2038,7 +2038,7 @@
       "postfix": "PluginInstall",
       "definiteArgument": "plugin install",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2074,7 +2074,7 @@
       "postfix": "PluginList",
       "definiteArgument": "plugin list",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2091,7 +2091,7 @@
       "postfix": "PluginRemove",
       "definiteArgument": "plugin remove",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2115,7 +2115,7 @@
       "postfix": "PluginUpdate",
       "definiteArgument": "plugin update",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2139,7 +2139,7 @@
       "postfix": "RepoAdd",
       "definiteArgument": "repo add",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "CaFile",
@@ -2210,7 +2210,7 @@
       "postfix": "RepoIndex",
       "definiteArgument": "repo index",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2247,7 +2247,7 @@
       "postfix": "RepoList",
       "definiteArgument": "repo list",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2264,7 +2264,7 @@
       "postfix": "RepoRemove",
       "definiteArgument": "repo remove",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2287,7 +2287,7 @@
       "postfix": "RepoUpdate",
       "definiteArgument": "repo update",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2311,7 +2311,7 @@
       "postfix": "Reset",
       "definiteArgument": "reset",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Force",
@@ -2384,7 +2384,7 @@
       "postfix": "Rollback",
       "definiteArgument": "rollback",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Description",
@@ -2504,7 +2504,7 @@
       "postfix": "Search",
       "definiteArgument": "search",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "ColWidth",
@@ -2555,7 +2555,7 @@
       "postfix": "Serve",
       "definiteArgument": "serve",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Address",
@@ -2593,7 +2593,7 @@
       "postfix": "Status",
       "definiteArgument": "status",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -2672,7 +2672,7 @@
       "postfix": "Template",
       "definiteArgument": "template",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Execute",
@@ -2786,7 +2786,7 @@
       "postfix": "Test",
       "definiteArgument": "test",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Cleanup",
@@ -2872,7 +2872,7 @@
       "postfix": "Upgrade",
       "definiteArgument": "upgrade",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Atomic",
@@ -3145,7 +3145,7 @@
       "postfix": "Verify",
       "definiteArgument": "verify",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Help",
@@ -3175,7 +3175,7 @@
       "postfix": "Version",
       "definiteArgument": "version",
       "settingsClass": {
-        "baseClass": "HelmToolSettings",
+        "baseClass": "HelmOptionsBase",
         "properties": [
           {
             "name": "Client",
@@ -3260,7 +3260,8 @@
   ],
   "dataClasses": [
     {
-      "name": "HelmCommonSettings",
+      "name": "HelmOptionsBase",
+      "baseClass": "ToolOptions",
       "extensionMethods": true,
       "properties": [
         {

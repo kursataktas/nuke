@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Nuke.CodeGeneration.Model;
 using Nuke.CodeGeneration.Writers;
 using Nuke.Common;
 using Nuke.Common.Utilities;
+using Nuke.Common.Utilities.Collections;
 using Nuke.Tooling;
 using Serilog;
 
@@ -98,19 +100,34 @@ public static class DataClassGenerator
             return;
 
         var type = GetPropertyType(property);
-        var attributeArguments = new (string Name, string Value)[]
-        {
-            (nameof(ArgumentAttribute.Format), property.Format?.DoubleQuote()),
-            (nameof(ArgumentAttribute.Position), property.Position?.ToString().ToLowerInvariant()),
-            (nameof(ArgumentAttribute.Secret), property.Secret?.ToString().ToLowerInvariant()),
-            (nameof(ArgumentAttribute.Separator), property.Separator?.DoubleQuote()),
-            (nameof(ArgumentAttribute.FormatterMethod), property.Formatter?.Apply(x => $"nameof({x})")),
-        }.Where(x => x.Item2 != null)
-        .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();
+        var attributes = new[] { GetArgumentAttribute(), GetJsonPropertyAttribute() }.WhereNotNull();
 
         writer
             .WriteLine($"/// <summary>{property.Help}</summary>")
-            .WriteLine($"[Argument({attributeArguments})] public {type.External} {property.Name} => Get<{type.Internal}>(() => {property.Name});");
+            .WriteLine($"{attributes.JoinSpace()} public {type.External} {property.Name} => Get<{type.Internal}>(() => {property.Name});");
+
+        string GetArgumentAttribute()
+        {
+            var arguments = new (string Name, string Value)[]
+                {
+                    (nameof(ArgumentAttribute.Format), property.Format?.DoubleQuote()),
+                    (nameof(ArgumentAttribute.Position), property.Position?.ToString().ToLowerInvariant()),
+                    (nameof(ArgumentAttribute.Secret), property.Secret?.ToString().ToLowerInvariant()),
+                    (nameof(ArgumentAttribute.Separator), property.Separator?.DoubleQuote()),
+                    (nameof(ArgumentAttribute.FormatterMethod), property.Formatter?.Apply(x => $"nameof({x})")),
+                }.Where(x => x.Item2 != null)
+                .Select(x => $"{x.Name} = {x.Value}").JoinCommaSpace();
+
+            return $"[Argument({arguments})]";
+        }
+
+        string GetJsonPropertyAttribute()
+        {
+            if (property.Json.IsNullOrWhiteSpace())
+                return null;
+
+            return $"[JsonProperty({property.Json.DoubleQuote()})]";
+        }
     }
 
     private static (string External, string Internal) GetPropertyType(Property property)

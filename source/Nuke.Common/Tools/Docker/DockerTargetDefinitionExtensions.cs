@@ -97,8 +97,8 @@ public static class DockerTargetDefinitionExtensions
                     .SetUsername(settings.Username)
                     .SetPassword(settings.Password)
                     .SetServer(settings.Server)
-                    .DisableProcessLogInvocation()
-                    .DisableProcessLogOutput());
+                    .DisableProcessInvocationLogging()
+                    .DisableProcessOutputLogging());
             }
 
             try
@@ -118,7 +118,7 @@ public static class DockerTargetDefinitionExtensions
                                  definition.Target.Name,
                                  $"--{ParameterService.GetParameterDashedName(Constants.SkippedTargetsParameterName)}"
                              }.Concat(settings.Args))
-                    .DisableProcessLogInvocation()
+                    .DisableProcessInvocationLogging()
                     .SetProcessLogger((_, message) =>
                     {
                         try
@@ -144,7 +144,7 @@ public static class DockerTargetDefinitionExtensions
     }
 
     private static IReadOnlyDictionary<string, string> GetEnvironmentVariables(
-        ToolSettings settings,
+        ToolOptions settings,
         AbsolutePath rootDirectory,
         AbsolutePath tempDirectory)
     {

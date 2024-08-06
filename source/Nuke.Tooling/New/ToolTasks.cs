@@ -15,7 +15,7 @@ public abstract partial class ToolTasks
 {
     public static string GetToolPath<T>() where T : ToolTasks, new() => new T().GetToolPathInternal();
 
-    protected internal virtual partial Action<OutputType, string> GetLogger();
+    protected internal virtual partial Action<OutputType, string> GetLogger(ToolOptions options = null);
 
     protected virtual partial string GetToolPath(ToolOptions options = null);
     protected virtual partial Func<IProcess, object> GetExitHandler(ToolOptions options = null);
