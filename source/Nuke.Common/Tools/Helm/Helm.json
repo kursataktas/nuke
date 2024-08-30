@@ -60,13 +60,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for completion."
-          },
-          {
             "name": "Shell",
             "type": "string",
             "format": "{value}"
@@ -81,13 +74,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for create."
-          },
           {
             "name": "Starter",
             "type": "string",
@@ -124,13 +110,6 @@
             "format": "--dry-run",
             "secret": false,
             "help": "Simulate a delete."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for delete."
           },
           {
             "name": "NoHooks",
@@ -213,13 +192,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for build."
-          },
-          {
             "name": "Keyring",
             "type": "string",
             "format": "--keyring {value}",
@@ -250,13 +222,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for list."
-          },
-          {
             "name": "Chart",
             "type": "string",
             "format": "{value}",
@@ -272,13 +237,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for update."
-          },
           {
             "name": "Keyring",
             "type": "string",
@@ -343,13 +301,6 @@
             "format": "--devel",
             "secret": false,
             "help": "Use development versions, too. Equivalent to version '&gt;0.0.0-0'. If --version is set, this is ignored."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for fetch."
           },
           {
             "name": "KeyFile",
@@ -439,13 +390,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for get."
-          },
-          {
             "name": "Revision",
             "type": "int",
             "format": "--revision {value}",
@@ -510,13 +454,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for hooks."
-          },
           {
             "name": "Revision",
             "type": "int",
@@ -583,13 +520,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for manifest."
-          },
-          {
             "name": "Revision",
             "type": "int",
             "format": "--revision {value}",
@@ -654,13 +584,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for notes."
-          },
           {
             "name": "Revision",
             "type": "int",
@@ -731,13 +654,6 @@
             "format": "--all",
             "secret": false,
             "help": "Dump all (computed) values."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for values."
           },
           {
             "name": "Output",
@@ -819,13 +735,6 @@
             "help": "Specifies the max column width of output (default 60)."
           },
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for history."
-          },
-          {
             "name": "Max",
             "type": "int",
             "format": "--max {value}",
@@ -895,16 +804,7 @@
       "postfix": "Home",
       "definiteArgument": "home",
       "settingsClass": {
-        "baseClass": "HelmOptionsBase",
-        "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for home."
-          }
-        ]
+        "baseClass": "HelmOptionsBase"
       }
     },
     {
@@ -948,13 +848,6 @@
             "format": "--force-upgrade",
             "secret": false,
             "help": "Force upgrade of Tiller to the current helm version."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for init."
           },
           {
             "name": "HistoryMax",
@@ -1123,13 +1016,6 @@
             "help": "Use development versions, too. Equivalent to version '&gt;0.0.0-0'. If --version is set, this is ignored."
           },
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for inspect."
-          },
-          {
             "name": "KeyFile",
             "type": "string",
             "format": "--key-file {value}",
@@ -1214,13 +1100,6 @@
             "format": "--devel",
             "secret": false,
             "help": "Use development versions, too. Equivalent to version '&gt;0.0.0-0'. If --version is set, this is ignored."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for chart."
           },
           {
             "name": "KeyFile",
@@ -1309,13 +1188,6 @@
             "help": "Use development versions, too. Equivalent to version '&gt;0.0.0-0'. If --version is set, this is ignored."
           },
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for readme."
-          },
-          {
             "name": "KeyFile",
             "type": "string",
             "format": "--key-file {value}",
@@ -1386,13 +1258,6 @@
             "format": "--devel",
             "secret": false,
             "help": "Use development versions, too. Equivalent to version '&gt;0.0.0-0'. If --version is set, this is ignored."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for values."
           },
           {
             "name": "KeyFile",
@@ -1507,13 +1372,6 @@
             "format": "--dry-run",
             "secret": false,
             "help": "Simulate an install."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for install."
           },
           {
             "name": "KeyFile",
@@ -1720,13 +1578,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for lint."
-          },
-          {
             "name": "Namespace",
             "type": "string",
             "format": "--namespace {value}",
@@ -1845,13 +1696,6 @@
             "format": "--failed",
             "secret": false,
             "help": "Show failed releases."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for list."
           },
           {
             "name": "Max",
@@ -1982,13 +1826,6 @@
             "help": "Location to write the chart. (default \".\")."
           },
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for package."
-          },
-          {
             "name": "Key",
             "type": "string",
             "format": "--key {value}",
@@ -2041,13 +1878,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for install."
-          },
-          {
             "name": "Version",
             "type": "string",
             "format": "--version {value}",
@@ -2074,16 +1904,7 @@
       "postfix": "PluginList",
       "definiteArgument": "plugin list",
       "settingsClass": {
-        "baseClass": "HelmOptionsBase",
-        "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for list."
-          }
-        ]
+        "baseClass": "HelmOptionsBase"
       }
     },
     {
@@ -2093,13 +1914,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for remove."
-          },
           {
             "name": "Plugins",
             "type": "List<string>",
@@ -2117,13 +1931,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for update."
-          },
           {
             "name": "Plugins",
             "type": "List<string>",
@@ -2154,13 +1961,6 @@
             "format": "--cert-file {value}",
             "secret": false,
             "help": "Identify HTTPS client using this SSL certificate file."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for add."
           },
           {
             "name": "KeyFile",
@@ -2213,13 +2013,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for index."
-          },
-          {
             "name": "Merge",
             "type": "string",
             "format": "--merge {value}",
@@ -2247,16 +2040,7 @@
       "postfix": "RepoList",
       "definiteArgument": "repo list",
       "settingsClass": {
-        "baseClass": "HelmOptionsBase",
-        "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for list."
-          }
-        ]
+        "baseClass": "HelmOptionsBase"
       }
     },
     {
@@ -2266,13 +2050,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for remove."
-          },
           {
             "name": "Name",
             "type": "string",
@@ -2289,13 +2066,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for update."
-          },
           {
             "name": "Strict",
             "type": "bool",
@@ -2319,13 +2089,6 @@
             "format": "--force",
             "secret": false,
             "help": "Forces Tiller uninstall even if there are releases installed, or if Tiller is not in ready state. Releases are not deleted.)."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for reset."
           },
           {
             "name": "RemoveHelmHome",
@@ -2406,13 +2169,6 @@
             "format": "--force",
             "secret": false,
             "help": "Force resource update through delete/recreate if needed."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for rollback."
           },
           {
             "name": "NoHooks",
@@ -2514,13 +2270,6 @@
             "help": "Specifies the max column width of output (default 60)."
           },
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for search."
-          },
-          {
             "name": "Regexp",
             "type": "bool",
             "format": "--regexp",
@@ -2565,13 +2314,6 @@
             "help": "Address to listen on (default \"127.0.0.1:8879\")."
           },
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for serve."
-          },
-          {
             "name": "RepoPath",
             "type": "string",
             "format": "--repo-path {value}",
@@ -2595,13 +2337,6 @@
       "settingsClass": {
         "baseClass": "HelmOptionsBase",
         "properties": [
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for status."
-          },
           {
             "name": "Output",
             "type": "HelmOutputFormat",
@@ -2682,13 +2417,6 @@
             "separator": ",",
             "secret": false,
             "help": "Only execute the given templates."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for template."
           },
           {
             "name": "IsUpgrade",
@@ -2794,13 +2522,6 @@
             "format": "--cleanup",
             "secret": false,
             "help": "Delete test pods upon completion."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for test."
           },
           {
             "name": "Parallel",
@@ -2922,13 +2643,6 @@
             "format": "--force",
             "secret": false,
             "help": "Force resource update through delete/recreate if needed."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for upgrade."
           },
           {
             "name": "Install",
@@ -3148,13 +2862,6 @@
         "baseClass": "HelmOptionsBase",
         "properties": [
           {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for verify."
-          },
-          {
             "name": "Keyring",
             "type": "string",
             "format": "--keyring {value}",
@@ -3183,13 +2890,6 @@
             "format": "--client",
             "secret": false,
             "help": "Client version only."
-          },
-          {
-            "name": "Help",
-            "type": "bool",
-            "format": "--help",
-            "secret": false,
-            "help": "Help for version."
           },
           {
             "name": "Server",
@@ -3270,13 +2970,6 @@
           "format": "--debug",
           "secret": false,
           "help": "Enable verbose output."
-        },
-        {
-          "name": "Help",
-          "type": "bool",
-          "format": "--help",
-          "secret": false,
-          "help": "Help for helm."
         },
         {
           "name": "Home",
