@@ -55,7 +55,7 @@
       "postfix": "ApiResources",
       "definiteArgument": "api-resources",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "ApiGroup",
@@ -102,7 +102,7 @@
       "postfix": "Drain",
       "definiteArgument": "drain",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "DeleteLocalData",
@@ -160,7 +160,7 @@
       "postfix": "Run",
       "definiteArgument": "run",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Name",
@@ -405,7 +405,7 @@
       "postfix": "Get",
       "definiteArgument": "get",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -562,7 +562,7 @@
       "postfix": "Version",
       "definiteArgument": "version",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Client",
@@ -590,7 +590,7 @@
       "postfix": "Top",
       "definiteArgument": "top",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
@@ -598,7 +598,7 @@
       "postfix": "Config",
       "definiteArgument": "config",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
@@ -606,7 +606,7 @@
       "postfix": "Exec",
       "definiteArgument": "exec",
       "settingsClass": {
-        "baseClass": "KubernetesExecBaseSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "PodName",
@@ -637,6 +637,20 @@
             "type": "bool",
             "format": "--tty={value}",
             "help": "Stdin is a TTY."
+          },
+          {
+            "name": "Command",
+            "type": "string",
+            "format": "-- {value}",
+            "position": -2,
+            "help": ""
+          },
+          {
+            "name": "Arguments",
+            "type": "List<string>",
+            "format": "{value}",
+            "position": -1,
+            "help": ""
           }
         ]
       }
@@ -646,7 +660,7 @@
       "postfix": "RollingUpdate",
       "definiteArgument": "rolling-update",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllowMissingTemplateKeys",
@@ -741,7 +755,7 @@
       "postfix": "Label",
       "definiteArgument": "label",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -857,7 +871,7 @@
       "postfix": "Annotate",
       "definiteArgument": "annotate",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -967,7 +981,7 @@
       "postfix": "Delete",
       "definiteArgument": "delete",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -1069,7 +1083,7 @@
       "postfix": "Expose",
       "definiteArgument": "expose",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllowMissingTemplateKeys",
@@ -1212,7 +1226,7 @@
       "postfix": "Options",
       "definiteArgument": "options",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
@@ -1220,7 +1234,7 @@
       "postfix": "Attach",
       "definiteArgument": "attach",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Pod",
@@ -1261,7 +1275,7 @@
       "postfix": "Proxy",
       "definiteArgument": "proxy",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AcceptHosts",
@@ -1337,14 +1351,14 @@
       "postfix": "Alpha",
       "definiteArgument": "alpha",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
       "help": "kubectl controls the Kubernetes cluster manager. Find more information at: https://kubernetes.io/docs/reference/kubectl/overview/.",
       "definiteArgument": "kubectl",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
@@ -1352,7 +1366,7 @@
       "postfix": "Completion",
       "definiteArgument": "completion",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
@@ -1360,7 +1374,7 @@
       "postfix": "Patch",
       "definiteArgument": "patch",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -1438,7 +1452,7 @@
       "postfix": "Replace",
       "definiteArgument": "replace",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllowMissingTemplateKeys",
@@ -1521,7 +1535,7 @@
       "postfix": "Taint",
       "definiteArgument": "taint",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -1588,7 +1602,7 @@
       "postfix": "Describe",
       "definiteArgument": "describe",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -1642,7 +1656,7 @@
       "postfix": "Set",
       "definiteArgument": "set",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Subcommand",
@@ -1659,7 +1673,7 @@
       "postfix": "Auth",
       "definiteArgument": "auth",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Subcommand",
@@ -1675,7 +1689,7 @@
       "postfix": "Certificate",
       "definiteArgument": "certificate",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Subcommand",
@@ -1692,7 +1706,7 @@
       "postfix": "Rollout",
       "definiteArgument": "rollout",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Subcommand",
@@ -1709,7 +1723,7 @@
       "postfix": "Apply",
       "definiteArgument": "apply",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "All",
@@ -1840,7 +1854,7 @@
       "postfix": "ApplyKustomize",
       "definiteArgument": "apply -k",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Kustomize",
@@ -1977,7 +1991,7 @@
       "postfix": "Cordon",
       "definiteArgument": "cordon",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Node",
@@ -2005,7 +2019,7 @@
       "postfix": "Cp",
       "definiteArgument": "cp",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "SrcFileSpec",
@@ -2033,7 +2047,7 @@
       "postfix": "ApiVersions",
       "definiteArgument": "api-versions",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
@@ -2041,7 +2055,7 @@
       "postfix": "Uncordon",
       "definiteArgument": "uncordon",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Node",
@@ -2069,7 +2083,7 @@
       "postfix": "Autoscale",
       "definiteArgument": "autoscale",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllowMissingTemplateKeys",
@@ -2158,7 +2172,7 @@
       "postfix": "Plugin",
       "definiteArgument": "plugin",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "Name",
@@ -2174,14 +2188,14 @@
       "postfix": "ClusterInfo",
       "definiteArgument": "cluster-info",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings"
+        "baseClass": "KubernetesOptionsBase"
       }
     },
     {
       "postfix": "Wait",
       "definiteArgument": "wait",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllNamespaces",
@@ -2246,7 +2260,7 @@
       "postfix": "Convert",
       "definiteArgument": "convert",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllowMissingTemplateKeys",
@@ -2305,7 +2319,7 @@
       "postfix": "Create",
       "definiteArgument": "create",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -2401,7 +2415,7 @@
       "postfix": "PortForward",
       "definiteArgument": "port-forward",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -2432,7 +2446,7 @@
       "postfix": "RunContainer",
       "definiteArgument": "run-container",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "AllowMissingTemplateKeys",
@@ -2671,7 +2685,7 @@
       "postfix": "Edit",
       "definiteArgument": "edit",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -2755,7 +2769,7 @@
       "postfix": "Scale",
       "definiteArgument": "scale",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "All",
@@ -2838,7 +2852,7 @@
       "postfix": "Explain",
       "definiteArgument": "explain",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "ApiVersion",
@@ -2867,7 +2881,7 @@
       "postfix": "Logs",
       "definiteArgument": "logs",
       "settingsClass": {
-        "baseClass": "KubernetesToolSettings",
+        "baseClass": "KubernetesOptionsBase",
         "properties": [
           {
             "name": "TypeName",
@@ -2954,7 +2968,8 @@
   ],
   "dataClasses": [
     {
-      "name": "KubernetesCommonSettings",
+      "name": "KubernetesOptionsBase",
+      "baseClass": "ToolOptions",
       "extensionMethods": true,
       "properties": [
         {

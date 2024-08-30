@@ -16,6 +16,7 @@ using Nuke.Common.Tools.CorFlags;
 using Nuke.Common.Tools.Discord;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.Kubernetes;
 using Nuke.Common.Utilities;
 using Nuke.Tooling;
 using VerifyXunit;
@@ -157,5 +158,16 @@ public class SettingsTest
             .ToJson(Options.JsonSerializerSettings);
 
         return Verifier.Verify(result);
+    }
+
+    [Fact]
+    public void TestKubernetes()
+    {
+        Assert(new KubernetesExecSettings()
+                .SetContainer("container")
+                .SetCommand("command")
+                .SetArguments("arg1", "arg2")
+                .SetCluster("cluster"),
+            "exec --container=container --cluster=cluster -- command arg1 arg2");
     }
 }

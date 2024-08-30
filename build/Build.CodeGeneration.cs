@@ -59,7 +59,7 @@ partial class Build
                 "Helm.json",
                 "ILRepack.json",
                 "InnoSetup.json",
-                // "Kubernetes.json",
+                "Kubernetes.json",
                 "MSBuild.json",
                 "MSpec.json",
                 "MakeNSIS.json",
