@@ -66,7 +66,7 @@ partial class Build
                 "Mastodon.json",
                 "MauiCheck.json",
                 "MinVer.json",
-                // "NSwag.json",
+                "NSwag.json",
                 "NUnit.json",
                 "NerdbankGitVersioning.json",
                 "Netlify.json",

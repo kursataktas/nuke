@@ -4,26 +4,18 @@
 
 using System;
 using System.Linq;
+using Nuke.Common.Tooling;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.NSwag;
 
 partial class NSwagTasks
 {
-    internal static string GetToolPath()
+    protected override string GetToolPath(ToolOptions options = null)
     {
-        Assert.Fail("Settings.NSwagRuntime must be defined to detect the proper nswag executable");
-        return null;
-    }
-
-    public enum Runtime
-    {
-        NetCore10,
-        NetCore11,
-        NetCore20,
-        NetCore21,
-        NetCore31,
-        Net50,
-        Net60,
-        Win
+        return NuGetToolPathResolver.GetPackageExecutable(
+            packageId: PackageId,
+            packageExecutable: "dotnet-nswag.dll|NSwag.exe",
+            framework: (options as NSwagOptionsBase)?.Framework);
     }
 }

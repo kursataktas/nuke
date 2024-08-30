@@ -32,7 +32,7 @@
       "postfix": "Version",
       "definiteArgument": "version",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -43,7 +43,7 @@
       ],
       "definiteArgument": "list-types",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "File",
@@ -68,7 +68,7 @@
       ],
       "definiteArgument": "list-controllers",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "File",
@@ -93,7 +93,7 @@
       ],
       "definiteArgument": "types2openapi",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -104,7 +104,7 @@
       ],
       "definiteArgument": "types2swagger",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "AllowReferencesWithProperties",
@@ -179,7 +179,7 @@
       ],
       "definiteArgument": "webapi2openapi",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -192,7 +192,7 @@
       ],
       "definiteArgument": "webapi2swagger",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "AddMissingPathParameters",
@@ -249,7 +249,7 @@
       ],
       "definiteArgument": "aspnetcore2openapi",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -262,7 +262,7 @@
       ],
       "definiteArgument": "aspnetcore2swagger",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "ApiGroupNames",
@@ -332,7 +332,7 @@
       "postfix": "CreateDocument",
       "definiteArgument": "new",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -340,7 +340,7 @@
       "postfix": "ExecuteDocument",
       "definiteArgument": "run",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "Input",
@@ -365,7 +365,7 @@
       ],
       "definiteArgument": "jsonschema2csclient",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "AnyType",
@@ -439,7 +439,7 @@
       ],
       "definiteArgument": "jsonschema2tsclient",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "Name",
@@ -461,7 +461,7 @@
       ],
       "definiteArgument": "openapi2csclient",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -475,7 +475,7 @@
       ],
       "definiteArgument": "swagger2csclient",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "ClientBaseClass",
@@ -653,7 +653,7 @@
       ],
       "definiteArgument": "openapi2cscontroller",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -667,7 +667,7 @@
       ],
       "definiteArgument": "swagger2cscontroller",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "BasePath",
@@ -730,7 +730,7 @@
       ],
       "definiteArgument": "openapi2tsclient",
       "settingsClass": {
-        "baseClass": "NSwagSettings"
+        "baseClass": "NSwagOptionsBase"
       }
     },
     {
@@ -743,7 +743,7 @@
       ],
       "definiteArgument": "swagger2tsclient",
       "settingsClass": {
-        "baseClass": "NSwagSettings",
+        "baseClass": "NSwagOptionsBase",
         "properties": [
           {
             "name": "BaseUrlTokenName",
@@ -1036,8 +1036,8 @@
       "name": "NSwagRuntime",
       "type": "string",
       "format": "{value}",
-      "position": 1,
       "customImpl": true,
+      "position": 1,
       "customValue": true
     }
   ],
@@ -1603,6 +1603,20 @@
       }
     ]
   },
+  "dataClasses": [
+    {
+      "name": "NSwagOptionsBase",
+      "baseClass": "ToolOptions",
+      "extensionMethods": true,
+      "properties": [
+        {
+          "name": "Framework",
+          "type": "string",
+          "noArgument": true
+        }
+      ]
+    }
+  ],
   "enumerations": [
     {
       "name": "SchemaType",
