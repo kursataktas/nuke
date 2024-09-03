@@ -137,6 +137,7 @@ public class ToolOptionsArgumentsTest
         Assert<ListToolOptions>(new { SimpleList = new[] { "a", "b" } }, ["--param", "a", "--param", "b"]);
         Assert<ListToolOptions>(new { SeparatorList = new[] { "a", "b" } }, ["--param", "a+b"]);
         Assert<ListToolOptions>(new { WhitespaceList = new[] { "a", "b" } }, ["--param", "a", "b"]);
+        Assert<ListToolOptions>(new { QuotedList = new[] { "a", "b" } }, ["--param:\"a b\""]);
         Assert<ListToolOptions>(new { FormattedList = new[] { "true", "false" } }, ["--param=TRUE", "--param=FALSE"]);
     }
 
@@ -145,7 +146,8 @@ public class ToolOptionsArgumentsTest
     {
         [Argument(Format = "--param {value}")] public IReadOnlyList<string> SimpleList => Get<List<string>>(() => SimpleList);
         [Argument(Format = "--param {value}", Separator = "+")] public IReadOnlyList<string> SeparatorList => Get<List<string>>(() => SeparatorList);
-        [Argument(Format = "--param {value}", Separator = " ")] public IReadOnlyList<string> WhitespaceList => Get<List<string>>(() => SeparatorList);
+        [Argument(Format = "--param {value}", Separator = " ")] public IReadOnlyList<string> WhitespaceList => Get<List<string>>(() => WhitespaceList);
+        [Argument(Format = "--param:{value}", Separator = " ", QuoteMultiple = true)] public IReadOnlyList<string> QuotedList => Get<List<string>>(() => QuotedList);
         [Argument(Format = "--param={value}", FormatterMethod = nameof(Format))] public IReadOnlyList<bool> FormattedList => Get<List<bool>>(() => FormattedList);
 
         private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();

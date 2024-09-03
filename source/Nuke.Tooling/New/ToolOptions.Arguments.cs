@@ -37,6 +37,7 @@ public class ArgumentAttribute : Attribute
     public string FormatterMethod { get; set; }
 
     public string Separator { get; set; }
+    public bool QuoteMultiple { get; set; }
 }
 
 public class BuilderAttribute : Attribute
