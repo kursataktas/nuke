@@ -94,7 +94,7 @@ partial class Build
                 "VSTest.json",
                 "VSWhere.json",
                 "WebConfigTransformRunner.json",
-                // "Xunit.json",
+                "Xunit.json",
             ])).ForEach(x =>
                 GenerateCode(
                     x,

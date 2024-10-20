@@ -37,6 +37,7 @@ public class ArgumentAttribute : Attribute
     public string FormatterMethod { get; set; }
 
     public string Separator { get; set; }
+    public string InnerSeparator { get; set; }
     public bool QuoteMultiple { get; set; }
 }
 
@@ -196,20 +197,51 @@ partial class ToolOptions
                     return pairs.Select(x => part.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
 
                 var pairPart = part.Substring(pairStart, pairLength);
-                var formattedPairs = pairs.Select(x => pairPart.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
-                return [part.Substring(startIndex: 0, length: pairStart) + formattedPairs.Join(attribute.Separator)];
+                var replacedPairs = pairs.Select(x => pairPart.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Value));
+                return [part.Substring(startIndex: 0, length: pairStart) + replacedPairs.Join(attribute.Separator)];
             });
         }
 
         IEnumerable<string> GetLookupArguments()
         {
-            Assert.True(attribute.Separator == null);
-
             var valueType = property.PropertyType.GetGenericArguments().Last();
             var pairs = token.Value<JObject>().Properties()
                 .Select(x => (Key: x.Name, Values: x.Value.Value<JArray>().Select(x => Parse(x, valueType))));
 
-            return [];
+            if (attribute.Separator == null)
+            {
+                if (attribute.InnerSeparator == null)
+                {
+                    return from pair in pairs
+                           from value in pair.Values
+                           from part in formatParts
+                           select part.Replace(KeyPlaceholder, pair.Key).Replace(ValuePlaceholder, value);
+                }
+                else
+                {
+                    return from pair in pairs
+                           from part in formatParts
+                           select part.Replace(KeyPlaceholder, pair.Key).Replace(ValuePlaceholder, pair.Values.Join(attribute.InnerSeparator));
+                }
+            }
+
+            Assert.NotNull(attribute.InnerSeparator);
+
+            return formatParts.SelectMany(part =>
+            {
+                var pairStart = part.IndexOf(KeyPlaceholder, StringComparison.OrdinalIgnoreCase);
+                var pairLength = part.IndexOf(ValuePlaceholder, StringComparison.OrdinalIgnoreCase) - pairStart + ValuePlaceholder.Length;
+
+                if (pairStart == -1)
+                    return [part];
+
+                if (attribute.Separator.IsNullOrWhiteSpace())
+                    return pairs.Select(x => part.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Values.Join(attribute.InnerSeparator)));
+
+                var pairPart = part.Substring(pairStart, pairLength);
+                var replacedPairs = pairs.Select(x => pairPart.Replace(KeyPlaceholder, x.Key).Replace(ValuePlaceholder, x.Values.Join(attribute.InnerSeparator)));
+                return [part.Substring(startIndex: 0, length: pairStart) + replacedPairs.Join(attribute.Separator)];
+            });
         }
     }
 }

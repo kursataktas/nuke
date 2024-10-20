@@ -156,19 +156,22 @@ public class ToolOptionsArgumentsTest
         private string Format(object value, PropertyInfo property) => value?.ToString()?.ToUpperInvariant();
     }
 
+    private readonly LookupTable<string, object> _simpleLookupTable = new() { ["key1"] = [1, 2], ["key2"] = [true, false] };
+
+    [Fact] public void TestLookup_Simple() => Assert<LookupToolOptions>(new { SimpleLookup = _simpleLookupTable }, ["--param", "key1=1","--param", "key1=2", "--param", "key2=true", "--param", "key2=false"]);
+    [Fact] public void TestLookup_InnerSeparator() => Assert<LookupToolOptions>(new { InnerSeparatorLookup = _simpleLookupTable }, ["--param:key1=1,2", "--param:key2=true,false"]);
+    [Fact] public void TestLookup_Separator() => Assert<LookupToolOptions>(new { SeparatorLookup = _simpleLookupTable }, ["--param:key1=1,2;key2=true,false"]);
+    [Fact] public void TestLookup_Formatted() => Assert<LookupToolOptions>(new { FormattedLookup = _simpleLookupTable }, ["--param", "key1", "1+2", "--param", "key2", "TRUE+FALSE"]);
+
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class LookupToolOptions : ToolOptions
     {
-        // [Argument(Format = "--param {key}={value}", Separator = ",", Separator = " ")] public ILookup<string, object> SimpleLookup => Get<LookupTable<string, object>>(() => SimpleLookup);
-        // [Argument(Format = "--param {key} {value}", Separator = ",", Separator = " ")] public ILookup<string, object> Simple2Lookup => Get<LookupTable<string, object>>(() => Simple2Lookup);
-    }
+        [Argument(Format = "--param {key}={value}")] public ILookup<string, object> SimpleLookup => Get<LookupTable<string, object>>(() => SimpleLookup);
+        [Argument(Format = "--param:{key}={value}", InnerSeparator = ",")] public ILookup<string, object> InnerSeparatorLookup => Get<LookupTable<string, object>>(() => InnerSeparatorLookup);
+        [Argument(Format = "--param:{key}={value}", Separator = ";", InnerSeparator = ",")] public ILookup<string, object> SeparatorLookup => Get<LookupTable<string, object>>(() => SeparatorLookup);
+        [Argument(Format = "--param {key} {value}", InnerSeparator = "+", FormatterMethod = nameof(Format))] public ILookup<string, object> FormattedLookup => Get<LookupTable<string, object>>(() => FormattedLookup);
 
-    [Fact]
-    public void TestLookup()
-    {
-        var lookup = new LookupTable<string, object> { ["key1"] = [1, 2,], ["key2"] = [true, false,] };
-        Assert<LookupToolOptions>(new { SimpleLookup = lookup }, ["--param", "key1=1,2", "key2=true,false"]);
-        Assert<LookupToolOptions>(new { Simple2Lookup = lookup }, ["--param", "key1", "1,2", "key2", "true,false"]);
+        private string Format(object value, PropertyInfo property) => value?.ToString()?.ToUpperInvariant();
     }
 
     [Fact]

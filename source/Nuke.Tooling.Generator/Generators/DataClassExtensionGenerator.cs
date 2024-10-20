@@ -181,8 +181,60 @@ public static class DataClassExtensionGenerator
             property.Delegates.ForEach(WriteDelegateProperty);
         }
 
-        // else if (property.IsLookupTable())
-        //     WriteLookupExtensions(writer, property);
+        // Lookup<TKey, TValue>
+        if (property.IsLookupTable())
+        {
+            CheckPlural(property);
+            var (keyType, valueType) = property.GetLookupTableKeyValueTypes();
+
+            writer
+                // Set
+                .WriteMethod(
+                    property,
+                    name: $"Set{property.Name}",
+                    additionalParameters: [$"{keyType} k", $"params {valueType}[] v"],
+                    modification: $"SetLookup(() => {access}, k, v)",
+                    property.Help)
+                .WriteMethod(
+                    property,
+                    name: $"Set{property.Name}",
+                    additionalParameters: [$"{keyType} k", $"IEnumerable<{valueType}> v"],
+                    modification: $"SetLookup(() => {access}, k, v)",
+                    property.Help)
+                // Add
+                .WriteMethod(
+                    property,
+                    name: $"Add{property.Name}",
+                    additionalParameters: [$"{keyType} k", $"params {valueType}[] v"],
+                    modification: $"AddLookup(() => {access}, k, v)",
+                    property.Help)
+                .WriteMethod(
+                    property,
+                    name: $"Add{property.Name}",
+                    additionalParameters: [$"{keyType} k", $"IEnumerable<{valueType}> v"],
+                    modification: $"AddLookup(() => {access}, k, v)",
+                    property.Help)
+                // Remove
+                .WriteMethod(
+                    property,
+                    name: $"Remove{property.Name}",
+                    additionalParameters: [$"{keyType} k"],
+                    modification: $"RemoveLookup(() => {access}, k)",
+                    property.Help)
+                .WriteMethod(
+                    property,
+                    name: $"Remove{property.Name}",
+                    additionalParameters: [$"{keyType} k", $"{valueType} v"],
+                    modification: $"RemoveLookup(() => {access}, k, v)",
+                    property.Help)
+                // Clear
+                .WriteMethod(
+                    property,
+                    name: $"Reset{property.Name}",
+                    additionalParameters: [],
+                    modification: $"ClearLookup(() => {access})",
+                    property.Help);
+        }
 
         writer.WriteLine("#endregion");
         return;
@@ -295,46 +347,6 @@ public static class DataClassExtensionGenerator
 
             writer.WriteLine("#endregion");
         }
-    }
-
-    private static void WriteLookupExtensions(DataClassWriter writer, Property property)
-    {
-        // var propertyInstance = property.Name.ToInstance();
-        // var (keyType, valueType) = property.GetLookupTableKeyValueTypes();
-        // var propertySingular = property.Name.ToSingular();
-        // var propertySingularInstance = property.Name.ToSingular().ToInstance();
-        // var keyInstance = $"{propertyInstance}Key";
-        // var valueInstance = $"{propertyInstance}Value";
-        // var valueInstances = $"{propertyInstance}Values";
-        // var propertyAccess = $"toolSettings.{property.Name}Internal";
-        //
-        // // TODO: params
-        // // TODO: remove by key
-        // writer
-        //     .WriteSummaryExtension($"Sets {property.GetCrefTag()} to a new lookup table", property)
-        //     .WriteObsoleteAttributeWhenObsolete(property)
-        //     .WriteMethod($"Set{property.Name}",
-        //         $"ILookup<{keyType}, {valueType}> {propertyInstance}",
-        //         $"{propertyAccess} = {propertyInstance}.ToLookupTable(StringComparer.OrdinalIgnoreCase);")
-        //     .WriteSummaryExtension($"Clears {property.GetCrefTag()}", property)
-        //     .WriteObsoleteAttributeWhenObsolete(property)
-        //     .WriteMethod($"Clear{property.Name}",
-        //         $"{propertyAccess}.Clear();")
-        //     .WriteSummaryExtension($"Adds new values for the given key to {property.GetCrefTag()}", property)
-        //     .WriteObsoleteAttributeWhenObsolete(property)
-        //     .WriteMethod($"Add{property.Name}",
-        //         new[] { $"{keyType} {keyInstance}", $"params {valueType}[] {valueInstances}" },
-        //         $"{propertyAccess}.AddRange({keyInstance}, {valueInstances});")
-        //     .WriteSummaryExtension($"Adds new values for the given key to {property.GetCrefTag()}", property)
-        //     .WriteObsoleteAttributeWhenObsolete(property)
-        //     .WriteMethod($"Add{property.Name}",
-        //         new[] { $"{keyType} {keyInstance}", $"IEnumerable<{valueType}> {valueInstances}" },
-        //         $"{propertyAccess}.AddRange({keyInstance}, {valueInstances});")
-        //     .WriteSummaryExtension($"Removes a single {propertySingularInstance} from {property.GetCrefTag()}", property)
-        //     .WriteObsoleteAttributeWhenObsolete(property)
-        //     .WriteMethod($"Remove{propertySingular}",
-        //         new[] { $"{keyType} {keyInstance}", $"{valueType} {valueInstance}" },
-        //         $"{propertyAccess}.Remove({keyInstance}, {valueInstance});");
     }
 
     private static DataClassWriter WriteMethod(

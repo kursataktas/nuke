@@ -102,15 +102,13 @@
           {
             "name": "Traits",
             "type": "LookupTable<string, string>",
-            "format": "-trait {value}",
-            "itemFormat": "{key}={value}",
+            "format": "-trait {key}={value}",
             "help": "Only run tests with matching name/value traits."
           },
           {
             "name": "ExcludedTraits",
             "type": "LookupTable<string, string>",
-            "format": "-notrait {value}",
-            "itemFormat": "{key}={value}",
+            "format": "-notrait {key}={value}",
             "help": "Do not run tests with matching name/value traits."
           },
           {
@@ -146,8 +144,7 @@
           {
             "name": "ResultReports",
             "type": "Dictionary<Xunit2ResultFormat, string>",
-            "format": "-{value}",
-            "itemFormat": "{key} {value}",
+            "format": "-{key} {value}",
             "help": "Result formats:<ul><li><c>-xml</c>: output results to xUnit.net v2 XML file</li><li><c>-xmlv1</c>: output results to xUnit.net v1 XML file</li><li><c>-nunit</c>: output results to NUnit v2.5 XML file</li><li><c>-html</c>: output results to HTML file</li></ul>"
           },
           {

@@ -80,20 +80,20 @@ public class SettingsTest
     [Fact]
     public void TestXunit2()
     {
-        Assert<Xunit2Settings>(x => x
+        Assert(new Xunit2Settings()
                 .AddTargetAssemblies("A.csproj")
                 .AddTargetAssemblyWithConfigs("B.csproj", "D.config", "new folder\\E.config"),
             "A.csproj  B.csproj D.config B.csproj \"new folder\\E.config\"");
 
-        Assert<Xunit2Settings>(x => x
+        Assert(new Xunit2Settings()
                 .AddResultReport(Xunit2ResultFormat.HTML, "new folder\\data.html")
                 .AddResultReport(Xunit2ResultFormat.Xml, "new_folder\\data.xml"),
             "-HTML \"new folder\\data.html\" -Xml new_folder\\data.xml");
 
-        Assert<Xunit2Settings>(x => x
-                .AddResultReport(Xunit2ResultFormat.NUnit, "new folder\\nunit.xml")
+        Assert(new Xunit2Settings()
+                .EnableFailSkips()
                 .EnableDiagnostics()
-                .EnableFailSkips(),
+                .AddResultReport(Xunit2ResultFormat.NUnit, "new folder\\nunit.xml"),
             "-failskips -diagnostics -NUnit \"new folder\\nunit.xml\"");
     }
 
