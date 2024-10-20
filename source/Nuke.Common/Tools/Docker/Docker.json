@@ -2584,8 +2584,7 @@
           {
             "name": "ServiceReplicas",
             "type": "Dictionary<string,string>",
-            "format": "{value}",
-            "itemFormat": "{key=value}",
+            "format": "{key}={value}",
             "help": "SERVICE=REPLICAS"
           }
         ]
@@ -3141,8 +3140,7 @@
           {
             "name": "Sysctl",
             "type": "Dictionary<string,string>",
-            "format": "--sysctl {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--sysctl {key}:{value}",
             "help": "Sysctl options."
           },
           {
@@ -3759,8 +3757,7 @@
           {
             "name": "Sysctl",
             "type": "Dictionary<string,string>",
-            "format": "--sysctl {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--sysctl {key}:{value}",
             "help": "Sysctl options."
           },
           {
@@ -5614,8 +5611,7 @@
           {
             "name": "Sysctl",
             "type": "Dictionary<string,string>",
-            "format": "--sysctl {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--sysctl {key}:{value}",
             "help": "Sysctl options."
           },
           {
@@ -5728,8 +5724,7 @@
           {
             "name": "Opt",
             "type": "Dictionary<string,string>",
-            "format": "--opt {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--opt {key}:{value}",
             "help": "Set driver specific options."
           },
           {
@@ -6237,8 +6232,7 @@
           {
             "name": "AuxAddress",
             "type": "Dictionary<string,string>",
-            "format": "--aux-address {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--aux-address {key}:{value}",
             "help": "Auxiliary IPv4 or IPv6 addresses used by Network driver."
           },
           {
@@ -6292,8 +6286,7 @@
           {
             "name": "IpamOpt",
             "type": "Dictionary<string,string>",
-            "format": "--ipam-opt {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--ipam-opt {key}:{value}",
             "help": "Set IPAM driver specific options."
           },
           {
@@ -6311,8 +6304,7 @@
           {
             "name": "Opt",
             "type": "Dictionary<string,string>",
-            "format": "--opt {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--opt {key}:{value}",
             "help": "Set driver specific options."
           },
           {
@@ -7170,8 +7162,7 @@
           {
             "name": "Sysctl",
             "type": "Dictionary<string,string>",
-            "format": "--sysctl {value}",
-            "itemFormat": "{key}:{value}",
+            "format": "--sysctl {key}:{value}",
             "help": "Sysctl options."
           },
           {
@@ -7631,8 +7622,7 @@
           {
             "name": "KeyValues",
             "type": "Dictionary<string,string>",
-            "format": "{value}",
-            "itemFormat": "{key=value}",
+            "format": "{key}={value}",
             "help": "[KEY=VALUE...]"
           }
         ]
@@ -8917,8 +8907,7 @@
           {
             "name": "KeyValues",
             "type": "Dictionary<string,string>",
-            "format": "{value}",
-            "itemFormat": "{key=value}",
+            "format": "{key}={value}",
             "help": "KEY=VALUE"
           }
         ]

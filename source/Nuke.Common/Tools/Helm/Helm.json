@@ -887,8 +887,7 @@
           {
             "name": "Override",
             "type": "Dictionary<string, object>",
-            "format": "--override {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--override {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Override values for the Tiller Deployment manifest (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -1453,8 +1452,7 @@
           {
             "name": "Set",
             "type": "Dictionary<string, object>",
-            "format": "--set {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -1462,8 +1460,7 @@
           {
             "name": "SetFile",
             "type": "Dictionary<string, object>",
-            "format": "--set-file {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-file {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)."
@@ -1471,8 +1468,7 @@
           {
             "name": "SetString",
             "type": "Dictionary<string, object>",
-            "format": "--set-string {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-string {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -1587,8 +1583,7 @@
           {
             "name": "Set",
             "type": "Dictionary<string, object>",
-            "format": "--set {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -1596,8 +1591,7 @@
           {
             "name": "SetFile",
             "type": "Dictionary<string, object>",
-            "format": "--set-file {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-file {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)."
@@ -1605,8 +1599,7 @@
           {
             "name": "SetString",
             "type": "Dictionary<string, object>",
-            "format": "--set-string {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-string {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -2412,8 +2405,7 @@
           {
             "name": "Execute",
             "type": "Dictionary<string, object>",
-            "format": "--execute {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--execute {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Only execute the given templates."
@@ -2470,8 +2462,7 @@
           {
             "name": "Set",
             "type": "Dictionary<string, object>",
-            "format": "--set {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -2479,8 +2470,7 @@
           {
             "name": "SetFile",
             "type": "Dictionary<string, object>",
-            "format": "--set-file {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-file {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)."
@@ -2488,8 +2478,7 @@
           {
             "name": "SetString",
             "type": "Dictionary<string, object>",
-            "format": "--set-string {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-string {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -2731,8 +2720,7 @@
           {
             "name": "Set",
             "type": "Dictionary<string, object>",
-            "format": "--set {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."
@@ -2740,8 +2728,7 @@
           {
             "name": "SetFile",
             "type": "Dictionary<string, object>",
-            "format": "--set-file {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-file{key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2)."
@@ -2749,8 +2736,7 @@
           {
             "name": "SetString",
             "type": "Dictionary<string, object>",
-            "format": "--set-string {value}",
-            "itemFormat": "{key}={value}",
+            "format": "--set-string {key}={value}",
             "separator": ",",
             "secret": false,
             "help": "Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2)."

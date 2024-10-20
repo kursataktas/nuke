@@ -222,7 +222,7 @@ public partial class NSwagListTypesSettings : NSwagOptionsBase
     /// <summary>The nswag.json configuration file path.</summary>
     [Argument(Format = "/File:{value}")] public string File => Get<string>(() => File);
     /// <summary></summary>
-    [Argument(Format = "/Variables:{value}")] public IReadOnlyDictionary<string, object> Variables => Get<Dictionary<string, object>>(() => Variables);
+    [Argument(Format = "/Variables:{key}={value}")] public IReadOnlyDictionary<string, object> Variables => Get<Dictionary<string, object>>(() => Variables);
     /// <summary>The path or paths to the .NET assemblies (comma separated).</summary>
     [Argument(Format = "/Assembly:{value}")] public IReadOnlyList<string> Assembly => Get<List<string>>(() => Assembly);
     /// <summary>The path to the assembly App.config or Web.config (optional).</summary>
@@ -244,7 +244,7 @@ public partial class NSwagListWebApiControllersSettings : NSwagOptionsBase
     /// <summary>The nswag.json configuration file path.</summary>
     [Argument(Format = "/File:{value}")] public string File => Get<string>(() => File);
     /// <summary></summary>
-    [Argument(Format = "/Variables:{value}")] public IReadOnlyDictionary<string, object> Variables => Get<Dictionary<string, object>>(() => Variables);
+    [Argument(Format = "/Variables:{key}={value}")] public IReadOnlyDictionary<string, object> Variables => Get<Dictionary<string, object>>(() => Variables);
     /// <summary>The path or paths to the .NET assemblies (comma separated).</summary>
     [Argument(Format = "/Assembly:{value}")] public IReadOnlyList<string> Assembly => Get<List<string>>(() => Assembly);
     /// <summary>The path to the assembly App.config or Web.config (optional).</summary>
@@ -726,7 +726,7 @@ public partial class NSwagExecuteDocumentSettings : NSwagOptionsBase
     /// <summary></summary>
     [Argument(Format = "/Input:{value}")] public string Input => Get<string>(() => Input);
     /// <summary></summary>
-    [Argument(Format = "/Variables:{value}")] public IReadOnlyDictionary<string, object> Variables => Get<Dictionary<string, object>>(() => Variables);
+    [Argument(Format = "/Variables:{key}={value}")] public IReadOnlyDictionary<string, object> Variables => Get<Dictionary<string, object>>(() => Variables);
 }
 #endregion
 #region NSwagJsonSchemaToCSharpSettings

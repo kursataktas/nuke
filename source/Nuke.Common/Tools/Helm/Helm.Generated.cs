@@ -757,7 +757,7 @@ public partial class HelmInitSettings : HelmOptionsBase
     /// <summary>Skip installation and output Tiller's manifest in specified format (json or yaml).</summary>
     [Argument(Format = "--output {value}", Secret = false)] public HelmOutputFormat Output => Get<HelmOutputFormat>(() => Output);
     /// <summary>Override values for the Tiller Deployment manifest (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--override {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Override => Get<Dictionary<string, object>>(() => Override);
+    [Argument(Format = "--override {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Override => Get<Dictionary<string, object>>(() => Override);
     /// <summary>Amount of tiller instances to run on the cluster (default 1).</summary>
     [Argument(Format = "--replicas {value}", Secret = false)] public long? Replicas => Get<long?>(() => Replicas);
     /// <summary>Name of service account.</summary>
@@ -955,11 +955,11 @@ public partial class HelmInstallSettings : HelmOptionsBase
     /// <summary>Chart repository url where to locate the requested chart.</summary>
     [Argument(Format = "--repo {value}", Secret = false)] public string Repo => Get<string>(() => Repo);
     /// <summary>Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
+    [Argument(Format = "--set {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
     /// <summary>Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2).</summary>
-    [Argument(Format = "--set-file {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
+    [Argument(Format = "--set-file {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
     /// <summary>Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set-string {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
+    [Argument(Format = "--set-string {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
     /// <summary>Time in seconds to wait for any individual Kubernetes operation (like Jobs for hooks) (default 300).</summary>
     [Argument(Format = "--timeout {value}s", Secret = false)] public long? Timeout => Get<long?>(() => Timeout);
     /// <summary>Enable TLS for request.</summary>
@@ -999,11 +999,11 @@ public partial class HelmLintSettings : HelmOptionsBase
     /// <summary>Namespace to put the release into (default "default").</summary>
     [Argument(Format = "--namespace {value}", Secret = false)] public string Namespace => Get<string>(() => Namespace);
     /// <summary>Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
+    [Argument(Format = "--set {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
     /// <summary>Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2).</summary>
-    [Argument(Format = "--set-file {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
+    [Argument(Format = "--set-file {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
     /// <summary>Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set-string {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
+    [Argument(Format = "--set-string {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
     /// <summary>Fail on lint warnings.</summary>
     [Argument(Format = "--strict", Secret = false)] public bool? Strict => Get<bool?>(() => Strict);
     /// <summary>Specify values in a YAML file (can specify multiple) (default []).</summary>
@@ -1359,7 +1359,7 @@ public partial class HelmStatusSettings : HelmOptionsBase
 public partial class HelmTemplateSettings : HelmOptionsBase
 {
     /// <summary>Only execute the given templates.</summary>
-    [Argument(Format = "--execute {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Execute => Get<Dictionary<string, object>>(() => Execute);
+    [Argument(Format = "--execute {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Execute => Get<Dictionary<string, object>>(() => Execute);
     /// <summary>Set .Release.IsUpgrade instead of .Release.IsInstall.</summary>
     [Argument(Format = "--is-upgrade", Secret = false)] public bool? IsUpgrade => Get<bool?>(() => IsUpgrade);
     /// <summary>Kubernetes version used as Capabilities.KubeVersion.Major/Minor (default "1.9").</summary>
@@ -1375,11 +1375,11 @@ public partial class HelmTemplateSettings : HelmOptionsBase
     /// <summary>Writes the executed templates to files in output-dir instead of stdout.</summary>
     [Argument(Format = "--output-dir {value}", Secret = false)] public string OutputDir => Get<string>(() => OutputDir);
     /// <summary>Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
+    [Argument(Format = "--set {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
     /// <summary>Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2).</summary>
-    [Argument(Format = "--set-file {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
+    [Argument(Format = "--set-file {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
     /// <summary>Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set-string {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
+    [Argument(Format = "--set-string {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
     /// <summary>Specify values in a YAML file (can specify multiple) (default []).</summary>
     [Argument(Format = "--values {value}", Secret = false)] public IReadOnlyList<string> Values => Get<List<string>>(() => Values);
     /// <summary></summary>
@@ -1463,11 +1463,11 @@ public partial class HelmUpgradeSettings : HelmOptionsBase
     /// <summary>When upgrading, reuse the last release's values and merge in any overrides from the command line via --set and -f. If '--reset-values' is specified, this is ignored.</summary>
     [Argument(Format = "--reuse-values", Secret = false)] public bool? ReuseValues => Get<bool?>(() => ReuseValues);
     /// <summary>Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
+    [Argument(Format = "--set {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> Set => Get<Dictionary<string, object>>(() => Set);
     /// <summary>Set values from respective files specified via the command line (can specify multiple or separate values with commas: key1=path1,key2=path2).</summary>
-    [Argument(Format = "--set-file {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
+    [Argument(Format = "--set-file{key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetFile => Get<Dictionary<string, object>>(() => SetFile);
     /// <summary>Set STRING values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).</summary>
-    [Argument(Format = "--set-string {value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
+    [Argument(Format = "--set-string {key}={value}", Secret = false, Separator = ",")] public IReadOnlyDictionary<string, object> SetString => Get<Dictionary<string, object>>(() => SetString);
     /// <summary>Time in seconds to wait for any individual Kubernetes operation (like Jobs for hooks) (default 300).</summary>
     [Argument(Format = "--timeout {value}s", Secret = false)] public long? Timeout => Get<long?>(() => Timeout);
     /// <summary>Enable TLS for request.</summary>

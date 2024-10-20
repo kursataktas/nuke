@@ -54,8 +54,7 @@
           {
             "name": "Variables",
             "type": "Dictionary<string,object>",
-            "format": "/Variables:{value}",
-            "itemFormat": "{key}={value}"
+            "format": "/Variables:{key}={value}"
           }
         ]
       }
@@ -79,8 +78,7 @@
           {
             "name": "Variables",
             "type": "Dictionary<string,object>",
-            "format": "/Variables:{value}",
-            "itemFormat": "{key}={value}"
+            "format": "/Variables:{key}={value}"
           }
         ]
       }
@@ -350,8 +348,7 @@
           {
             "name": "Variables",
             "type": "Dictionary<string,object>",
-            "format": "/Variables:{value}",
-            "itemFormat": "{key}={value}"
+            "format": "/Variables:{key}={value}"
           }
         ]
       }

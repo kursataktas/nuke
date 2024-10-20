@@ -738,7 +738,7 @@ public partial class KubernetesLabelSettings : KubernetesOptionsBase
     /// <summary>The type or/and name of the ressource.</summary>
     [Argument(Format = "{value}", Separator = " ")] public IReadOnlyList<string> TypeName => Get<List<string>>(() => TypeName);
     /// <summary>The Labels to set.</summary>
-    [Argument(Format = "{value}", Separator = " ")] public IReadOnlyDictionary<string, string> Labels => Get<Dictionary<string, string>>(() => Labels);
+    [Argument(Format = "{key}={value}", Separator = " ")] public IReadOnlyDictionary<string, string> Labels => Get<Dictionary<string, string>>(() => Labels);
     /// <summary>Select all resources, including uninitialized ones, in the namespace of the specified resource types.</summary>
     [Argument(Format = "--all={value}")] public bool? All => Get<bool?>(() => All);
     /// <summary>If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.</summary>
@@ -782,7 +782,7 @@ public partial class KubernetesAnnotateSettings : KubernetesOptionsBase
     /// <summary>The type or/and name of the ressource.</summary>
     [Argument(Format = "{value}", Separator = " ")] public IReadOnlyList<string> TypeName => Get<List<string>>(() => TypeName);
     /// <summary>The annotations to set on the ressource</summary>
-    [Argument(Format = "{value}", Separator = " ")] public IReadOnlyDictionary<string, string> Annotations => Get<Dictionary<string, string>>(() => Annotations);
+    [Argument(Format = "{key}={value}", Separator = " ")] public IReadOnlyDictionary<string, string> Annotations => Get<Dictionary<string, string>>(() => Annotations);
     /// <summary>Select all resources, including uninitialized ones, in the namespace of the specified resource types.</summary>
     [Argument(Format = "--all={value}")] public bool? All => Get<bool?>(() => All);
     /// <summary>If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.</summary>
@@ -1076,7 +1076,7 @@ public partial class KubernetesTaintSettings : KubernetesOptionsBase
     /// <summary>The type or/and name of the ressource.</summary>
     [Argument(Format = "{value}", Separator = " ")] public IReadOnlyList<string> TypeName => Get<List<string>>(() => TypeName);
     /// <summary>The taint effects to set.</summary>
-    [Argument(Format = "{value}", Separator = " ")] public IReadOnlyDictionary<string, string> TaintEffects => Get<Dictionary<string, string>>(() => TaintEffects);
+    [Argument(Format = "{key}={value}", Separator = " ")] public IReadOnlyDictionary<string, string> TaintEffects => Get<Dictionary<string, string>>(() => TaintEffects);
     /// <summary>Select all nodes in the cluster.</summary>
     [Argument(Format = "--all={value}")] public bool? All => Get<bool?>(() => All);
     /// <summary>If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.</summary>
@@ -1486,7 +1486,7 @@ public partial class KubernetesPortForwardSettings : KubernetesOptionsBase
     /// <summary>The type or/and name of the resource.</summary>
     [Argument(Format = "{value}", Separator = " ")] public IReadOnlyList<string> TypeName => Get<List<string>>(() => TypeName);
     /// <summary>The port combinations to forward. In the Format 'srcPort:destPort'.</summary>
-    [Argument(Format = "{value}", Separator = " ")] public IReadOnlyDictionary<int, int> Ports => Get<Dictionary<int, int>>(() => Ports);
+    [Argument(Format = "{key}={value}", Separator = " ")] public IReadOnlyDictionary<int, int> Ports => Get<Dictionary<int, int>>(() => Ports);
     /// <summary>The length of time (like 5s, 2m, or 3h, higher than zero) to wait until at least one pod is running.</summary>
     [Argument(Format = "--pod-running-timeout={value}")] public TimeSpan? PodRunningTimeout => Get<TimeSpan?>(() => PodRunningTimeout);
 }
@@ -1749,7 +1749,7 @@ public partial class KubernetesOptionsBase : ToolOptions
     /// <summary>log level for V logs.</summary>
     [Argument(Format = "--v={value}")] public int? V => Get<int?>(() => V);
     /// <summary>comma-separated list of pattern=N settings for file-filtered logging.</summary>
-    [Argument(Format = "--vmodule={value}", Separator = ",")] public IReadOnlyDictionary<string, string> Vmodule => Get<Dictionary<string, string>>(() => Vmodule);
+    [Argument(Format = "--vmodule={key}={value}", Separator = ",")] public IReadOnlyDictionary<string, string> Vmodule => Get<Dictionary<string, string>>(() => Vmodule);
 }
 #endregion
 #region KubernetesApiResourcesSettingsExtensions

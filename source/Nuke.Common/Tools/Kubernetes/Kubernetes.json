@@ -767,8 +767,7 @@
           {
             "name": "Labels",
             "type": "Dictionary<string,string>",
-            "format": "{value}",
-            "itemFormat": "{key}={value}",
+            "format": "{key}={value}",
             "separator": " ",
             "help": "The Labels to set."
           },
@@ -883,8 +882,7 @@
           {
             "name": "Annotations",
             "type": "Dictionary<string,string>",
-            "format": "{value}",
-            "itemFormat": "{key}={value}",
+            "format": "{key}={value}",
             "separator": " ",
             "help": "The annotations to set on the ressource"
           },
@@ -1547,8 +1545,7 @@
           {
             "name": "TaintEffects",
             "type": "Dictionary<string,string>",
-            "format": "{value}",
-            "itemFormat": "{key}={value}",
+            "format": "{key}={value}",
             "separator": " ",
             "help": "The taint effects to set."
           },
@@ -2427,8 +2424,7 @@
           {
             "name": "Ports",
             "type": "Dictionary<int,int>",
-            "format": "{value}",
-            "itemFormat": "{key}={value}",
+            "format": "{key}={value}",
             "separator": " ",
             "help": "The port combinations to forward. In the Format 'srcPort:destPort'."
           },
@@ -3107,8 +3103,7 @@
         {
           "name": "Vmodule",
           "type": "Dictionary<string,string>",
-          "format": "--vmodule={value}",
-          "itemFormat": "{key}={value}",
+          "format": "--vmodule={key}={value}",
           "separator": ",",
           "help": "comma-separated list of pattern=N settings for file-filtered logging."
         }

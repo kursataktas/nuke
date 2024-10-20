@@ -131,8 +131,7 @@
           {
             "name": "Variables",
             "type": "Dictionary<string,string>",
-            "format": "-var {value}",
-            "itemFormat": "{key}={value}",
+            "format": "-var {key}={value}",
             "help": "Variable key value pair for variable substitution in manifest"
           },
           {

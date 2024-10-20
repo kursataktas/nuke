@@ -2965,7 +2965,7 @@ public partial class DockerStackDeploySettings : DockerOptionsBase
 public partial class DockerServiceScaleSettings : DockerOptionsBase
 {
     /// <summary>SERVICE=REPLICAS</summary>
-    [Argument(Format = "{value}")] public IReadOnlyDictionary<string, string> ServiceReplicas => Get<Dictionary<string, string>>(() => ServiceReplicas);
+    [Argument(Format = "{key}={value}")] public IReadOnlyDictionary<string, string> ServiceReplicas => Get<Dictionary<string, string>>(() => ServiceReplicas);
 }
 #endregion
 #region DockerRunSettings
@@ -3157,7 +3157,7 @@ public partial class DockerRunSettings : DockerOptionsBase
     /// <summary>Storage driver options for the container.</summary>
     [Argument(Format = "--storage-opt {value}")] public IReadOnlyList<string> StorageOpt => Get<List<string>>(() => StorageOpt);
     /// <summary>Sysctl options.</summary>
-    [Argument(Format = "--sysctl {value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
+    [Argument(Format = "--sysctl {key}:{value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
     /// <summary>Mount a tmpfs directory.</summary>
     [Argument(Format = "--tmpfs {value}")] public IReadOnlyList<string> Tmpfs => Get<List<string>>(() => Tmpfs);
     /// <summary>Allocate a pseudo-TTY.</summary>
@@ -3369,7 +3369,7 @@ public partial class DockerCreateSettings : DockerOptionsBase
     /// <summary>Storage driver options for the container.</summary>
     [Argument(Format = "--storage-opt {value}")] public IReadOnlyList<string> StorageOpt => Get<List<string>>(() => StorageOpt);
     /// <summary>Sysctl options.</summary>
-    [Argument(Format = "--sysctl {value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
+    [Argument(Format = "--sysctl {key}:{value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
     /// <summary>Mount a tmpfs directory.</summary>
     [Argument(Format = "--tmpfs {value}")] public IReadOnlyList<string> Tmpfs => Get<List<string>>(() => Tmpfs);
     /// <summary>Allocate a pseudo-TTY.</summary>
@@ -4153,7 +4153,7 @@ public partial class DockerContainerCreateSettings : DockerOptionsBase
     /// <summary>Storage driver options for the container.</summary>
     [Argument(Format = "--storage-opt {value}")] public IReadOnlyList<string> StorageOpt => Get<List<string>>(() => StorageOpt);
     /// <summary>Sysctl options.</summary>
-    [Argument(Format = "--sysctl {value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
+    [Argument(Format = "--sysctl {key}:{value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
     /// <summary>Mount a tmpfs directory.</summary>
     [Argument(Format = "--tmpfs {value}")] public IReadOnlyList<string> Tmpfs => Get<List<string>>(() => Tmpfs);
     /// <summary>Allocate a pseudo-TTY.</summary>
@@ -4197,7 +4197,7 @@ public partial class DockerVolumeCreateSettings : DockerOptionsBase
     /// <summary>Specify volume name.</summary>
     [Argument(Format = "--name {value}")] public string Name => Get<string>(() => Name);
     /// <summary>Set driver specific options.</summary>
-    [Argument(Format = "--opt {value}")] public IReadOnlyDictionary<string, string> Opt => Get<Dictionary<string, string>>(() => Opt);
+    [Argument(Format = "--opt {key}:{value}")] public IReadOnlyDictionary<string, string> Opt => Get<Dictionary<string, string>>(() => Opt);
     /// <summary>[VOLUME]</summary>
     [Argument(Format = "{value}")] public string Volume => Get<string>(() => Volume);
 }
@@ -4479,7 +4479,7 @@ public partial class DockerNetworkCreateSettings : DockerOptionsBase
     /// <summary>Enable manual container attachment.</summary>
     [Argument(Format = "--attachable")] public bool? Attachable => Get<bool?>(() => Attachable);
     /// <summary>Auxiliary IPv4 or IPv6 addresses used by Network driver.</summary>
-    [Argument(Format = "--aux-address {value}")] public IReadOnlyDictionary<string, string> AuxAddress => Get<Dictionary<string, string>>(() => AuxAddress);
+    [Argument(Format = "--aux-address {key}:{value}")] public IReadOnlyDictionary<string, string> AuxAddress => Get<Dictionary<string, string>>(() => AuxAddress);
     /// <summary>The network from which copying the configuration.</summary>
     [Argument(Format = "--config-from {value}")] public string ConfigFrom => Get<string>(() => ConfigFrom);
     /// <summary>Create a configuration only network.</summary>
@@ -4497,13 +4497,13 @@ public partial class DockerNetworkCreateSettings : DockerOptionsBase
     /// <summary>IP Address Management Driver.</summary>
     [Argument(Format = "--ipam-driver {value}")] public string IpamDriver => Get<string>(() => IpamDriver);
     /// <summary>Set IPAM driver specific options.</summary>
-    [Argument(Format = "--ipam-opt {value}")] public IReadOnlyDictionary<string, string> IpamOpt => Get<Dictionary<string, string>>(() => IpamOpt);
+    [Argument(Format = "--ipam-opt {key}:{value}")] public IReadOnlyDictionary<string, string> IpamOpt => Get<Dictionary<string, string>>(() => IpamOpt);
     /// <summary>Enable IPv6 networking.</summary>
     [Argument(Format = "--ipv6")] public bool? Ipv6 => Get<bool?>(() => Ipv6);
     /// <summary>Set metadata on a network.</summary>
     [Argument(Format = "--label {value}")] public IReadOnlyList<string> Label => Get<List<string>>(() => Label);
     /// <summary>Set driver specific options.</summary>
-    [Argument(Format = "--opt {value}")] public IReadOnlyDictionary<string, string> Opt => Get<Dictionary<string, string>>(() => Opt);
+    [Argument(Format = "--opt {key}:{value}")] public IReadOnlyDictionary<string, string> Opt => Get<Dictionary<string, string>>(() => Opt);
     /// <summary>Control the network's scope.</summary>
     [Argument(Format = "--scope {value}")] public string Scope => Get<string>(() => Scope);
     /// <summary>Subnet in CIDR format that represents a network segment.</summary>
@@ -4861,7 +4861,7 @@ public partial class DockerContainerRunSettings : DockerOptionsBase
     /// <summary>Storage driver options for the container.</summary>
     [Argument(Format = "--storage-opt {value}")] public IReadOnlyList<string> StorageOpt => Get<List<string>>(() => StorageOpt);
     /// <summary>Sysctl options.</summary>
-    [Argument(Format = "--sysctl {value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
+    [Argument(Format = "--sysctl {key}:{value}")] public IReadOnlyDictionary<string, string> Sysctl => Get<Dictionary<string, string>>(() => Sysctl);
     /// <summary>Mount a tmpfs directory.</summary>
     [Argument(Format = "--tmpfs {value}")] public IReadOnlyList<string> Tmpfs => Get<List<string>>(() => Tmpfs);
     /// <summary>Allocate a pseudo-TTY.</summary>
@@ -5079,7 +5079,7 @@ public partial class DockerPluginInstallSettings : DockerOptionsBase
     /// <summary>PLUGIN</summary>
     [Argument(Format = "{value}")] public string Plugin => Get<string>(() => Plugin);
     /// <summary>[KEY=VALUE...]</summary>
-    [Argument(Format = "{value}")] public IReadOnlyDictionary<string, string> KeyValues => Get<Dictionary<string, string>>(() => KeyValues);
+    [Argument(Format = "{key}={value}")] public IReadOnlyDictionary<string, string> KeyValues => Get<Dictionary<string, string>>(() => KeyValues);
 }
 #endregion
 #region DockerImagePruneSettings
@@ -5673,7 +5673,7 @@ public partial class DockerPluginSetSettings : DockerOptionsBase
     /// <summary>PLUGIN</summary>
     [Argument(Format = "{value}")] public string Plugin => Get<string>(() => Plugin);
     /// <summary>KEY=VALUE</summary>
-    [Argument(Format = "{value}")] public IReadOnlyDictionary<string, string> KeyValues => Get<Dictionary<string, string>>(() => KeyValues);
+    [Argument(Format = "{key}={value}")] public IReadOnlyDictionary<string, string> KeyValues => Get<Dictionary<string, string>>(() => KeyValues);
 }
 #endregion
 #region DockerWaitSettings
