@@ -102,10 +102,10 @@ public class SettingsTest
     {
         var projectFile = RootDirectory / "source" / "Nuke.Common" / "Nuke.Common.csproj";
 
-        Assert<OpenCoverSettings>(x => x
+        Assert(new OpenCoverSettings()
                 .SetTargetPath(projectFile)
-                .AddFilters("+[*]*", "-[xunit.*]*", "-[NUnit.*]*")
-                .SetTargetArguments("-diagnostics -HTML \"new folder\\data.xml\""),
+                .SetTargetArguments("-diagnostics -HTML \"new folder\\data.xml\"")
+                .AddFilters("+[*]*", "-[xunit.*]*", "-[NUnit.*]*"),
             $"-target:{projectFile.ToString().DoubleQuoteIfNeeded()} -targetargs:\"-diagnostics -HTML \\\"new folder\\data.xml\\\"\" -filter:\"+[*]* -[xunit.*]* -[NUnit.*]*\"");
     }
 

@@ -114,7 +114,8 @@ partial class ToolOptions
             {
                 var formatterType = attribute.FormatterType ?? GetType();
                 var formatterMethod = formatterType.GetMethod(attribute.FormatterMethod, ReflectionUtility.All);
-                value = formatterMethod.GetValue<string>(obj: this, args: [token.ToObject(type), property]);
+                var objValue = type != typeof(object) ? token.ToObject(type) : token.ToObject<string>();
+                value = formatterMethod.GetValue<string>(obj: this, args: [objValue, property]);
             }
             else
             {
@@ -148,6 +149,7 @@ partial class ToolOptions
 
             if (attribute.Separator == null)
             {
+                Assert.False(attribute.QuoteMultiple);
                 return from value in values
                        from part in formatParts
                        select part.Replace(ValuePlaceholder, value);
@@ -159,10 +161,14 @@ partial class ToolOptions
                 if (valueStart == -1)
                     return [part];
 
-                if (attribute.Separator.IsNullOrWhiteSpace())
+                if (attribute.Separator.IsNullOrWhiteSpace() && !attribute.QuoteMultiple)
                     return values.Select(x => part.Replace(ValuePlaceholder, x));
 
-                return [part.Replace(ValuePlaceholder, values.Join(attribute.Separator))];
+                var joinedValues = values.Join(attribute.Separator);
+                if (attribute.QuoteMultiple)
+                    joinedValues = joinedValues.DoubleQuote();
+
+                return [part.Replace(ValuePlaceholder, joinedValues)];
             });
         }
 

@@ -95,7 +95,7 @@ public partial class BenchmarkDotNetSettings : ToolOptions
     /// <summary>The directory to restore packages to (optional).</summary>
     [Argument(Format = "--packages {value}")] public string RestorePath => Get<string>(() => RestorePath);
     /// <summary>Path(s) to CoreRun (optional).</summary>
-    [Argument(Format = "--coreRun {value}", Separator = " ")] public IReadOnlyList<string> CoreRunPaths => Get<List<string>>(() => CoreRunPaths);
+    [Argument(Format = "--coreRun {value}", Separator = " ", QuoteMultiple = true)] public IReadOnlyList<string> CoreRunPaths => Get<List<string>>(() => CoreRunPaths);
     /// <summary>Optional path to Mono which should be used for running benchmarks.</summary>
     [Argument(Format = "--monoPath {value}")] public string MonoPath => Get<string>(() => MonoPath);
     /// <summary>Optional version of private CLR build used as the value of <c>COMPLUS_Version</c> env var.</summary>

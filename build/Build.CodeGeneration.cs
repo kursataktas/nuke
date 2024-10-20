@@ -74,7 +74,7 @@ partial class Build
                 "NuGet.json",
                 "OctoVersion.json",
                 "Octopus.json",
-                // "OpenCover.json",
+                "OpenCover.json",
                 "Paket.json",
                 "PowerShell.json",
                 "Pulumi.json",

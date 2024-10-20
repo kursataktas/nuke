@@ -54,7 +54,7 @@ public partial class CoverletSettings : ToolOptions
     /// <summary>Path to the test runner application.</summary>
     [Argument(Format = "--target {value}")] public string Target => Get<string>(() => Target);
     /// <summary>Arguments to be passed to the test runner.</summary>
-    [Argument(Format = "--targetargs {value}", Separator = " ")] public IReadOnlyList<string> TargetArgs => Get<List<string>>(() => TargetArgs);
+    [Argument(Format = "--targetargs {value}", Separator = " ", QuoteMultiple = true)] public IReadOnlyList<string> TargetArgs => Get<List<string>>(() => TargetArgs);
     /// <summary>Output of the generated coverage report</summary>
     [Argument(Format = "--output {value}")] public string Output => Get<string>(() => Output);
     /// <summary>Format of the generated coverage report.Can be specified multiple times to output multiple formats in a single run.</summary>

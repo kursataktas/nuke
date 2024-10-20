@@ -17,13 +17,9 @@ namespace Nuke.Common.Tests;
 
 public class ToolOptionsArgumentsTest
 {
-    [Fact]
-    public void TestBool()
-    {
-        Assert<BoolToolOptions>(new { Bool = true }, ["/bool:true",]);
-        Assert<BoolToolOptions>(new { Flag = true }, ["/flag"]);
-        Assert<BoolToolOptions>(new { Flag = false }, []);
-    }
+    [Fact] public void TestBool_Simple() => Assert<BoolToolOptions>(new { Bool = true }, ["/bool:true",]);
+    [Fact] public void TestBool_FlagTrue() => Assert<BoolToolOptions>(new { Flag = true }, ["/flag"]);
+    [Fact] public void TestBool_FlagFalse() => Assert<BoolToolOptions>(new { Flag = false }, []);
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class BoolToolOptions : ToolOptions
@@ -32,11 +28,12 @@ public class ToolOptionsArgumentsTest
         [Argument(Format = "/flag")] public bool? Flag => Get<bool>(() => Flag);
     }
 
-    [Fact]
-    public void TestString()
-    {
-        Assert<StringToolOptions>(new { String = "value" }, ["--string", "value",]);
+    [Fact] public void TestString_Simple() => Assert<StringToolOptions>(new { String = "value" }, ["--string", "value"]);
+    [Fact] public void TestString_Quoted() => Assert<StringToolOptions>(new { String = "white space" }, ["--string", "\"white space\""]);
 
+    [Fact]
+    public void TestString_Secret()
+    {
         var options = SetInternalOptions<StringToolOptions>(new { Secret = "secret-value" });
         options.GetSecrets().Should().Equal("secret-value");
     }
@@ -48,11 +45,7 @@ public class ToolOptionsArgumentsTest
         [Argument(Format = "--secret {value}", Secret = true)] public string Secret => Get<string>(() => Secret);
     }
 
-    [Fact]
-    public void TestImplicit()
-    {
-        Assert<ImplicitToolOptions>(new { String = "value" }, ["implicit argument", "--string", "value"]);
-    }
+    [Fact] public void TestImplicit() => Assert<ImplicitToolOptions>(new { String = "value" }, ["implicit argument", "--string", "value"]);
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     [Command(Arguments = "implicit argument")]
@@ -77,20 +70,16 @@ public class ToolOptionsArgumentsTest
         [Argument(Format = "/flag2")] public bool Flag2 => Get<bool>(() => Flag2);
     }
 
-    [Fact]
-    public void TestPosition()
-    {
-        Assert<PositionToolOptions>(
-            new
-            {
-                SecondToLast = "second-last",
-                Second = "second",
-                Middle = "middle",
-                First = "first",
-                Last = "last"
-            },
-            arguments: ["first", "second", "middle", "second-last", "last"]);
-    }
+    [Fact] public void TestPosition() => Assert<PositionToolOptions>(
+        new
+        {
+            SecondToLast = "second-last",
+            Second = "second",
+            Middle = "middle",
+            First = "first",
+            Last = "last"
+        },
+        arguments: ["first", "second", "middle", "second-last", "last"]);
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class PositionToolOptions : ToolOptions
@@ -102,13 +91,9 @@ public class ToolOptionsArgumentsTest
         [Argument(Format = "{value}", Position = -2)] public string SecondToLast => Get<string>(() => SecondToLast);
     }
 
-    [Fact]
-    public void TestFormatter()
-    {
-        Assert<FormatToolOptions>(new { Time = DateTime.UnixEpoch.AddHours(1).AddMinutes(15) }, ["01:15"]);
-        Assert<FormatToolOptions>(new { Date = DateTime.UnixEpoch }, ["01/01/1970"]);
-        Assert<FormatToolOptions>(new { Minutes = TimeSpan.FromMinutes(10) }, ["10"]);
-    }
+    [Fact] public void TestFormatter_Method1() => Assert<FormatToolOptions>(new { Time = DateTime.UnixEpoch.AddHours(1).AddMinutes(15) }, ["01:15"]);
+    [Fact] public void TestFormatter_Method2() => Assert<FormatToolOptions>(new { Date = DateTime.UnixEpoch }, ["01/01/1970"]);
+    [Fact] public void TestFormatter_TypeMethod() => Assert<FormatToolOptions>(new { Minutes = TimeSpan.FromMinutes(10) }, ["10"]);
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class FormatToolOptions : ToolOptions
@@ -131,15 +116,13 @@ public class ToolOptionsArgumentsTest
         public static string FormatMinutes(TimeSpan timespan, PropertyInfo _) => timespan.TotalMinutes.ToString(CultureInfo.InvariantCulture);
     }
 
-    [Fact]
-    public void TestList()
-    {
-        Assert<ListToolOptions>(new { SimpleList = new[] { "a", "b" } }, ["--param", "a", "--param", "b"]);
-        Assert<ListToolOptions>(new { SeparatorList = new[] { "a", "b" } }, ["--param", "a+b"]);
-        Assert<ListToolOptions>(new { WhitespaceList = new[] { "a", "b" } }, ["--param", "a", "b"]);
-        Assert<ListToolOptions>(new { QuotedList = new[] { "a", "b" } }, ["--param:\"a b\""]);
-        Assert<ListToolOptions>(new { FormattedList = new[] { "true", "false" } }, ["--param=TRUE", "--param=FALSE"]);
-    }
+    [Fact] public void TestList_Simple() => Assert<ListToolOptions>(new { SimpleList = new[] { "a", "b" } }, ["--param", "a", "--param", "b"]);
+    [Fact] public void TestList_Quoted() => Assert<ListToolOptions>(new { SimpleList = new[] { "white space" } }, ["--param", "\"white space\""]);
+    [Fact] public void TestList_Separator() => Assert<ListToolOptions>(new { SeparatorList = new[] { "a", "b" } }, ["--param", "a+b"]);
+    [Fact] public void TestList_Whitespace() => Assert<ListToolOptions>(new { WhitespaceList = new[] { "a", "b" } }, ["--param", "a", "b"]);
+    [Fact] public void TestList_QuoteMultiple() => Assert<ListToolOptions>(new { QuotedList = new[] { "a", "b" } }, ["--param:\"a b\""]);
+    [Fact] public void TestList_QuoteMultiple_WhitespaceValue() => Assert<ListToolOptions>(new { QuotedList = new[] { "a", "white space" } }, ["--param:\"a \\\"white space\\\"\""]);
+    [Fact] public void TestList_Formatted() => Assert<ListToolOptions>(new { FormattedList = new[] { "true", "false" } }, ["--param=TRUE", "--param=FALSE"]);
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class ListToolOptions : ToolOptions
@@ -153,18 +136,13 @@ public class ToolOptionsArgumentsTest
         private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();
     }
 
-    [Fact]
-    public void TestDictionary()
-    {
-        var dictionary = new Dictionary<string, object> { ["key1"] = 1, ["key2"] = "foobar" };
-        Assert<DictionaryToolOptions>(new { SimpleDictionary = dictionary }, ["-p", "key1=1", "-p", "key2=foobar"]);
-        Assert<DictionaryToolOptions>(new { Simple2Dictionary = dictionary }, ["-p", "key1", "1", "-p", "key2", "foobar"]);
-        Assert<DictionaryToolOptions>(new { SeparatorDictionary = dictionary }, ["/p:key1=1;key2=foobar"]);
-        Assert<DictionaryToolOptions>(new { WhitespaceDictionary = dictionary }, ["--", "key1=1", "key2=foobar"]);
+    private readonly Dictionary<string, object> _simpleDictionary = new() { ["key1"] = 1, ["key2"] = "foobar" };
 
-        var boolDictionary = new Dictionary<string, bool> { ["key1"] = true, ["key2"] = false };
-        Assert<DictionaryToolOptions>(new { FormattedDictionary = boolDictionary }, ["/p:key1=TRUE", "/p:key2=FALSE"]);
-    }
+    [Fact] public void TestDictionary_Simple1() => Assert<DictionaryToolOptions>(new { SimpleDictionary = _simpleDictionary }, ["-p", "key1=1", "-p", "key2=foobar"]);
+    [Fact] public void TestDictionary_Simple2() => Assert<DictionaryToolOptions>(new { Simple2Dictionary = _simpleDictionary }, ["-p", "key1", "1", "-p", "key2", "foobar"]);
+    [Fact] public void TestDictionary_Separator() => Assert<DictionaryToolOptions>(new { SeparatorDictionary = _simpleDictionary }, ["/p:key1=1;key2=foobar"]);
+    [Fact] public void TestDictionary_Whitespace() => Assert<DictionaryToolOptions>(new { WhitespaceDictionary = _simpleDictionary }, ["--", "key1=1", "key2=foobar"]);
+    [Fact] public void TestDictionary_Formatted() => Assert<DictionaryToolOptions>(new { FormattedDictionary = _simpleDictionary }, ["/p:key1=1", "/p:key2=FOOBAR"]);
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class DictionaryToolOptions : ToolOptions
@@ -173,9 +151,9 @@ public class ToolOptionsArgumentsTest
         [Argument(Format = "-p {key} {value}")] public IReadOnlyDictionary<string, object> Simple2Dictionary => Get<Dictionary<string, object>>(() => Simple2Dictionary);
         [Argument(Format = "/p:{key}={value}", Separator = ";")] public IReadOnlyDictionary<string, object> SeparatorDictionary => Get<Dictionary<string, object>>(() => SeparatorDictionary);
         [Argument(Format = "-- {key}={value}", Separator = " ")] public IReadOnlyDictionary<string, object> WhitespaceDictionary => Get<Dictionary<string, object>>(() => WhitespaceDictionary);
-        [Argument(Format = "/p:{key}={value}", FormatterMethod = nameof(Format))] public IReadOnlyDictionary<string, bool> FormattedDictionary => Get<Dictionary<string, bool>>(() => FormattedDictionary);
+        [Argument(Format = "/p:{key}={value}", FormatterMethod = nameof(Format))] public IReadOnlyDictionary<string, object> FormattedDictionary => Get<Dictionary<string, object>>(() => FormattedDictionary);
 
-        private string Format(bool value, PropertyInfo property) => value.ToString().ToUpperInvariant();
+        private string Format(object value, PropertyInfo property) => value?.ToString()?.ToUpperInvariant();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
@@ -194,18 +172,15 @@ public class ToolOptionsArgumentsTest
     }
 
     [Fact]
-    public void TestAdditionalArguments()
-    {
-        var arguments = new[] { "first", "second" };
-        Assert<AdditionalArgumentsToolOptions>(
-            new
-            {
-                String = "value",
-                ProcessAdditionalArguments = arguments
-            },
-            new[] { "--string", "value" }.Concat(arguments));
-    }
+    public void TestAdditionalArguments() => Assert<AdditionalArgumentsToolOptions>(
+        new
+        {
+            String = "value",
+            ProcessAdditionalArguments = new[] { "first", "second" }
+        },
+        arguments: ["--string", "value", "first", "second"]);
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     private class AdditionalArgumentsToolOptions : ToolOptions
     {
         [Argument(Format = "--string {value}")] public string String => Get<string>(() => String);
