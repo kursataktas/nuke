@@ -14,6 +14,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Nuke.Common.ValueInjection;
+using Nuke.Tooling;
 
 namespace Nuke.Common.Tools.OctoVersion;
 

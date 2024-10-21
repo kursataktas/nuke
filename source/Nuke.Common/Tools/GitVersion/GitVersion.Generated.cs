@@ -22,11 +22,12 @@ namespace Nuke.Common.Tools.GitVersion;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
-[NuGetTool(Id = PackageId)]
+[NuGetTool(Id = PackageId, Executable = PackageExecutable)]
 public partial class GitVersionTasks : ToolTasks
 {
     public static string GitVersionPath => new GitVersionTasks().GetToolPath();
     public const string PackageId = "GitVersion.Tool";
+    public const string PackageExecutable = "GitVersion.dll|GitVersion.exe";
     /// <summary><p>GitVersion is a tool to help you achieve Semantic Versioning on your project.</p><p>For more details, visit the <a href="http://gitversion.readthedocs.io/en/stable/">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> GitVersion(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<GitVersionTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>GitVersion is a tool to help you achieve Semantic Versioning on your project.</p><p>For more details, visit the <a href="http://gitversion.readthedocs.io/en/stable/">official website</a>.</p></summary>
@@ -45,7 +46,7 @@ public partial class GitVersionTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<GitVersionSettings>))]
 [Command(Type = typeof(GitVersionTasks), Command = nameof(GitVersionTasks.GitVersion))]
-public partial class GitVersionSettings : ToolOptions
+public partial class GitVersionSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The directory containing .git. If not defined current directory is used. (Must be first argument).</summary>
     [Argument(Format = "{value}", Position = 1)] public string TargetPath => Get<string>(() => TargetPath);
@@ -95,8 +96,6 @@ public partial class GitVersionSettings : ToolOptions
     [Argument(Format = "/projargs {value}")] public string MSBuildProjectArguments => Get<string>(() => MSBuildProjectArguments);
     /// <summary>Set Verbosity level (<c>debug</c>, <c>info</c>, <c>warn</c>, <c>error</c>, <c>none</c>). Default is <c>info</c>.</summary>
     [Argument(Format = "/verbosity {value}")] public GitVersionVerbosity Verbosity => Get<GitVersionVerbosity>(() => Verbosity);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region GitVersionSettingsExtensions
@@ -383,14 +382,6 @@ public static partial class GitVersionSettingsExtensions
     /// <inheritdoc cref="GitVersionSettings.Verbosity"/>
     [Pure] [Builder(Type = typeof(GitVersionSettings), Property = nameof(GitVersionSettings.Verbosity))]
     public static T ResetVerbosity<T>(this T o) where T : GitVersionSettings => o.Modify(b => b.Remove(() => o.Verbosity));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="GitVersionSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(GitVersionSettings), Property = nameof(GitVersionSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : GitVersionSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="GitVersionSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(GitVersionSettings), Property = nameof(GitVersionSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : GitVersionSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

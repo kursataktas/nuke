@@ -55,7 +55,7 @@ public partial class OctoVersionTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctoVersionGetVersionSettings>))]
 [Command(Type = typeof(OctoVersionTasks), Command = nameof(OctoVersionTasks.OctoVersionGetVersion), Arguments = "octoversion")]
-public partial class OctoVersionGetVersionSettings : ToolOptions
+public partial class OctoVersionGetVersionSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Pass in the name of the branch. If not set, OctoVersion will attempt to derive it, but this may lead to incorrect values.</summary>
     [Argument(Format = "--CurrentBranch {value}")] public string CurrentBranch => Get<string>(() => CurrentBranch);
@@ -81,8 +81,6 @@ public partial class OctoVersionGetVersionSettings : ToolOptions
     [Argument(Format = "--DetectEnvironment {value}")] public bool? DetectEnvironment => Get<bool?>(() => DetectEnvironment);
     /// <summary>Emit json to the specified file. Ensure that either the `JsonFile` output formatter is added, or that `DetectEnvironment` is `true`.</summary>
     [Argument(Format = "--OutputJsonFile {value}")] public string OutputJsonFile => Get<string>(() => OutputJsonFile);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctoVersionExecuteSettings
@@ -91,7 +89,7 @@ public partial class OctoVersionGetVersionSettings : ToolOptions
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctoVersionExecuteSettings>))]
 [Command(Type = typeof(OctoVersionTasks), Command = nameof(OctoVersionTasks.OctoVersionExecute), Arguments = "octoversion")]
-public partial class OctoVersionExecuteSettings : ToolOptions
+public partial class OctoVersionExecuteSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Pass in the name of the branch. If not set, OctoVersion will attempt to derive it, but this may lead to incorrect values.</summary>
     [Argument(Format = "--CurrentBranch {value}")] public string CurrentBranch => Get<string>(() => CurrentBranch);
@@ -117,8 +115,6 @@ public partial class OctoVersionExecuteSettings : ToolOptions
     [Argument(Format = "--DetectEnvironment {value}")] public bool? DetectEnvironment => Get<bool?>(() => DetectEnvironment);
     /// <summary>Emit json to the specified file. Ensure that either the `JsonFile` output formatter is added, or that `DetectEnvironment` is `true`.</summary>
     [Argument(Format = "--OutputJsonFile {value}")] public string OutputJsonFile => Get<string>(() => OutputJsonFile);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctoVersionGetVersionSettingsExtensions
@@ -262,14 +258,6 @@ public static partial class OctoVersionGetVersionSettingsExtensions
     [Pure] [Builder(Type = typeof(OctoVersionGetVersionSettings), Property = nameof(OctoVersionGetVersionSettings.OutputJsonFile))]
     public static T ResetOutputJsonFile<T>(this T o) where T : OctoVersionGetVersionSettings => o.Modify(b => b.Remove(() => o.OutputJsonFile));
     #endregion
-    #region Framework
-    /// <inheritdoc cref="OctoVersionGetVersionSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctoVersionGetVersionSettings), Property = nameof(OctoVersionGetVersionSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : OctoVersionGetVersionSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="OctoVersionGetVersionSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctoVersionGetVersionSettings), Property = nameof(OctoVersionGetVersionSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : OctoVersionGetVersionSettings => o.Modify(b => b.Remove(() => o.Framework));
-    #endregion
 }
 #endregion
 #region OctoVersionExecuteSettingsExtensions
@@ -412,14 +400,6 @@ public static partial class OctoVersionExecuteSettingsExtensions
     /// <inheritdoc cref="OctoVersionExecuteSettings.OutputJsonFile"/>
     [Pure] [Builder(Type = typeof(OctoVersionExecuteSettings), Property = nameof(OctoVersionExecuteSettings.OutputJsonFile))]
     public static T ResetOutputJsonFile<T>(this T o) where T : OctoVersionExecuteSettings => o.Modify(b => b.Remove(() => o.OutputJsonFile));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="OctoVersionExecuteSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctoVersionExecuteSettings), Property = nameof(OctoVersionExecuteSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : OctoVersionExecuteSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="OctoVersionExecuteSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctoVersionExecuteSettings), Property = nameof(OctoVersionExecuteSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : OctoVersionExecuteSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

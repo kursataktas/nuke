@@ -45,7 +45,7 @@ public partial class XunitTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<Xunit2Settings>))]
 [Command(Type = typeof(XunitTasks), Command = nameof(XunitTasks.Xunit2))]
-public partial class Xunit2Settings : ToolOptions
+public partial class Xunit2Settings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Assemblies to test, and their related related configuration files (ending with .json or .config).</summary>
     [Argument(Format = "{key} {value}", Position = 1)] public ILookup<string, string> TargetAssemblyWithConfigs => Get<LookupTable<string, string>>(() => TargetAssemblyWithConfigs);
@@ -91,8 +91,6 @@ public partial class Xunit2Settings : ToolOptions
     [Argument(Format = "-{value}")] public Xunit2ReporterType Reporter => Get<Xunit2ReporterType>(() => Reporter);
     /// <summary>Result formats:<ul><li><c>-xml</c>: output results to xUnit.net v2 XML file</li><li><c>-xmlv1</c>: output results to xUnit.net v1 XML file</li><li><c>-nunit</c>: output results to NUnit v2.5 XML file</li><li><c>-html</c>: output results to HTML file</li></ul></summary>
     [Argument(Format = "-{key} {value}")] public IReadOnlyDictionary<Xunit2ResultFormat, string> ResultReports => Get<Dictionary<Xunit2ResultFormat, string>>(() => ResultReports);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region Xunit2SettingsExtensions
@@ -474,14 +472,6 @@ public static partial class Xunit2SettingsExtensions
     /// <inheritdoc cref="Xunit2Settings.ResultReports"/>
     [Pure] [Builder(Type = typeof(Xunit2Settings), Property = nameof(Xunit2Settings.ResultReports))]
     public static T ClearResultReports<T>(this T o) where T : Xunit2Settings => o.Modify(b => b.ClearDictionary(() => o.ResultReports));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="Xunit2Settings.Framework"/>
-    [Pure] [Builder(Type = typeof(Xunit2Settings), Property = nameof(Xunit2Settings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : Xunit2Settings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="Xunit2Settings.Framework"/>
-    [Pure] [Builder(Type = typeof(Xunit2Settings), Property = nameof(Xunit2Settings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : Xunit2Settings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

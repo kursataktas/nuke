@@ -22,11 +22,12 @@ namespace Nuke.Common.Tools.MinVer;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
-[NuGetTool(Id = PackageId)]
+[NuGetTool(Id = PackageId, Executable = PackageExecutable)]
 public partial class MinVerTasks : ToolTasks
 {
     public static string MinVerPath => new MinVerTasks().GetToolPath();
     public const string PackageId = "minver-cli";
+    public const string PackageExecutable = "minver-cli.dll";
     /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> MinVer(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<MinVerTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>Minimalistic versioning using Git tags.</p><p>For more details, visit the <a href="https://github.com/adamralph/minver">official website</a>.</p></summary>
@@ -45,7 +46,7 @@ public partial class MinVerTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<MinVerSettings>))]
 [Command(Type = typeof(MinVerTasks), Command = nameof(MinVerTasks.MinVer))]
-public partial class MinVerSettings : ToolOptions
+public partial class MinVerSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary></summary>
     [Argument(Format = "--auto-increment {value}")] public MinVerVersionPart AutoIncrement => Get<MinVerVersionPart>(() => AutoIncrement);
@@ -59,8 +60,6 @@ public partial class MinVerSettings : ToolOptions
     [Argument(Format = "--tag-prefix {value}")] public string TagPrefix => Get<string>(() => TagPrefix);
     /// <summary></summary>
     [Argument(Format = "--verbosity {value}")] public MinVerVerbosity Verbosity => Get<MinVerVerbosity>(() => Verbosity);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region MinVerSettingsExtensions
@@ -116,14 +115,6 @@ public static partial class MinVerSettingsExtensions
     /// <inheritdoc cref="MinVerSettings.Verbosity"/>
     [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Verbosity))]
     public static T ResetVerbosity<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.Verbosity));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="MinVerSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : MinVerSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="MinVerSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(MinVerSettings), Property = nameof(MinVerSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : MinVerSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

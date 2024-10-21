@@ -13,14 +13,6 @@ namespace Nuke.Common.Tools.MinVer;
 
 partial class MinVerTasks
 {
-    protected override string GetToolPath(ToolOptions options = null)
-    {
-        return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: PackageId,
-            packageExecutable: "minver-cli.dll",
-            framework: (options as MinVerSettings)?.Framework);
-    }
-
     protected override object GetResult<T>(ToolOptions options, IReadOnlyCollection<Output> output)
     {
         var versionString = output.Select(x => x.Text).Single(x => !x.StartsWith("MinVer:"));

@@ -15,14 +15,6 @@ namespace Nuke.Common.Tools.GitVersion;
 
 partial class GitVersionTasks
 {
-    protected override string GetToolPath(ToolOptions options = null)
-    {
-        return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: PackageId,
-            packageExecutable: "GitVersion.dll|GitVersion.exe",
-            framework: (options as GitVersionSettings)?.Framework);
-    }
-
     protected override object GetResult<T>(ToolOptions options, IReadOnlyCollection<Output> output)
     {
         try

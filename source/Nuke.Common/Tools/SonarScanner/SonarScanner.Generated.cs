@@ -22,11 +22,12 @@ namespace Nuke.Common.Tools.SonarScanner;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
-[NuGetTool(Id = PackageId)]
+[NuGetTool(Id = PackageId, Executable = PackageExecutable)]
 public partial class SonarScannerTasks : ToolTasks
 {
     public static string SonarScannerPath => new SonarScannerTasks().GetToolPath();
     public const string PackageId = "dotnet-sonarscanner";
+    public const string PackageExecutable = "SonarScanner.MSBuild.dll|SonarScanner.MSBuild.exe";
     /// <summary><p>The SonarScanner for MSBuild is the recommended way to launch a SonarQube or SonarCloud analysis for projects/solutions using MSBuild or dotnet command as build tool.</p><p>For more details, visit the <a href="https://www.sonarqube.org/">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> SonarScanner(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<SonarScannerTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>The SonarScanner for MSBuild is the recommended way to launch a SonarQube or SonarCloud analysis for projects/solutions using MSBuild or dotnet command as build tool.</p><p>For more details, visit the <a href="https://www.sonarqube.org/">official website</a>.</p></summary>
@@ -54,7 +55,7 @@ public partial class SonarScannerTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<SonarScannerBeginSettings>))]
 [Command(Type = typeof(SonarScannerTasks), Command = nameof(SonarScannerTasks.SonarScannerBegin), Arguments = "begin")]
-public partial class SonarScannerBeginSettings : ToolOptions
+public partial class SonarScannerBeginSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Specifies the key of the analyzed project in SonarQube.</summary>
     [Argument(Format = "/k:{value}", Secret = false)] public string ProjectKey => Get<string>(() => ProjectKey);
@@ -144,8 +145,6 @@ public partial class SonarScannerBeginSettings : ToolOptions
     [Argument(Format = "/d:sonar.clientcert.path={value}")] public string ClientCertificatePath => Get<string>(() => ClientCertificatePath);
     /// <summary>Specifies the password for the client certificate used to access SonarQube. Required if a client certificate is used.</summary>
     [Argument(Format = "/d:sonar.clientcert.password={value}")] public string ClientCertificatePassword => Get<string>(() => ClientCertificatePassword);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region SonarScannerEndSettings
@@ -154,7 +153,7 @@ public partial class SonarScannerBeginSettings : ToolOptions
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<SonarScannerEndSettings>))]
 [Command(Type = typeof(SonarScannerTasks), Command = nameof(SonarScannerTasks.SonarScannerEnd), Arguments = "end")]
-public partial class SonarScannerEndSettings : ToolOptions
+public partial class SonarScannerEndSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Specifies the username or access token to authenticate with to SonarQube. If this argument is added to the begin step, it must also be added on the end step.</summary>
     [Argument(Format = "/d:sonar.login={value}", Secret = true)] public string Login => Get<string>(() => Login);
@@ -164,8 +163,6 @@ public partial class SonarScannerEndSettings : ToolOptions
     [Argument(Format = "/d:sonar.token={value}", Secret = true)] public string Token => Get<string>(() => Token);
     /// <summary>Specifies the password for the client certificate used to access SonarQube. Required if a client certificate is used.</summary>
     [Argument(Format = "/d:sonar.clientcert.password={value}")] public string ClientCertificatePassword => Get<string>(() => ClientCertificatePassword);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region SonarScannerBeginSettingsExtensions
@@ -784,14 +781,6 @@ public static partial class SonarScannerBeginSettingsExtensions
     [Pure] [Builder(Type = typeof(SonarScannerBeginSettings), Property = nameof(SonarScannerBeginSettings.ClientCertificatePassword))]
     public static T ResetClientCertificatePassword<T>(this T o) where T : SonarScannerBeginSettings => o.Modify(b => b.Remove(() => o.ClientCertificatePassword));
     #endregion
-    #region Framework
-    /// <inheritdoc cref="SonarScannerBeginSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(SonarScannerBeginSettings), Property = nameof(SonarScannerBeginSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : SonarScannerBeginSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="SonarScannerBeginSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(SonarScannerBeginSettings), Property = nameof(SonarScannerBeginSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : SonarScannerBeginSettings => o.Modify(b => b.Remove(() => o.Framework));
-    #endregion
 }
 #endregion
 #region SonarScannerEndSettingsExtensions
@@ -831,14 +820,6 @@ public static partial class SonarScannerEndSettingsExtensions
     /// <inheritdoc cref="SonarScannerEndSettings.ClientCertificatePassword"/>
     [Pure] [Builder(Type = typeof(SonarScannerEndSettings), Property = nameof(SonarScannerEndSettings.ClientCertificatePassword))]
     public static T ResetClientCertificatePassword<T>(this T o) where T : SonarScannerEndSettings => o.Modify(b => b.Remove(() => o.ClientCertificatePassword));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="SonarScannerEndSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(SonarScannerEndSettings), Property = nameof(SonarScannerEndSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : SonarScannerEndSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="SonarScannerEndSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(SonarScannerEndSettings), Property = nameof(SonarScannerEndSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : SonarScannerEndSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

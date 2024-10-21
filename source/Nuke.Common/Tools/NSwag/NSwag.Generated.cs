@@ -22,11 +22,12 @@ namespace Nuke.Common.Tools.NSwag;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
-[NuGetTool(Id = PackageId)]
+[NuGetTool(Id = PackageId, Executable = PackageExecutable)]
 public partial class NSwagTasks : ToolTasks
 {
     public static string NSwagPath => new NSwagTasks().GetToolPath();
     public const string PackageId = "nswag.msbuild";
+    public const string PackageExecutable = "dotnet-nswag.dll|NSwag.exe";
     /// <summary><p>The project combines the functionality of Swashbuckle (Swagger generation) and AutoRest (client generation) in one toolchain. This way a lot of incompatibilites can be avoided and features which are not well described by the Swagger specification or JSON Schema are better supported (e.g. <a href="https://github.com/NJsonSchema/NJsonSchema/wiki/Inheritance">inheritance</a>, <a href="https://github.com/NJsonSchema/NJsonSchema/wiki/Enums">enum</a> and reference handling). The NSwag project heavily uses <a href="http://njsonschema.org/">NJsonSchema for .NET</a> for JSON Schema handling and C#/TypeScript class/interface generation.</p><p>For more details, visit the <a href="https://github.com/RSuter/NSwag">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> NSwag(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<NSwagTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>Prints the toolchain version.</p><p>For more details, visit the <a href="https://github.com/RSuter/NSwag">official website</a>.</p></summary>
@@ -207,7 +208,7 @@ public partial class NSwagTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagVersionSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagVersion), Arguments = "version")]
-public partial class NSwagVersionSettings : NSwagOptionsBase
+public partial class NSwagVersionSettings : ToolOptions, IToolOptionsWithFramework
 {
 }
 #endregion
@@ -217,7 +218,7 @@ public partial class NSwagVersionSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagListTypesSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagListTypes), Arguments = "list-types")]
-public partial class NSwagListTypesSettings : NSwagOptionsBase
+public partial class NSwagListTypesSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The nswag.json configuration file path.</summary>
     [Argument(Format = "/File:{value}")] public string File => Get<string>(() => File);
@@ -239,7 +240,7 @@ public partial class NSwagListTypesSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagListWebApiControllersSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagListWebApiControllers), Arguments = "list-controllers")]
-public partial class NSwagListWebApiControllersSettings : NSwagOptionsBase
+public partial class NSwagListWebApiControllersSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The nswag.json configuration file path.</summary>
     [Argument(Format = "/File:{value}")] public string File => Get<string>(() => File);
@@ -261,7 +262,7 @@ public partial class NSwagListWebApiControllersSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagTypesToOpenApiSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagTypesToOpenApi), Arguments = "types2openapi")]
-public partial class NSwagTypesToOpenApiSettings : NSwagOptionsBase
+public partial class NSwagTypesToOpenApiSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The output file path (optional).</summary>
     [Argument(Format = "/Output:{value}")] public string Output => Get<string>(() => Output);
@@ -283,7 +284,7 @@ public partial class NSwagTypesToOpenApiSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagTypesToSwaggerSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagTypesToSwagger), Arguments = "types2swagger")]
-public partial class NSwagTypesToSwaggerSettings : NSwagOptionsBase
+public partial class NSwagTypesToSwaggerSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Use $ref references even if additional properties are defined on the object (otherwise allOf/oneOf with $ref is used, default: false).</summary>
     [Argument(Format = "/AllowReferencesWithProperties:{value}")] public bool? AllowReferencesWithProperties => Get<bool?>(() => AllowReferencesWithProperties);
@@ -325,7 +326,7 @@ public partial class NSwagTypesToSwaggerSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagWebApiToOpenApiSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagWebApiToOpenApi), Arguments = "webapi2openapi")]
-public partial class NSwagWebApiToOpenApiSettings : NSwagOptionsBase
+public partial class NSwagWebApiToOpenApiSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Nullable body parameters are allowed (ignored when MvcOptions.AllowEmptyInputInBodyModelBinding is available (ASP.NET Core 2.0+), default: true).</summary>
     [Argument(Format = "/AllowNullableBodyParameters:{value}")] public bool? AllowNullableBodyParameters => Get<bool?>(() => AllowNullableBodyParameters);
@@ -413,7 +414,7 @@ public partial class NSwagWebApiToOpenApiSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagWebApiToSwaggerSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagWebApiToSwagger), Arguments = "webapi2swagger")]
-public partial class NSwagWebApiToSwaggerSettings : NSwagOptionsBase
+public partial class NSwagWebApiToSwaggerSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Specifies whether to add path parameters which are missing in the action method (default: true).</summary>
     [Argument(Format = "/AddMissingPathParameters:{value}")] public bool? AddMissingPathParameters => Get<bool?>(() => AddMissingPathParameters);
@@ -515,7 +516,7 @@ public partial class NSwagWebApiToSwaggerSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagAspNetCoreToOpenApiSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagAspNetCoreToOpenApi), Arguments = "aspnetcore2openapi")]
-public partial class NSwagAspNetCoreToOpenApiSettings : NSwagOptionsBase
+public partial class NSwagAspNetCoreToOpenApiSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Nullable body parameters are allowed (ignored when MvcOptions.AllowEmptyInputInBodyModelBinding is available (ASP.NET Core 2.0+), default: true).</summary>
     [Argument(Format = "/AllowNullableBodyParameters:{value}")] public bool? AllowNullableBodyParameters => Get<bool?>(() => AllowNullableBodyParameters);
@@ -603,7 +604,7 @@ public partial class NSwagAspNetCoreToOpenApiSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagAspNetCoreToSwaggerSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagAspNetCoreToSwagger), Arguments = "aspnetcore2swagger")]
-public partial class NSwagAspNetCoreToSwaggerSettings : NSwagOptionsBase
+public partial class NSwagAspNetCoreToSwaggerSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The ASP.NET Core API Explorer group names to include (comma separated, default: empty = all).</summary>
     [Argument(Format = "/ApiGroupNames:{value}")] public IReadOnlyList<string> ApiGroupNames => Get<List<string>>(() => ApiGroupNames);
@@ -711,7 +712,7 @@ public partial class NSwagAspNetCoreToSwaggerSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagCreateDocumentSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagCreateDocument), Arguments = "new")]
-public partial class NSwagCreateDocumentSettings : NSwagOptionsBase
+public partial class NSwagCreateDocumentSettings : ToolOptions, IToolOptionsWithFramework
 {
 }
 #endregion
@@ -721,7 +722,7 @@ public partial class NSwagCreateDocumentSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagExecuteDocumentSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagExecuteDocument), Arguments = "run")]
-public partial class NSwagExecuteDocumentSettings : NSwagOptionsBase
+public partial class NSwagExecuteDocumentSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary></summary>
     [Argument(Format = "/Input:{value}")] public string Input => Get<string>(() => Input);
@@ -735,7 +736,7 @@ public partial class NSwagExecuteDocumentSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagJsonSchemaToCSharpSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagJsonSchemaToCSharp), Arguments = "jsonschema2csclient")]
-public partial class NSwagJsonSchemaToCSharpSettings : NSwagOptionsBase
+public partial class NSwagJsonSchemaToCSharpSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The any .NET type (default: 'object').</summary>
     [Argument(Format = "/AnyType:{value}")] public string AnyType => Get<string>(() => AnyType);
@@ -773,7 +774,7 @@ public partial class NSwagJsonSchemaToCSharpSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagJsonSchemaToTypeScriptSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagJsonSchemaToTypeScript), Arguments = "jsonschema2tsclient")]
-public partial class NSwagJsonSchemaToTypeScriptSettings : NSwagOptionsBase
+public partial class NSwagJsonSchemaToTypeScriptSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The type name of the root schema.</summary>
     [Argument(Format = "/Name:{value}")] public string Name => Get<string>(() => Name);
@@ -793,7 +794,7 @@ public partial class NSwagJsonSchemaToTypeScriptSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagOpenApiToCSharpClientSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagOpenApiToCSharpClient), Arguments = "openapi2csclient")]
-public partial class NSwagOpenApiToCSharpClientSettings : NSwagOptionsBase
+public partial class NSwagOpenApiToCSharpClientSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The additional contract namespace usages.</summary>
     [Argument(Format = "/AdditionalContractNamespaceUsages:{value}")] public IReadOnlyList<string> AdditionalContractNamespaceUsages => Get<List<string>>(() => AdditionalContractNamespaceUsages);
@@ -907,7 +908,7 @@ public partial class NSwagOpenApiToCSharpClientSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagSwaggerToCSharpClientSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagSwaggerToCSharpClient), Arguments = "swagger2csclient")]
-public partial class NSwagSwaggerToCSharpClientSettings : NSwagOptionsBase
+public partial class NSwagSwaggerToCSharpClientSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The client base class (empty for no base class).</summary>
     [Argument(Format = "/ClientBaseClass:{value}")] public string ClientBaseClass => Get<string>(() => ClientBaseClass);
@@ -1075,7 +1076,7 @@ public partial class NSwagSwaggerToCSharpClientSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagOpenApiToCSharpControllerSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagOpenApiToCSharpController), Arguments = "openapi2cscontroller")]
-public partial class NSwagOpenApiToCSharpControllerSettings : NSwagOptionsBase
+public partial class NSwagOpenApiToCSharpControllerSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The additional contract namespace usages.</summary>
     [Argument(Format = "/AdditionalContractNamespaceUsages:{value}")] public IReadOnlyList<string> AdditionalContractNamespaceUsages => Get<List<string>>(() => AdditionalContractNamespaceUsages);
@@ -1189,7 +1190,7 @@ public partial class NSwagOpenApiToCSharpControllerSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagSwaggerToCSharpControllerSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagSwaggerToCSharpController), Arguments = "swagger2cscontroller")]
-public partial class NSwagSwaggerToCSharpControllerSettings : NSwagOptionsBase
+public partial class NSwagSwaggerToCSharpControllerSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The Base path on which the API is served, which is relative to the Host</summary>
     [Argument(Format = "/BasePath:{value}")] public string BasePath => Get<string>(() => BasePath);
@@ -1319,7 +1320,7 @@ public partial class NSwagSwaggerToCSharpControllerSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagOpenApiToTypeScriptClientSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagOpenApiToTypeScriptClient), Arguments = "openapi2tsclient")]
-public partial class NSwagOpenApiToTypeScriptClientSettings : NSwagOptionsBase
+public partial class NSwagOpenApiToTypeScriptClientSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The custom IEnumNameGenerator implementation type in the form 'assemblyName:fullTypeName' or 'fullTypeName').</summary>
     [Argument(Format = "/EnumNameGeneratorType:{value}")] public string EnumNameGeneratorType => Get<string>(() => EnumNameGeneratorType);
@@ -1345,7 +1346,7 @@ public partial class NSwagOpenApiToTypeScriptClientSettings : NSwagOptionsBase
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<NSwagSwaggerToTypeScriptClientSettings>))]
 [Command(Type = typeof(NSwagTasks), Command = nameof(NSwagTasks.NSwagSwaggerToTypeScriptClient), Arguments = "swagger2tsclient")]
-public partial class NSwagSwaggerToTypeScriptClientSettings : NSwagOptionsBase
+public partial class NSwagSwaggerToTypeScriptClientSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The token name for injecting the API base URL string (used in the Angular template, default: 'API_BASE_URL').</summary>
     [Argument(Format = "/BaseUrlTokenName:{value}")] public string BaseUrlTokenName => Get<string>(() => BaseUrlTokenName);
@@ -1457,17 +1458,6 @@ public partial class NSwagSwaggerToTypeScriptClientSettings : NSwagOptionsBase
     [Argument(Format = "/ServiceSchemes:{value}")] public IReadOnlyList<string> ServiceSchemes => Get<List<string>>(() => ServiceSchemes);
     /// <summary>The output file path (optional).</summary>
     [Argument(Format = "/Output:{value}")] public string Output => Get<string>(() => Output);
-}
-#endregion
-#region NSwagOptionsBase
-/// <summary>Used within <see cref="NSwagTasks"/>.</summary>
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-[TypeConverter(typeof(TypeConverter<NSwagOptionsBase>))]
-public partial class NSwagOptionsBase : ToolOptions
-{
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region NSwagVersionSettingsExtensions
@@ -8555,22 +8545,6 @@ public static partial class NSwagSwaggerToTypeScriptClientSettingsExtensions
     /// <inheritdoc cref="NSwagSwaggerToTypeScriptClientSettings.Output"/>
     [Pure] [Builder(Type = typeof(NSwagSwaggerToTypeScriptClientSettings), Property = nameof(NSwagSwaggerToTypeScriptClientSettings.Output))]
     public static T ResetOutput<T>(this T o) where T : NSwagSwaggerToTypeScriptClientSettings => o.Modify(b => b.Remove(() => o.Output));
-    #endregion
-}
-#endregion
-#region NSwagOptionsBaseExtensions
-/// <summary>Used within <see cref="NSwagTasks"/>.</summary>
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public static partial class NSwagOptionsBaseExtensions
-{
-    #region Framework
-    /// <inheritdoc cref="NSwagOptionsBase.Framework"/>
-    [Pure] [Builder(Type = typeof(NSwagOptionsBase), Property = nameof(NSwagOptionsBase.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : NSwagOptionsBase => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="NSwagOptionsBase.Framework"/>
-    [Pure] [Builder(Type = typeof(NSwagOptionsBase), Property = nameof(NSwagOptionsBase.Framework))]
-    public static T ResetFramework<T>(this T o) where T : NSwagOptionsBase => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

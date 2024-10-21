@@ -8,7 +8,8 @@
   "officialUrl": "https://www.sonarqube.org/",
   "help": "The SonarScanner for MSBuild is the recommended way to launch a SonarQube or SonarCloud analysis for projects/solutions using MSBuild or dotnet command as build tool.",
   "nugetPackageId": "dotnet-sonarscanner",
-  "customExecutable": true,
+  "nugetFramework": true,
+  "packageExecutable": "SonarScanner.MSBuild.dll|SonarScanner.MSBuild.exe",
   "tasks": [
     {
       "postfix": "Begin",
@@ -334,13 +335,6 @@
           }
         ]
       }
-    }
-  ],
-  "commonTaskProperties": [
-    {
-      "name": "Framework",
-      "type": "string",
-      "noArgument": true
     }
   ]
 }

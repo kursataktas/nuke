@@ -22,11 +22,12 @@ namespace Nuke.Common.Tools.Octopus;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
-[NuGetTool(Id = PackageId)]
+[NuGetTool(Id = PackageId, Executable = PackageExecutable)]
 public partial class OctopusTasks : ToolTasks
 {
     public static string OctopusPath => new OctopusTasks().GetToolPath();
     public const string PackageId = "Octopus.DotNet.Cli";
+    public const string PackageExecutable = "OctoVersion.Tool.dll";
     /// <summary><p>Octopus Deploy is an automated deployment server, which you install yourself, much like you would install SQL Server, Team Foundation Server or JetBrains TeamCity. Octopus makes it easy to automate deployment of ASP.NET web applications and Windows Services into development, test and production environments.<para/>Along with the Octopus Deploy server, you'll also install a lightweight agent service on each of the machines that you plan to deploy to, for example your web and application servers. We call this the Tentacle agent; the idea being that one Octopus server controls many Tentacles, potentially a lot more than 8! With Octopus and Tentacle, you can easily deploy to your own servers, or cloud services from providers like Amazon Web Services or Microsoft Azure.</p><p>For more details, visit the <a href="https://octopus.com/">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> Octopus(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => Run<OctopusTasks>(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>The <c>Octo.exe pack</c> command provides a number of other useful parameters that can be used to customize the way your package gets created, such as output folder, files to include and release notes.</p><p>For more details, visit the <a href="https://octopus.com/">official website</a>.</p></summary>
@@ -81,7 +82,7 @@ public partial class OctopusTasks : ToolTasks
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctopusPackSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusPack), Arguments = "pack")]
-public partial class OctopusPackSettings : ToolOptions
+public partial class OctopusPackSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>The ID of the package. E.g. <c>MyCompany.MyApp</c>.</summary>
     [Argument(Format = "--id={value}")] public string Id => Get<string>(() => Id);
@@ -119,7 +120,7 @@ public partial class OctopusPackSettings : ToolOptions
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctopusPushSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusPush), Arguments = "push")]
-public partial class OctopusPushSettings : ToolOptions
+public partial class OctopusPushSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Package file to push.</summary>
     [Argument(Format = "--package={value}")] public IReadOnlyList<string> Package => Get<List<string>>(() => Package);
@@ -153,8 +154,6 @@ public partial class OctopusPushSettings : ToolOptions
     [Argument(Format = "--space={value}")] public string Space => Get<string>(() => Space);
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusCreateReleaseSettings
@@ -163,7 +162,7 @@ public partial class OctopusPushSettings : ToolOptions
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctopusCreateReleaseSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusCreateRelease), Arguments = "create-release")]
-public partial class OctopusCreateReleaseSettings : ToolOptions
+public partial class OctopusCreateReleaseSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Name of the project.</summary>
     [Argument(Format = "--project={value}")] public string Project => Get<string>(() => Project);
@@ -255,8 +254,6 @@ public partial class OctopusCreateReleaseSettings : ToolOptions
     [Argument(Format = "--space={value}")] public string Space => Get<string>(() => Space);
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusDeployReleaseSettings
@@ -265,7 +262,7 @@ public partial class OctopusCreateReleaseSettings : ToolOptions
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctopusDeployReleaseSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusDeployRelease), Arguments = "deploy-release")]
-public partial class OctopusDeployReleaseSettings : ToolOptions
+public partial class OctopusDeployReleaseSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Show progress of the deployment.</summary>
     [Argument(Format = "--progress")] public bool? Progress => Get<bool?>(() => Progress);
@@ -337,8 +334,6 @@ public partial class OctopusDeployReleaseSettings : ToolOptions
     [Argument(Format = "--space={value}")] public string Space => Get<string>(() => Space);
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusBuildInformationSettings
@@ -347,7 +342,7 @@ public partial class OctopusDeployReleaseSettings : ToolOptions
 [ExcludeFromCodeCoverage]
 [TypeConverter(typeof(TypeConverter<OctopusBuildInformationSettings>))]
 [Command(Type = typeof(OctopusTasks), Command = nameof(OctopusTasks.OctopusBuildInformation), Arguments = "build-information")]
-public partial class OctopusBuildInformationSettings : ToolOptions
+public partial class OctopusBuildInformationSettings : ToolOptions, IToolOptionsWithFramework
 {
     /// <summary>Id of the package.</summary>
     [Argument(Format = "--package-id={value}")] public IReadOnlyList<string> PackageId => Get<List<string>>(() => PackageId);
@@ -385,8 +380,6 @@ public partial class OctopusBuildInformationSettings : ToolOptions
     [Argument(Format = "--space={value}")] public string Space => Get<string>(() => Space);
     /// <summary>The log level. Valid options are verbose, debug, information, warning, error and fatal. Defaults to 'debug'.</summary>
     [Argument(Format = "--logLevel={value}")] public string LogLevel => Get<string>(() => LogLevel);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
 }
 #endregion
 #region OctopusPackSettingsExtensions
@@ -741,14 +734,6 @@ public static partial class OctopusPushSettingsExtensions
     /// <inheritdoc cref="OctopusPushSettings.LogLevel"/>
     [Pure] [Builder(Type = typeof(OctopusPushSettings), Property = nameof(OctopusPushSettings.LogLevel))]
     public static T ResetLogLevel<T>(this T o) where T : OctopusPushSettings => o.Modify(b => b.Remove(() => o.LogLevel));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="OctopusPushSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusPushSettings), Property = nameof(OctopusPushSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : OctopusPushSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="OctopusPushSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusPushSettings), Property = nameof(OctopusPushSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : OctopusPushSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion
@@ -1283,14 +1268,6 @@ public static partial class OctopusCreateReleaseSettingsExtensions
     [Pure] [Builder(Type = typeof(OctopusCreateReleaseSettings), Property = nameof(OctopusCreateReleaseSettings.LogLevel))]
     public static T ResetLogLevel<T>(this T o) where T : OctopusCreateReleaseSettings => o.Modify(b => b.Remove(() => o.LogLevel));
     #endregion
-    #region Framework
-    /// <inheritdoc cref="OctopusCreateReleaseSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusCreateReleaseSettings), Property = nameof(OctopusCreateReleaseSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : OctopusCreateReleaseSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="OctopusCreateReleaseSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusCreateReleaseSettings), Property = nameof(OctopusCreateReleaseSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : OctopusCreateReleaseSettings => o.Modify(b => b.Remove(() => o.Framework));
-    #endregion
 }
 #endregion
 #region OctopusDeployReleaseSettingsExtensions
@@ -1717,14 +1694,6 @@ public static partial class OctopusDeployReleaseSettingsExtensions
     [Pure] [Builder(Type = typeof(OctopusDeployReleaseSettings), Property = nameof(OctopusDeployReleaseSettings.LogLevel))]
     public static T ResetLogLevel<T>(this T o) where T : OctopusDeployReleaseSettings => o.Modify(b => b.Remove(() => o.LogLevel));
     #endregion
-    #region Framework
-    /// <inheritdoc cref="OctopusDeployReleaseSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusDeployReleaseSettings), Property = nameof(OctopusDeployReleaseSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : OctopusDeployReleaseSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="OctopusDeployReleaseSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusDeployReleaseSettings), Property = nameof(OctopusDeployReleaseSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : OctopusDeployReleaseSettings => o.Modify(b => b.Remove(() => o.Framework));
-    #endregion
 }
 #endregion
 #region OctopusBuildInformationSettingsExtensions
@@ -1918,14 +1887,6 @@ public static partial class OctopusBuildInformationSettingsExtensions
     /// <inheritdoc cref="OctopusBuildInformationSettings.LogLevel"/>
     [Pure] [Builder(Type = typeof(OctopusBuildInformationSettings), Property = nameof(OctopusBuildInformationSettings.LogLevel))]
     public static T ResetLogLevel<T>(this T o) where T : OctopusBuildInformationSettings => o.Modify(b => b.Remove(() => o.LogLevel));
-    #endregion
-    #region Framework
-    /// <inheritdoc cref="OctopusBuildInformationSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusBuildInformationSettings), Property = nameof(OctopusBuildInformationSettings.Framework))]
-    public static T SetFramework<T>(this T o, string v) where T : OctopusBuildInformationSettings => o.Modify(b => b.Set(() => o.Framework, v));
-    /// <inheritdoc cref="OctopusBuildInformationSettings.Framework"/>
-    [Pure] [Builder(Type = typeof(OctopusBuildInformationSettings), Property = nameof(OctopusBuildInformationSettings.Framework))]
-    public static T ResetFramework<T>(this T o) where T : OctopusBuildInformationSettings => o.Modify(b => b.Remove(() => o.Framework));
     #endregion
 }
 #endregion

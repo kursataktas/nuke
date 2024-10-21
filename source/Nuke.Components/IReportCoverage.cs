@@ -13,6 +13,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Codecov;
 using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
+using Nuke.Tooling;
 using static Nuke.Common.Tools.Codecov.CodecovTasks;
 using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 

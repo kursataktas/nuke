@@ -8,7 +8,8 @@
   "officialUrl": "http://gitversion.readthedocs.io/en/stable/",
   "help": "GitVersion is a tool to help you achieve Semantic Versioning on your project.",
   "nugetPackageId": "GitVersion.Tool",
-  "customExecutable": true,
+  "nugetFramework": true,
+  "packageExecutable": "GitVersion.dll|GitVersion.exe",
   "tasks": [
     {
       "returnType": "GitVersion",
@@ -160,11 +161,6 @@
             "type": "GitVersionVerbosity",
             "format": "/verbosity {value}",
             "help": "Set Verbosity level (<c>debug</c>, <c>info</c>, <c>warn</c>, <c>error</c>, <c>none</c>). Default is <c>info</c>."
-          },
-          {
-            "name": "Framework",
-            "type": "string",
-            "noArgument": true
           }
         ]
       }

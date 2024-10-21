@@ -15,19 +15,6 @@ namespace Nuke.Common.Tools.OctoVersion;
 
 partial class OctoVersionTasks
 {
-    protected override string GetToolPath(ToolOptions options = null)
-    {
-        return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: PackageId,
-            packageExecutable: "OctoVersion.Tool.dll",
-            framework: options switch
-            {
-                OctoVersionGetVersionSettings settings => settings.Framework,
-                OctoVersionExecuteSettings settings => settings.Framework,
-                _ => throw new ArgumentOutOfRangeException(nameof(options), options, null)
-            });
-    }
-
     protected override object GetResult<T>(ToolOptions options, IReadOnlyCollection<Output> output)
     {
         if (options is OctoVersionGetVersionSettings getVersion)

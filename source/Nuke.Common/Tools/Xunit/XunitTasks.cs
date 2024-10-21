@@ -17,7 +17,7 @@ partial class XunitTasks
         return NuGetToolPathResolver.GetPackageExecutable(
             packageId: PackageId,
             packageExecutable: EnvironmentInfo.Is64Bit ? "xunit.console.exe" : "xunit.console.x86.exe",
-            framework: ((Xunit2Settings)options)?.Framework);
+            framework: (options as IToolOptionsWithFramework)?.Framework);
     }
 
     protected override Func<IProcess, object> GetExitHandler(ToolOptions options = null)

@@ -20,15 +20,3 @@ public class ReportGeneratorVerbosityMappingAttribute : VerbosityMappingAttribut
         Verbose = nameof(ReportGeneratorVerbosity.Verbose);
     }
 }
-
-partial class ReportGeneratorTasks
-{
-    protected override string GetToolPath(ToolOptions options = null)
-    {
-        var reportGeneratorOptions = (ReportGeneratorSettings)options;
-        return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: PackageId,
-            packageExecutable: "ReportGenerator.dll|ReportGenerator.exe",
-            framework: reportGeneratorOptions?.Framework);
-    }
-}
