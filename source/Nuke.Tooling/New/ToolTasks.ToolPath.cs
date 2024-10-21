@@ -4,6 +4,7 @@
 
 using System;
 using System.Reflection;
+using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
@@ -29,7 +30,7 @@ public abstract partial class ToolTasks
         if (ToolPathResolver.TryGetEnvironmentExecutable(environmentVariable) is { } environmentExecutable)
             return environmentExecutable;
 
-        return GetToolPath();
+        return GetToolPath(options);
     }
 
     protected virtual partial string GetToolPath(ToolOptions options)
@@ -49,17 +50,29 @@ public class PathToolAttribute : ToolAttribute
     }
 }
 
+#if NET6_0_OR_GREATER
+
 public class NuGetToolAttribute : ToolAttribute
 {
     public string Id { get; set; }
     public string Executable { get; set; }
-    public string FrameworkProperty { get; set; }
 
     internal override string GetToolPath(ToolOptions options)
     {
-        var framework = FrameworkProperty != null
-            ? options.GetType().GetProperty(FrameworkProperty)?.GetValue<string>(options)
-            : null;
-        return NuGetToolPathResolver.GetPackageExecutable(Id, Executable, framework);
+        var framework = (options as IToolOptionsWithFramework)?.Framework;
+        return NuGetToolPathResolver.GetPackageExecutable(Id, Executable, framework: framework);
     }
 }
+
+public interface IToolOptionsWithFramework
+{
+    public string Framework => ((Options)this).Get<string>(() => Framework);
+}
+
+public static class ToolOptionsWithFrameworkExtensions
+{
+    [Pure] [Builder(Type = typeof(IToolOptionsWithFramework), Property = nameof(IToolOptionsWithFramework.Framework))]
+    public static T SetFramework<T>(this T o, string v) where T : Options, IToolOptionsWithFramework => o.Modify(b => b.Set(() => o.Framework, v));
+}
+
+#endif

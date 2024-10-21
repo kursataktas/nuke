@@ -25,36 +25,50 @@ public class ToolTasksToolPathTest
     {
         new SimpleTool()
             .GetToolPathInternal()
-            .Should().EndWith("xunit.console.exe");
+            .Should().EndWith("xunit.console.dll");
     }
 
     [Fact]
     public void TestFromOptions()
     {
         new SimpleTool()
-            .GetToolPathInternal(new SimpleToolPathToolOptions()
+            .GetToolPathInternal(new SimpleToolOptions()
                 .SetProcessToolPath("/some/path"))
             .Should().EndWith("/some/path");
     }
 
     [Fact]
+    public void TestFromOptions_Framework()
+    {
+        new SimpleTool()
+            .GetToolPathInternal(new FrameworkToolOptions()
+                .SetFramework("netcoreapp2.0"))
+            .Should().Contain("netcoreapp2.0").And.EndWith("xunit.console.dll");
+    }
+
+
+    [Fact]
     public void TestFromOverride()
     {
-        new CustomToolPathTool()
+        new CustomPathTool()
             .GetToolPathInternal()
-            .Should().Be(nameof(CustomToolPathTool));
+            .Should().Be(nameof(CustomPathTool));
     }
 }
 
-[NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.exe")]
+[NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.dll")]
 file class SimpleTool : ToolTasks;
 
 [Command(Type = typeof(SimpleTool))]
-[TypeConverter(typeof(TypeConverter<SimpleToolPathToolOptions>))]
-file class SimpleToolPathToolOptions : ToolOptions;
+[TypeConverter(typeof(TypeConverter<SimpleToolOptions>))]
+file class SimpleToolOptions : ToolOptions;
 
-[NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.exe")]
-file class CustomToolPathTool : ToolTasks
+[Command(Type = typeof(SimpleTool))]
+[TypeConverter(typeof(TypeConverter<FrameworkToolOptions>))]
+file class FrameworkToolOptions : ToolOptions, IToolOptionsWithFramework;
+
+[NuGetTool(Id = "xunit.runner.console", Executable = "xunit.console.dll")]
+file class CustomPathTool : ToolTasks
 {
-    protected override string GetToolPath(ToolOptions options = null) => nameof(CustomToolPathTool);
+    protected override string GetToolPath(ToolOptions options = null) => nameof(CustomPathTool);
 }

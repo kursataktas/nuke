@@ -35,8 +35,11 @@ public static class DataClassGenerator
         }
 
         var writer = new DataClassWriter(dataClass, toolWriter);
-        var baseType = dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? nameof(ToolOptions) : nameof(Options));
-
+        var baseTypes = new[]
+        {
+            dataClass.BaseClass ?? (dataClass.Name.EndsWith("Settings") ? nameof(ToolOptions) : nameof(Options)),
+            dataClass.Tool.NuGetFramework ? "IToolOptionsWithFramework" : null
+        }.WhereNotNull();
 
         writer
             .WriteLine($"#region {dataClass.Name}")
@@ -46,7 +49,7 @@ public static class DataClassGenerator
             .WriteLine("[ExcludeFromCodeCoverage]")
             .WriteLine($"[TypeConverter(typeof(TypeConverter<{dataClass.Name}>))]")
             .WriteLine(GetCommandAttribute())
-            .WriteLine($"public partial class {dataClass.Name} : {baseType}")
+            .WriteLine($"public partial class {dataClass.Name} : {baseTypes.JoinCommaSpace()}")
             .WriteBlock(w => w
                 .ForEach(dataClass.Properties, WritePropertyDeclaration))
             .WriteLine("#endregion");
