@@ -37,7 +37,6 @@ partial class Build
                 "BenchmarkDotNet.json",
                 "Boots.json",
                 "Chocolatey.json",
-                // "CloudFoundry.json",
                 "CodeMetrics.json",
                 "Codecov.json",
                 "CorFlags.json",
