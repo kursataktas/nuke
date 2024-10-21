@@ -52,15 +52,6 @@ partial class Build
     ///   - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => ((IPack)x).Pack);
 
-    Target NAME => _ => _
-        .Executes(() =>
-        {
-            DotNet(
-                $"");
-
-            DotNetRestore(new DotNetRestoreSettings());
-        });
-
     [CI] readonly TeamCity TeamCity;
     [CI] readonly AzurePipelines AzurePipelines;
     [CI] readonly AppVeyor AppVeyor;
