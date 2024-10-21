@@ -49,7 +49,7 @@ partial class Build
                 "DotCover.json",
                 "DotMemoryUnit.json",
                 "DotNet.json",
-                // "DotnetPackaging.json",
+                "DotnetPackaging.json",
                 "EntityFramework.json",
                 "Fixie.json",
                 "Git.json",
