@@ -33,7 +33,7 @@ public abstract partial class ToolTasks
 {
     protected internal virtual partial Action<OutputType, string> GetLogger(ToolOptions options)
     {
-        if (options.ProcessLogger != null)
+        if (options?.ProcessLogger != null)
             return options.ProcessLogger;
 
         var toolType = GetType();
