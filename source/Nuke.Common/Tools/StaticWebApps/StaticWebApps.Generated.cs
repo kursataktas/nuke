@@ -22,7 +22,7 @@ namespace Nuke.Common.Tools.StaticWebApps;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [NpmPackageRequirement(PackageId)]
-public partial class StaticWebAppsTasks : ToolTasks
+public partial class StaticWebAppsTasks : ToolTasks, IRequireNpmPackage
 {
     public static string StaticWebAppsPath => new StaticWebAppsTasks().GetToolPath();
     public const string PackageExecutable = "swa";

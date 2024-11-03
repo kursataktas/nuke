@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.ReportGenerator;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class ReportGeneratorTasks : ToolTasks
+public partial class ReportGeneratorTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string ReportGeneratorPath => new ReportGeneratorTasks().GetToolPath();
     public const string PackageId = "ReportGenerator";

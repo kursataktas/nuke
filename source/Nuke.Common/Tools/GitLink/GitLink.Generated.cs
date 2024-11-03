@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.GitLink;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class GitLinkTasks : ToolTasks
+public partial class GitLinkTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string GitLinkPath => new GitLinkTasks().GetToolPath();
     public const string PackageId = "gitlink";

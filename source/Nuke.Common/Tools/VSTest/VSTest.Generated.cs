@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.VSTest;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class VSTestTasks : ToolTasks
+public partial class VSTestTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string VSTestPath => new VSTestTasks().GetToolPath();
     public const string PackageId = "Microsoft.TestPlatform";

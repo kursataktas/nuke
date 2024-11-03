@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.WebConfigTransformRunner;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class WebConfigTransformRunnerTasks : ToolTasks
+public partial class WebConfigTransformRunnerTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string WebConfigTransformRunnerPath => new WebConfigTransformRunnerTasks().GetToolPath();
     public const string PackageId = "WebConfigTransformRunner";

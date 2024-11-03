@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.AzureSignTool;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class AzureSignToolTasks : ToolTasks
+public partial class AzureSignToolTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string AzureSignToolPath => new AzureSignToolTasks().GetToolPath();
     public const string PackageId = "AzureSignTool";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Paket;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class PaketTasks : ToolTasks
+public partial class PaketTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string PaketPath => new PaketTasks().GetToolPath();
     public const string PackageId = "Paket";

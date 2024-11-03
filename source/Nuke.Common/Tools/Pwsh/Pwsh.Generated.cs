@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Pwsh;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class PwshTasks : ToolTasks
+public partial class PwshTasks : ToolTasks, IRequirePathTool
 {
     public static string PwshPath => new PwshTasks().GetToolPath();
     public const string PathExecutable = "pwsh";

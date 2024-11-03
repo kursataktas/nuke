@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.GitVersion;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class GitVersionTasks : ToolTasks
+public partial class GitVersionTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string GitVersionPath => new GitVersionTasks().GetToolPath();
     public const string PackageId = "GitVersion.Tool";

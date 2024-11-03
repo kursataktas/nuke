@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Codecov;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId)]
-public partial class CodecovTasks : ToolTasks
+public partial class CodecovTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string CodecovPath => new CodecovTasks().GetToolPath();
     public const string PackageId = "CodecovUploader";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Docker;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class DockerTasks : ToolTasks
+public partial class DockerTasks : ToolTasks, IRequirePathTool
 {
     public static string DockerPath => new DockerTasks().GetToolPath();
     public const string PathExecutable = "docker";

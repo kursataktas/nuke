@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.NerdbankGitVersioning;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class NerdbankGitVersioningTasks : ToolTasks
+public partial class NerdbankGitVersioningTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string NerdbankGitVersioningPath => new NerdbankGitVersioningTasks().GetToolPath();
     public const string PackageId = "nbgv";

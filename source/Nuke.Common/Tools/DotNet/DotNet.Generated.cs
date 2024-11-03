@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.DotNet;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class DotNetTasks : ToolTasks
+public partial class DotNetTasks : ToolTasks, IRequirePathTool
 {
     public static string DotNetPath => new DotNetTasks().GetToolPath();
     public const string PathExecutable = "dotnet";

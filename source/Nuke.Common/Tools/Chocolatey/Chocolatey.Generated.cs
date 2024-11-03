@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Chocolatey;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class ChocolateyTasks : ToolTasks
+public partial class ChocolateyTasks : ToolTasks, IRequirePathTool
 {
     public static string ChocolateyPath => new ChocolateyTasks().GetToolPath();
     public const string PathExecutable = "choco";

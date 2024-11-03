@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.MakeNSIS;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class MakeNSISTasks : ToolTasks
+public partial class MakeNSISTasks : ToolTasks, IRequirePathTool
 {
     public static string MakeNSISPath => new MakeNSISTasks().GetToolPath();
     public const string PathExecutable = "makensis";

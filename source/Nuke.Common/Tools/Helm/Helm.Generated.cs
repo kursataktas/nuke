@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Helm;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class HelmTasks : ToolTasks
+public partial class HelmTasks : ToolTasks, IRequirePathTool
 {
     public static string HelmPath => new HelmTasks().GetToolPath();
     public const string PathExecutable = "helm";

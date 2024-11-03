@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.NuGet;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class NuGetTasks : ToolTasks
+public partial class NuGetTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string NuGetPath => new NuGetTasks().GetToolPath();
     public const string PackageId = "NuGet.CommandLine";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Octopus;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class OctopusTasks : ToolTasks
+public partial class OctopusTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string OctopusPath => new OctopusTasks().GetToolPath();
     public const string PackageId = "Octopus.DotNet.Cli";

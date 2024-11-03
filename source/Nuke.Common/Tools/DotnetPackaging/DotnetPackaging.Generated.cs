@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.DotnetPackaging;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class DotnetPackagingTasks : ToolTasks
+public partial class DotnetPackagingTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string DotnetPackagingPath => new DotnetPackagingTasks().GetToolPath();
     public const string PackageId = "DotnetPackaging.Console";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.MSpec;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId)]
-public partial class MSpecTasks : ToolTasks
+public partial class MSpecTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string MSpecPath => new MSpecTasks().GetToolPath();
     public const string PackageId = "machine.specifications.runner.console";

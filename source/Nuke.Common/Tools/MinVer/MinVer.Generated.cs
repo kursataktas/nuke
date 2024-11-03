@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.MinVer;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class MinVerTasks : ToolTasks
+public partial class MinVerTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string MinVerPath => new MinVerTasks().GetToolPath();
     public const string PackageId = "minver-cli";

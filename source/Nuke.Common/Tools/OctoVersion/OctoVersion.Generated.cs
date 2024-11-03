@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.OctoVersion;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class OctoVersionTasks : ToolTasks
+public partial class OctoVersionTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string OctoVersionPath => new OctoVersionTasks().GetToolPath();
     public const string PackageId = "OctoVersion.Tool";

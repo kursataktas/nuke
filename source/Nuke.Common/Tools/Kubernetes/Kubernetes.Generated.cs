@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Kubernetes;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class KubernetesTasks : ToolTasks
+public partial class KubernetesTasks : ToolTasks, IRequirePathTool
 {
     public static string KubernetesPath => new KubernetesTasks().GetToolPath();
     public const string PathExecutable = "kubectl";

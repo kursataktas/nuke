@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.DocFX;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class DocFXTasks : ToolTasks
+public partial class DocFXTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string DocFXPath => new DocFXTasks().GetToolPath();
     public const string PackageId = "docfx.console";

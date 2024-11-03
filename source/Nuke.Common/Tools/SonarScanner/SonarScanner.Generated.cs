@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.SonarScanner;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class SonarScannerTasks : ToolTasks
+public partial class SonarScannerTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string SonarScannerPath => new SonarScannerTasks().GetToolPath();
     public const string PackageId = "dotnet-sonarscanner";

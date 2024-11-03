@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Squirrel;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class SquirrelTasks : ToolTasks
+public partial class SquirrelTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string SquirrelPath => new SquirrelTasks().GetToolPath();
     public const string PackageId = "Squirrel.Windows";

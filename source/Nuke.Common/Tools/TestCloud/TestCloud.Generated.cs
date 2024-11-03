@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.TestCloud;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class TestCloudTasks : ToolTasks
+public partial class TestCloudTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string TestCloudPath => new TestCloudTasks().GetToolPath();
     public const string PackageId = "Xamarin.UITest";

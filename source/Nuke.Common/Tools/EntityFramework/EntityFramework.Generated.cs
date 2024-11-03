@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.EntityFramework;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class EntityFrameworkTasks : ToolTasks
+public partial class EntityFrameworkTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string EntityFrameworkPath => new EntityFrameworkTasks().GetToolPath();
     public const string PackageId = "dotnet-ef";

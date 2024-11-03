@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.DotCover;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId)]
-public partial class DotCoverTasks : ToolTasks
+public partial class DotCoverTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string DotCoverPath => new DotCoverTasks().GetToolPath();
     public const string PackageId = "JetBrains.dotCover.DotNetCliTool|JetBrains.dotCover.CommandLineTools";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.NUnit;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class NUnitTasks : ToolTasks
+public partial class NUnitTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string NUnitPath => new NUnitTasks().GetToolPath();
     public const string PackageId = "NUnit.ConsoleRunner";

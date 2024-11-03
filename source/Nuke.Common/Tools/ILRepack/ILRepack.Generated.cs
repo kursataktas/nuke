@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.ILRepack;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class ILRepackTasks : ToolTasks
+public partial class ILRepackTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string ILRepackPath => new ILRepackTasks().GetToolPath();
     public const string PackageId = "ILRepack";

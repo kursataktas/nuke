@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Xunit;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId)]
-public partial class XunitTasks : ToolTasks
+public partial class XunitTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string XunitPath => new XunitTasks().GetToolPath();
     public const string PackageId = "xunit.runner.console";

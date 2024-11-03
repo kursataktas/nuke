@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.DotMemoryUnit;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class DotMemoryUnitTasks : ToolTasks
+public partial class DotMemoryUnitTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string DotMemoryUnitPath => new DotMemoryUnitTasks().GetToolPath();
     public const string PackageId = "JetBrains.DotMemoryUnit";

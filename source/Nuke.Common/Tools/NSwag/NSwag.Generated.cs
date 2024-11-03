@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.NSwag;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class NSwagTasks : ToolTasks
+public partial class NSwagTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string NSwagPath => new NSwagTasks().GetToolPath();
     public const string PackageId = "nswag.msbuild";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.CorFlags;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class CorFlagsTasks : ToolTasks
+public partial class CorFlagsTasks : ToolTasks, IRequirePathTool
 {
     public static string CorFlagsPath => new CorFlagsTasks().GetToolPath();
     public const string PathExecutable = "CorFlags.exe";

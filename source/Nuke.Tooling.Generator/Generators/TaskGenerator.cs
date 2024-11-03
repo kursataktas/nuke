@@ -7,6 +7,7 @@ using System.Linq;
 using Nuke.CodeGeneration.Model;
 using Nuke.CodeGeneration.Writers;
 using Nuke.Common.Utilities;
+using Nuke.Common.Utilities.Collections;
 
 // ReSharper disable UnusedMethodReturnValue.Local
 
@@ -19,6 +20,15 @@ public static class TaskGenerator
         if (tool.Tasks.Count == 0 && !tool.CustomExecutable && tool.PathExecutable == null && tool.NuGetPackageId == null)
             return;
 
+        var baseClasses = new[]
+        {
+            "ToolTasks",
+            tool.PathExecutable?.Apply(_ => "IRequirePathTool"),
+            tool.NuGetPackageId?.Apply(_ => "IRequireNuGetPackage"),
+            tool.AptGetPackageId?.Apply(_ => "IRequireAptGetPackage"),
+            tool.NpmPackageId?.Apply(_ => "IRequireNpmPackage"),
+        }.WhereNotNull();
+
         toolWriter
             .WriteSummary(tool)
             .WriteLine("[PublicAPI]")
@@ -30,7 +40,7 @@ public static class TaskGenerator
             .WriteLineIfTrue(tool.AptGetPackageId != null, "[AptGetPackageRequirement(PackageId)]")
             .WriteLineIfTrue(tool.PathExecutable != null, "[PathToolRequirement(PathExecutable)]")
             .WriteLineIfTrue(tool.PathExecutable != null, "[PathTool(Executable = PathExecutable)]")
-            .WriteLine($"public partial class {tool.GetClassName()} : ToolTasks")
+            .WriteLine($"public partial class {tool.GetClassName()} : {baseClasses.JoinCommaSpace()}")
             .WriteBlock(w =>
             {
                 w

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Fixie;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class FixieTasks : ToolTasks
+public partial class FixieTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string FixiePath => new FixieTasks().GetToolPath();
     public const string PackageId = "fixie.console";

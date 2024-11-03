@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.VSWhere;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class VSWhereTasks : ToolTasks
+public partial class VSWhereTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string VSWherePath => new VSWhereTasks().GetToolPath();
     public const string PackageId = "vswhere";

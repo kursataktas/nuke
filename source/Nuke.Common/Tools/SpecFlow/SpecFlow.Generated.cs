@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.SpecFlow;
 [ExcludeFromCodeCoverage]
 [NuGetPackageRequirement(PackageId)]
 [NuGetTool(Id = PackageId, Executable = PackageExecutable)]
-public partial class SpecFlowTasks : ToolTasks
+public partial class SpecFlowTasks : ToolTasks, IRequireNuGetPackage
 {
     public static string SpecFlowPath => new SpecFlowTasks().GetToolPath();
     public const string PackageId = "SpecFlow";

@@ -23,7 +23,7 @@ namespace Nuke.Common.Tools.Netlify;
 [ExcludeFromCodeCoverage]
 [PathToolRequirement(PathExecutable)]
 [PathTool(Executable = PathExecutable)]
-public partial class NetlifyTasks : ToolTasks
+public partial class NetlifyTasks : ToolTasks, IRequirePathTool
 {
     public static string NetlifyPath => new NetlifyTasks().GetToolPath();
     public const string PathExecutable = "npx";
