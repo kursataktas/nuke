@@ -84,7 +84,7 @@ public static class WriterExtensions
 
         yield return "<ul>";
         foreach (var pair in propertiesWithArgument)
-            yield return $"  <li><c>{pair.Argument}</c> via {pair.Property.ToSeeCref()}</li>";
+            yield return $"<li><c>{pair.Argument}</c> via {pair.Property.ToSeeCref()}</li>";
         yield return "</ul>";
     }
 
