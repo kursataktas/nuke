@@ -1002,16 +1002,6 @@
       }
     }
   ],
-  "commonTaskProperties": [
-    {
-      "name": "NSwagRuntime",
-      "type": "string",
-      "format": "{value}",
-      "customImpl": true,
-      "position": 1,
-      "customValue": true
-    }
-  ],
   "commonTaskPropertySets": {
     "inputOutputCommand": [
       {
