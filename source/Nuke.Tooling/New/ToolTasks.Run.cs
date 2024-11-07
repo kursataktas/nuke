@@ -13,7 +13,7 @@ namespace Nuke.Tooling;
 
 partial class ToolTasks
 {
-    protected IReadOnlyCollection<Output> Run(ToolOptions options)
+    protected virtual IReadOnlyCollection<Output> Run(ToolOptions options)
     {
         var secrets = options.GetSecrets().ToList();
         string Filter(string text) => secrets.Aggregate(text, (str, s) => str.Replace(s, "[REDACTED]"));
@@ -35,7 +35,7 @@ partial class ToolTasks
         return process.Output;
     }
 
-    protected (TResult Result, IReadOnlyCollection<Output> Output) Run<TResult>(ToolOptions options)
+    protected virtual (TResult Result, IReadOnlyCollection<Output> Output) Run<TResult>(ToolOptions options)
     {
         var output = Run(options);
         try

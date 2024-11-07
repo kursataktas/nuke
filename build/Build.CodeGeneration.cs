@@ -89,7 +89,7 @@ partial class Build
                 "StaticWebApps.json",
                 "Teams.json",
                 "TestCloud.json",
-                // "Unity.json",
+                "Unity.json",
                 "VSTest.json",
                 "VSWhere.json",
                 "WebConfigTransformRunner.json",
