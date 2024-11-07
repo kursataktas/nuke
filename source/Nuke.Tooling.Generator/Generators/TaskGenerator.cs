@@ -85,7 +85,7 @@ public static class TaskGenerator
                             "exitHandler"
                         };
         var signature = $"IReadOnlyCollection<Output> {tool.Name}({parameters.JoinCommaSpace()})";
-        var invocation = $"Run<{tool.GetClassName()}>({arguments.JoinCommaSpace()})";
+        var invocation = $"new {tool.GetClassName()}().Run({arguments.JoinCommaSpace()})";
         writer
             .WriteSummary(tool)
             .WriteObsoleteAttributeWhenObsolete(tool)
@@ -100,8 +100,8 @@ public static class TaskGenerator
             : $"({task.ReturnType} Result, IReadOnlyCollection<Output> Output)";
         var signature = $"{returnType} {task.GetTaskMethodName()}({task.SettingsClass.Name} options = null)";
         var invocation = !task.HasReturnValue()
-            ? $"Run<{task.Tool.GetClassName()}>(options)"
-            : $"Run<{task.Tool.GetClassName()}, {task.ReturnType}>(options)";
+            ? $"new {task.Tool.GetClassName()}().Run(options)"
+            : $"new {task.Tool.GetClassName()}().Run<{task.ReturnType}>(options)";
 
         return writer
             .WriteSummary(task)
@@ -118,8 +118,8 @@ public static class TaskGenerator
             : $"({task.ReturnType} Result, IReadOnlyCollection<Output> Output)";
         var signature = $"{returnType} {task.GetTaskMethodName()}(Configure<{task.SettingsClass.Name}> configurator)";
         var invocation = !task.HasReturnValue()
-            ? $"Run<{task.Tool.GetClassName()}>(configurator.Invoke(new {task.SettingsClass.Name}()))"
-            : $"Run<{task.Tool.GetClassName()}, {task.ReturnType}>(configurator.Invoke(new {task.SettingsClass.Name}()))";
+            ? $"new {task.Tool.GetClassName()}().Run(configurator.Invoke(new {task.SettingsClass.Name}()))"
+            : $"new {task.Tool.GetClassName()}().Run<{task.ReturnType}>(configurator.Invoke(new {task.SettingsClass.Name}()))";
 
         return writer
             .WriteSummary(task)

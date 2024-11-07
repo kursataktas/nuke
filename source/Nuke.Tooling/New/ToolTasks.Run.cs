@@ -13,37 +13,34 @@ namespace Nuke.Tooling;
 
 partial class ToolTasks
 {
-    protected static IReadOnlyCollection<Output> Run<T>(ToolOptions options)
-        where T : ToolTasks, new()
+    protected IReadOnlyCollection<Output> Run(ToolOptions options)
     {
-        var tool = new T();
-        var secrets = options.GetSecrets();
+        var secrets = options.GetSecrets().ToList();
+        string Filter(string text) => secrets.Aggregate(text, (str, s) => str.Replace(s, "[REDACTED]"));
 
-        options = tool.PreProcess(options);
-        using var process = ProcessTasks.StartProcess(
-            tool.GetToolPathInternal(),
+        options = PreProcess(options);
+        using var process = StartProcess(
             options.GetArguments().JoinSpace(),
             options.ProcessWorkingDirectory,
             options.ProcessEnvironmentVariables,
             options.ProcessExecutionTimeout,
             options.ProcessOutputLogging,
             options.ProcessInvocationLogging,
-            tool.GetLogger(options),
-            text => secrets.Aggregate(text, (str, s) => str.Replace(s, "[REDACTED]")));
+            GetLogger(options),
+            Filter);
 
-        tool.GetExitHandlerInternal().Invoke(process);
-        tool.PostProcess(options);
+        GetExitHandlerInternal().Invoke(process);
+        PostProcess(options);
 
         return process.Output;
     }
 
-    protected static (TResult Result, IReadOnlyCollection<Output> Output) Run<T, TResult>(ToolOptions options)
-        where T : ToolTasks, new()
+    protected (TResult Result, IReadOnlyCollection<Output> Output) Run<TResult>(ToolOptions options)
     {
-        var output = Run<T>(options);
+        var output = Run(options);
         try
         {
-            var result = new T().GetResult<TResult>(options, output);
+            var result = GetResult<TResult>(options, output);
             return (Result: (TResult)result, Output: output);
         }
         catch (Exception exception)
@@ -54,7 +51,7 @@ partial class ToolTasks
 
 #if NET6_0_OR_GREATER
 
-    protected static IReadOnlyCollection<Output> Run<T>(
+    protected IReadOnlyCollection<Output> Run(
         ArgumentStringHandler arguments,
         string workingDirectory = null,
         IReadOnlyDictionary<string, string> environmentVariables = null,
@@ -63,21 +60,41 @@ partial class ToolTasks
         bool? logInvocation = null,
         Action<OutputType, string> logger = null,
         Func<IProcess, object> exitHandler = null)
-        where T : ToolTasks, new()
     {
-        var tool = new T();
-        using var process = ProcessTasks.StartProcess(
-            tool.GetToolPathInternal(),
-            arguments,
+        using var process = StartProcess(
+            arguments.ToStringAndClear(),
             workingDirectory,
             environmentVariables,
             timeout,
             logOutput,
             logInvocation,
-            logger ?? tool.GetLogger());
-        (exitHandler ?? tool.GetExitHandlerInternal()).Invoke(process);
+            logger ?? GetLogger());
+
+        (exitHandler ?? GetExitHandlerInternal()).Invoke(process);
         return process.Output;
     }
 
 #endif
+
+    protected virtual IProcess StartProcess(
+        string arguments,
+        string workingDirectory,
+        IReadOnlyDictionary<string, string> environmentVariables,
+        int? executionTimeout,
+        bool? outputLogging,
+        bool? invocationLogging,
+        Action<OutputType, string> logger,
+        Func<string, string> outputFilter = null)
+    {
+        return ProcessTasks.StartProcess(
+            GetToolPathInternal(),
+            arguments,
+            workingDirectory,
+            environmentVariables,
+            executionTimeout,
+            outputLogging,
+            invocationLogging,
+            logger,
+            outputFilter);
+    }
 }

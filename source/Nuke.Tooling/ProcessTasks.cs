@@ -156,7 +156,7 @@ public static class ProcessTasks
         Action<OutputType, string> logger = null,
         Func<string, string> outputFilter = null)
     {
-        Assert.True(toolPath != null);
+        Assert.FileExists(toolPath);
         if (!Path.IsPathRooted(toolPath) && !toolPath.Contains(Path.DirectorySeparatorChar))
             toolPath = ToolPathResolver.GetPathExecutable(toolPath);
 
