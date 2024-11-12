@@ -76,11 +76,11 @@ public static class ConfigureExtensions
                     try
                     {
                         var result = executor(x.DisableProcessOutputLogging());
-                        invocations.Add((x, x.ProcessLogger, result, default));
+                        invocations.Add((x, x.GetLogger(), result, default));
                     }
                     catch (Exception exception)
                     {
-                        invocations.Add((x, x.ProcessLogger, default, exception));
+                        invocations.Add((x, x.GetLogger(), default, exception));
 
                         if (!completeOnFailure)
                             throw;

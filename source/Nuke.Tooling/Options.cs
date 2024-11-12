@@ -59,14 +59,19 @@ public class Options
 
     internal Options Set<T>(Expression<Func<T>> propertyProvider, object value)
     {
+        return Set(GetOptionName(propertyProvider), value);
+    }
+
+    internal Options Set(string propertyName, object value)
+    {
         if (value != null)
         {
             var internalOption = JValue.FromObject(value, JsonSerializer);
-            InternalOptions[GetOptionName(propertyProvider)] = internalOption;
+            InternalOptions[propertyName] = internalOption;
         }
         else
         {
-            Remove(propertyProvider);
+            InternalOptions.Property(propertyName)?.Remove();
         }
 
         return this;
